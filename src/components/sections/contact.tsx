@@ -19,6 +19,7 @@ import {
   TurnstileWidget,
   turnstileConfigured,
 } from "@/components/leads/turnstile-widget";
+import { trackLeadConversion } from "@/components/analytics/marketing-analytics";
 
 const MAX_PHOTOS = 15;
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
@@ -450,6 +451,7 @@ export function ContactSection() {
         throw new Error(data?.error || "Failed");
       }
 
+      trackLeadConversion({ inquiryType: step1.data.type });
       toast.success(copy.contact.form.success);
       if (failed > 0 && photoUrls.length) {
         toast.message(copy.contact.form.partialUpload);

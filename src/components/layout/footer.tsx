@@ -7,6 +7,7 @@ import {
   usePageCopy,
   useSiteSettings,
 } from "@/components/site-settings-provider";
+import { MarketingSettingsButton } from "@/components/analytics/marketing-analytics";
 
 export function Footer() {
   const copy = usePageCopy();
@@ -113,11 +114,12 @@ export function Footer() {
           <p>
             © {year} {settings.brandName}. {copy.footer.rights}
           </p>
-          <p>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href="/personvern" className="hover:text-accent">
               {settings.privacy.linkLabel[locale as "no" | "en"]}
             </Link>
-          </p>
+            <MarketingSettingsButton />
+          </div>
           <p>{copy.footer.warrantyNote}</p>
           <p className="tracking-wider uppercase">{locale}</p>
         </div>
