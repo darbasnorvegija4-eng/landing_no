@@ -15,6 +15,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { StickyBottomCta } from "@/components/layout/sticky-cta";
 import { LivePreviewRefresh } from "@/components/live-preview-refresh";
+import { MarketingAnalytics } from "@/components/analytics/marketing-analytics";
 import "../../globals.css";
 
 export const revalidate = 30;
@@ -118,6 +119,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <main>{children}</main>
             <Footer />
             <StickyBottomCta />
+            <MarketingAnalytics />
             <Toaster theme="dark" position="top-center" richColors />
           </SiteSettingsProvider>
         </NextIntlClientProvider>
