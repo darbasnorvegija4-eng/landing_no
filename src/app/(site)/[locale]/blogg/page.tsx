@@ -5,6 +5,7 @@ import { getPosts, localizeContent } from "@/lib/cms-pages";
 import { siteConfig, type Locale } from "@/lib/site";
 
 export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 type Props = {
   params: Promise<{ locale: string }>;

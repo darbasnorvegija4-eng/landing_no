@@ -7,7 +7,10 @@
  */
 import pg from "pg";
 
-const url = process.env.DATABASE_URL?.replace(/[&?]channel_binding=require/g, "");
+const url = process.env.DATABASE_URL?.replace(
+  /[&?]channel_binding=require/g,
+  "",
+);
 if (!url?.startsWith("postgres")) {
   console.error("DATABASE_URL must be postgres");
   process.exit(1);
@@ -76,7 +79,9 @@ async function ensureEnumValue(label) {
     console.log(`ok enum: ${label}`);
     return;
   }
-  await pool.query(`alter type enum_leads_type add value if not exists '${label}'`);
+  await pool.query(
+    `alter type enum_leads_type add value if not exists '${label}'`,
+  );
   console.log(`added enum: ${label}`);
 }
 
@@ -99,20 +104,16 @@ try {
     await ensureEnumValue(label);
   }
 
-  // Two-step form: only name/phone/postal/type are required.
-  for (const column of ["email", "address", "house_number", "city", "message"]) {
+  // Two-step form: phone or email is required by API validation; phone stays nullable.
+  for (const column of ["email", "phone", "house_number", "city", "message"]) {
     try {
       await dropNotNull(column);
     } catch (err) {
-      console.log(`skip nullable ${column}:`, err instanceof Error ? err.message : err);
+      console.log(
+        `skip nullable ${column}:`,
+        err instanceof Error ? err.message : err,
+      );
     }
-  }
-
-  try {
-    await pool.query(`alter table leads alter column phone set not null`);
-    console.log("required: leads.phone");
-  } catch (err) {
-    console.log("skip phone not null:", err instanceof Error ? err.message : err);
   }
 
   const cols = await pool.query(
@@ -129,7 +130,10 @@ try {
      join pg_enum e on t.oid = e.enumtypid
      where t.typname = 'enum_leads_type' order by e.enumsortorder`,
   );
-  console.log("enum_leads_type:", enums.rows.map((r) => r.enumlabel).join(", "));
+  console.log(
+    "enum_leads_type:",
+    enums.rows.map((r) => r.enumlabel).join(", "),
+  );
 } catch (err) {
   console.error(err);
   process.exitCode = 1;

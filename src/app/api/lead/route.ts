@@ -13,6 +13,7 @@ import { buildLeadPdf, leadPdfFilename } from "@/lib/lead-pdf";
 import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { captureException } from "@/lib/monitoring";
+import { contactMethodSchema } from "@/lib/lead-contact-validation";
 
 const inquiryTypes = [
   "takvask",
@@ -22,32 +23,37 @@ const inquiryTypes = [
   "usikker",
 ] as const;
 
-const leadSchema = z.object({
-  name: z.string().min(2).max(120),
-  phone: z.string().min(5).max(40),
-  postal: z.string().min(3).max(12),
-  type: z.enum(inquiryTypes),
-  locale: z.enum(["no", "en"]),
-  email: z.string().email().max(200).optional(),
-  address: z.string().max(200).optional(),
-  roofSize: z
-    .string()
-    .max(20)
-    .optional()
-    .refine(
-      (v) => {
-        if (!v) return true;
-        const n = Number(v);
-        return Number.isFinite(n) && n >= 1 && n <= 2000;
-      },
-      { message: "Invalid roof size" },
-    ),
-  message: z.string().max(5000).optional(),
-  photoUrls: z.array(z.string().url()).max(15).optional(),
-  turnstileToken: z.string().max(2048).optional(),
-  consent: z.literal(true),
-  consentText: z.string().min(10).max(1000),
-});
+const leadSchema = z
+  .object({
+    name: z.string().min(2).max(120),
+    phone: z.string().min(5).max(40).optional(),
+    postal: z.string().min(3).max(12),
+    type: z.enum(inquiryTypes),
+    locale: z.enum(["no", "en"]),
+    email: z.string().email().max(200).optional(),
+    address: z.string().min(2).max(200),
+    roofSize: z
+      .string()
+      .max(20)
+      .optional()
+      .refine(
+        (v) => {
+          if (!v) return true;
+          const n = Number(v);
+          return Number.isFinite(n) && n >= 1 && n <= 2000;
+        },
+        { message: "Invalid roof size" },
+      ),
+    message: z.string().max(5000).optional(),
+    photoUrls: z.array(z.string().url()).max(15).optional(),
+    turnstileToken: z.string().max(2048).optional(),
+    consent: z.literal(true),
+    consentText: z.string().min(10).max(1000),
+  })
+  .refine((data) => contactMethodSchema.safeParse(data).success, {
+    message: "Phone or email is required",
+    path: ["phone"],
+  });
 
 function parsePhotoUrls(value: unknown): string[] {
   if (Array.isArray(value)) {
@@ -102,12 +108,12 @@ export async function POST(request: Request) {
         honeypotFilled(form.get("company_url_hp"));
       raw = {
         name: form.get("name"),
-        phone: form.get("phone"),
+        phone: form.get("phone") || undefined,
         postal: form.get("postal"),
         type: form.get("type"),
         locale: form.get("locale"),
         email: form.get("email") || undefined,
-        address: form.get("address") || undefined,
+        address: form.get("address"),
         roofSize: form.get("roofSize") || undefined,
         message: form.get("message") || undefined,
         photoUrls: parsePhotoUrls(form.get("photoUrls")),
@@ -140,8 +146,8 @@ export async function POST(request: Request) {
 
     const parsed = leadSchema.safeParse({
       ...raw,
+      phone: raw.phone || undefined,
       email: raw.email || undefined,
-      address: raw.address || undefined,
       roofSize: raw.roofSize || undefined,
       message: raw.message || undefined,
       photoUrls: parsePhotoUrls(raw.photoUrls),
@@ -175,12 +181,12 @@ export async function POST(request: Request) {
       data: {
         name: rest.name,
         postal: rest.postal,
-        phone,
+        ...(phone ? { phone } : {}),
         inquiryType: type,
         language: locale,
         message: message || "",
         ...(email ? { email } : {}),
-        ...(address ? { address } : {}),
+        address,
         ...(approxSqm && Number.isFinite(approxSqm) ? { approxSqm } : {}),
         ...(photoUrls.length ? { photoUrls: photoUrls.join("\n") } : {}),
         consentAt: new Date().toISOString(),

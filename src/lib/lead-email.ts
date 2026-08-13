@@ -5,7 +5,7 @@ export type LeadEmailInput = {
   id: string | number;
   token: string;
   name: string;
-  phone: string;
+  phone?: string;
   postal: string;
   type: string;
   locale: string;
@@ -70,14 +70,16 @@ export function buildLeadEmailText(input: LeadEmailInput) {
     "Ny henvendelse – Takfornyelse",
     "",
     `Navn: ${input.name}`,
-    `Telefon: ${input.phone}`,
+    input.phone ? `Telefon: ${input.phone}` : null,
     `Postnummer: ${input.postal}`,
     input.email ? `E-post: ${input.email}` : null,
     input.address ? `Adresse: ${input.address}` : null,
     input.approxSqm ? `Ca. m²: ${input.approxSqm}` : null,
     `Tjeneste: ${inquiryTypeLabelNo(input.type)}`,
     `Språk: ${languageLabelNo(input.locale)}`,
-    input.photoUrls.length ? `Bilder: ${input.photoUrls.length} – ${gallery}` : null,
+    input.photoUrls.length
+      ? `Bilder: ${input.photoUrls.length} – ${gallery}`
+      : null,
     "",
     input.message?.trim() || null,
     "",
@@ -108,7 +110,9 @@ export function buildLeadEmailHtml(input: LeadEmailInput) {
     })
     .join("");
 
-  const phoneHref = `tel:${input.phone.replace(/\s+/g, "")}`;
+  const phoneHref = input.phone
+    ? `tel:${input.phone.replace(/\s+/g, "")}`
+    : null;
   const emailHref = input.email ? `mailto:${input.email}` : null;
 
   return `<!DOCTYPE html>
@@ -133,7 +137,14 @@ export function buildLeadEmailHtml(input: LeadEmailInput) {
               <p style="margin:0 0 8px;color:#9aa3b2;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">Kontakt</p>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 ${row("Navn", escapeHtml(input.name))}
-                ${row("Telefon", `<a href="${escapeHtml(phoneHref)}" style="color:#e8a317;text-decoration:none;">${escapeHtml(input.phone)}</a>`)}
+                ${
+                  input.phone && phoneHref
+                    ? row(
+                        "Telefon",
+                        `<a href="${escapeHtml(phoneHref)}" style="color:#e8a317;text-decoration:none;">${escapeHtml(input.phone)}</a>`,
+                      )
+                    : ""
+                }
                 ${row("Postnr", escapeHtml(input.postal))}
                 ${
                   input.email && emailHref

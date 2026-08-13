@@ -27,8 +27,13 @@ export const Leads: CollectionConfig = {
   fields: [
     { name: "name", type: "text", required: true, access: adminManagedField },
     { name: "email", type: "email", access: adminManagedField },
-    { name: "phone", type: "text", required: true, access: adminManagedField },
-    { name: "address", type: "text", access: adminManagedField },
+    { name: "phone", type: "text", access: adminManagedField },
+    {
+      name: "address",
+      type: "text",
+      required: true,
+      access: adminManagedField,
+    },
     { name: "houseNumber", type: "text", access: adminManagedField },
     { name: "postal", type: "text", required: true, access: adminManagedField },
     { name: "city", type: "text", access: adminManagedField },
