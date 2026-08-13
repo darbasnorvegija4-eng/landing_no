@@ -48,14 +48,17 @@ type PhotoItem = {
 
 const step1Schema = z.object({
   name: z.string().trim().min(2),
-  phone: z.string().trim().min(5),
+  phone: z
+    .string()
+    .trim()
+    .refine((value) => !value || value.length >= 5),
   postal: z.string().trim().min(3),
   type: z.enum(inquiryTypes),
 });
 
 const step2Schema = z.object({
   email: z.string().trim().email().optional().or(z.literal("")),
-  address: z.string().trim().optional(),
+  address: z.string().trim().min(2),
   roofSize: z
     .string()
     .trim()
@@ -70,6 +73,10 @@ const step2Schema = z.object({
     ),
   message: z.string().trim().max(5000).optional(),
 });
+
+export function hasContactMethod(phone: string, email: string) {
+  return Boolean(phone.trim() || email.trim());
+}
 
 type FormState = {
   name: string;
@@ -395,6 +402,15 @@ export function ContactSection() {
       return;
     }
 
+    if (!hasContactMethod(step1.data.phone, step2.data.email || "")) {
+      toast.error(
+        locale === "no"
+          ? "Oppgi telefon, e-post eller begge."
+          : "Enter a phone number, email address, or both.",
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       if (turnstileConfigured() && !turnstileToken) {
@@ -425,12 +441,12 @@ export function ContactSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: step1.data.name,
-          phone: step1.data.phone,
+          phone: step1.data.phone || undefined,
           postal: step1.data.postal,
           type: step1.data.type,
           locale,
           email: step2.data.email || undefined,
-          address: step2.data.address || undefined,
+          address: step2.data.address,
           roofSize: step2.data.roofSize || undefined,
           message: step2.data.message || undefined,
           photoUrls: photoUrls.length ? photoUrls : undefined,
@@ -565,14 +581,17 @@ export function ContactSection() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">{copy.contact.form.phone} *</Label>
+                  <Label htmlFor="phone">
+                    {locale === "no"
+                      ? "Telefon (valgfritt hvis du oppgir e-post)"
+                      : "Phone (optional if you provide email)"}
+                  </Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={form.phone}
                     onChange={(e) => update("phone", e.target.value)}
                     autoComplete="tel"
-                    required
                   />
                 </div>
                 <div className="space-y-2">
@@ -614,7 +633,11 @@ export function ContactSection() {
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="email">{copy.contact.form.email}</Label>
+                  <Label htmlFor="email">
+                    {locale === "no"
+                      ? "E-post (valgfritt hvis du oppgir telefon)"
+                      : "Email (optional if you provide phone)"}
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -624,13 +647,24 @@ export function ContactSection() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address">{copy.contact.form.address}</Label>
+                  <Label htmlFor="address">{copy.contact.form.address} *</Label>
                   <Input
                     id="address"
                     value={form.address}
                     onChange={(e) => update("address", e.target.value)}
                     autoComplete="street-address"
+                    placeholder={
+                      locale === "no"
+                        ? "Gateadresse og husnummer"
+                        : "Street address and house number"
+                    }
+                    required
                   />
+                  <p className="text-muted-foreground text-xs">
+                    {locale === "no"
+                      ? "Skriv hele adressen der arbeidet skal utføres."
+                      : "Enter the full address where the work will be carried out."}
+                  </p>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="roofSize">{copy.contact.form.roofSize}</Label>
