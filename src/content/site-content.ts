@@ -69,8 +69,8 @@ export const faqItems = [
       en: "What does roof renovation cost?",
     },
     answer: {
-      no: "Prisen avhenger av størrelse, takstein og tilstand. En komplett takfornying (vask, impregnering og maling) ligger typisk mellom 600 og 1200 kr per m². Du får alltid fast pris etter gratis befaring.",
-      en: "Price depends on size, tile type and condition. A complete renewal (wash, impregnation and paint) typically sits between NOK 600 and 1,200 per m². You always get a fixed price after a free inspection.",
+      no: "Takvask koster fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Nøyaktig pris avhenger av takets størrelse, takstein og tilstand. Du får alltid fast pris etter gratis befaring.",
+      en: "Roof washing costs from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. The exact price depends on roof size, tile type and condition. You always get a fixed price after a free inspection.",
     },
   },
   {

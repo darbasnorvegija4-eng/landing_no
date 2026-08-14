@@ -4,6 +4,7 @@ import * as migration_2 from "./20260727_130000_admin_powers";
 import * as migration_3 from "./20260727_140000_drafts_roles";
 import * as migration_4 from "./20260727_150000_pages_posts_redirects";
 import * as migration_5 from "./20260813_120000_contact_choice";
+import * as migration_6 from "./20260814_120000_update_service_prices";
 
 export const migrations = [
   {
@@ -35,5 +36,10 @@ export const migrations = [
     up: migration_5.up,
     down: migration_5.down,
     name: "20260813_120000_contact_choice",
+  },
+  {
+    up: migration_6.up,
+    down: migration_6.down,
+    name: "20260814_120000_update_service_prices",
   },
 ];
