@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { setRequestLocale } from "next-intl/server";
 import { HeroSection } from "@/components/sections/hero";
+import { PackageOfferSection } from "@/components/sections/package-offer";
 import { ServicesSection } from "@/components/sections/services";
 import { NewRoofSection } from "@/components/sections/new-roof";
 import { AboutSection } from "@/components/sections/about";
@@ -54,6 +55,7 @@ export default async function HomePage({ params }: Props) {
         description={content.copy.meta.description[locale as "no" | "en"]}
       />
       <HeroSection heroImage={content.settings.images.hero} />
+      <PackageOfferSection locale={locale as "no" | "en"} />
       <ServicesSection items={content.services} />
       <CalculatorSection calculator={content.settings.calculator} />
       <NewRoofSection image={content.settings.images.newRoof} />
