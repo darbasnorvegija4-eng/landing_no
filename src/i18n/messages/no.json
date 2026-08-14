@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Takfornying – takvask, impregnering og maling av takstein",
-    "description": "Vi fornyer norske tak med vask, impregnering og maling – eller legger helt nytt. Fast pris, gratis befaring og opptil 10 års garanti."
+    "description": "Takvask fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Gratis befaring og opptil 10 års garanti."
   },
   "nav": {
     "home": "Hjem",
@@ -43,7 +43,7 @@
   "services": {
     "eyebrow": "Tjenester",
     "title": "Alt du trenger for et friskt tak",
-    "subtitle": "Fra takvask og mosefjerning til impregnering, maling og nytt tak – med fast pris og tydelig plan.",
+    "subtitle": "Takvask fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva – med fast pris og tydelig plan.",
     "showMore": "Vis flere tjenester",
     "showLess": "Vis færre",
     "items": {
@@ -59,17 +59,17 @@
       },
       "wash": {
         "title": "Takvask og mosefjerning",
-        "description": "Skånsom høytrykksvask som fjerner mose, alger og smuss uten å skade taksteinen.",
+        "description": "Fra 100 kr/m² + mva. Skånsom høytrykksvask som fjerner mose, alger og smuss uten å skade taksteinen.",
         "featured": true
       },
       "impregnation": {
         "title": "Impregnering av takstein",
-        "description": "Etter vask beskytter vi steinen med NowoCoat/Surfatech – mot fukt og ny mosevekst i mange år.",
+        "description": "Fra 40 kr/m² + mva. Etter vask beskytter vi steinen med NowoCoat/Surfatech – mot fukt og ny mosevekst i mange år.",
         "featured": true
       },
       "paint": {
         "title": "Maling av takstein",
-        "description": "Spesialmaling i ønsket farge gir varig beskyttelse og et tak som ser nytt ut.",
+        "description": "Fra 220 kr/m² + mva. Spesialmaling i ønsket farge gir varig beskyttelse og et tak som ser nytt ut.",
         "featured": true
       },
       "maintenance": {

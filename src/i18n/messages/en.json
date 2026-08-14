@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Roof renewal – wash, impregnation & painting",
-    "description": "We renew Norwegian roofs with washing, impregnation and painting – or install a brand-new roof. Fixed price, free inspection and up to 10-year warranty."
+    "description": "Roof washing from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. Free inspection and up to 10-year warranty."
   },
   "nav": {
     "home": "Home",
@@ -43,7 +43,7 @@
   "services": {
     "eyebrow": "Services",
     "title": "Everything your roof needs",
-    "subtitle": "From washing and moss removal to impregnation, painting and a new roof – fixed pricing and a clear plan.",
+    "subtitle": "Roof washing from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT – with fixed pricing and a clear plan.",
     "showMore": "Show more services",
     "showLess": "Show less",
     "items": {
@@ -59,17 +59,17 @@
       },
       "wash": {
         "title": "Roof washing & moss removal",
-        "description": "Gentle high-pressure washing that removes moss, algae and dirt without damaging the tiles.",
+        "description": "From NOK 100/m² + VAT. Gentle high-pressure washing that removes moss, algae and dirt without damaging the tiles.",
         "featured": true
       },
       "impregnation": {
         "title": "Tile impregnation",
-        "description": "After washing we protect the tiles with NowoCoat/Surfatech – against moisture and new moss for years.",
+        "description": "From NOK 40/m² + VAT. After washing we protect the tiles with NowoCoat/Surfatech – against moisture and new moss for years.",
         "featured": true
       },
       "paint": {
         "title": "Tile painting",
-        "description": "Specialist coating in your chosen colour gives lasting protection and a roof that looks new.",
+        "description": "From NOK 220/m² + VAT. Specialist coating in your chosen colour gives lasting protection and a roof that looks new.",
         "featured": true
       },
       "maintenance": {

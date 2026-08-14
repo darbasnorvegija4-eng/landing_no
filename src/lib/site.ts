@@ -20,7 +20,7 @@ export const siteConfig = {
     maxSqm: 500,
     defaultSqm: 150,
     newRoofPerSqm: 2500,
-    renewalPerSqm: 750,
+    renewalPerSqm: 360,
   },
   trust: {
     sqmRenewed: "2.000.000+",
