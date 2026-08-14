@@ -98,6 +98,17 @@
     background: var(--accent);
     color: var(--accent-foreground);
   }
+
+  select.service-select {
+    color-scheme: dark;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--foreground);
+  }
+
+  select.service-select option {
+    background-color: var(--background-elevated);
+    color: var(--foreground);
+  }
 }
 
 @layer utilities {

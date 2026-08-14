@@ -1,5 +1,6 @@
 const LABELS_NO: Record<string, string> = {
   takvask: "Takvask",
+  takvask_impregnering: "Takvask + impregnering",
   impregnering: "Impregnering",
   takmaling: "Takmaling",
   nytt_tak: "Nytt tak",
