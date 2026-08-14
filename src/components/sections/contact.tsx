@@ -20,6 +20,7 @@ import {
   turnstileConfigured,
 } from "@/components/leads/turnstile-widget";
 import { trackLeadConversion } from "@/components/analytics/marketing-analytics";
+import { CertificationBadges } from "@/components/trust/certification-badges";
 
 const MAX_PHOTOS = 15;
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
@@ -559,6 +560,8 @@ export function ContactSection() {
               </div>
             </li>
           </ul>
+
+          <CertificationBadges className="mt-8 max-w-[505px]" />
         </Reveal>
 
         <Reveal delay={0.1}>
