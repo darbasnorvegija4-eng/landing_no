@@ -7,14 +7,14 @@ type CertificationBadgesProps = {
 
 export function CertificationBadges({ className }: CertificationBadgesProps) {
   return (
-    <div className={cn("overflow-hidden rounded-2xl bg-[#0c0e12]", className)}>
+    <div className={cn("overflow-hidden rounded-2xl", className)}>
       <Image
         src="/certifications/sertifisert-og-godkjent.png"
         alt="Sertifisert og godkjent: Sentralt godkjent, StartBANK og Miljøfyrtårn"
         width={1839}
         height={855}
         sizes="(max-width: 640px) calc(100vw - 2rem), 505px"
-        className="h-auto w-full"
+        className="h-auto w-full mix-blend-lighten"
         loading="lazy"
         quality={90}
       />
