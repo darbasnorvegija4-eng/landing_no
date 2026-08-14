@@ -17,6 +17,7 @@ import { contactMethodSchema } from "@/lib/lead-contact-validation";
 
 const inquiryTypes = [
   "takvask",
+  "takvask_impregnering",
   "impregnering",
   "takmaling",
   "nytt_tak",

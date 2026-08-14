@@ -57,6 +57,10 @@ export const Leads: CollectionConfig = {
       access: adminManagedField,
       options: [
         { label: "Takvask", value: "takvask" },
+        {
+          label: "Takvask + impregnering",
+          value: "takvask_impregnering",
+        },
         { label: "Impregnering", value: "impregnering" },
         { label: "Takmaling", value: "takmaling" },
         { label: "Nytt tak", value: "nytt_tak" },

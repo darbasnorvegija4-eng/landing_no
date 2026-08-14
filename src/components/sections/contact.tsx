@@ -29,6 +29,7 @@ const UPLOAD_CONCURRENCY = 2;
 
 const inquiryTypes = [
   "takvask",
+  "takvask_impregnering",
   "impregnering",
   "takmaling",
   "nytt_tak",
@@ -249,6 +250,8 @@ export function ContactSection() {
 
   const typeLabels: Record<InquiryType, string> = {
     takvask: copy.contact.form.typeWash,
+    takvask_impregnering:
+      locale === "no" ? "Takvask + impregnering" : "Roof wash + impregnation",
     impregnering: copy.contact.form.typeImpregnation,
     takmaling: copy.contact.form.typePaint,
     nytt_tak: copy.contact.form.typeNew,
@@ -612,7 +615,7 @@ export function ContactSection() {
                     onChange={(e) =>
                       update("type", e.target.value as InquiryType)
                     }
-                    className="text-foreground focus-visible:border-accent/50 focus-visible:ring-accent/30 flex h-11 w-full rounded-xl border border-white/10 bg-black/30 px-3 text-sm outline-none focus-visible:ring-2"
+                    className="service-select text-foreground focus-visible:border-accent/50 focus-visible:ring-accent/30 flex h-11 w-full rounded-xl border border-white/10 bg-black/50 px-3 text-sm outline-none focus-visible:ring-2"
                   >
                     {inquiryTypes.map((value) => (
                       <option key={value} value={value}>
