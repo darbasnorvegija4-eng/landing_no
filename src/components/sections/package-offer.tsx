@@ -20,13 +20,13 @@ const content = {
       {
         name: "Basic",
         title: "Takvask",
-        price: "99",
+        price: "100",
         features: ["Taksjekk", "Mosebehandling", "Skånsom takvask"],
       },
       {
         name: "Standard",
         title: "Vask + impregnering",
-        price: "138",
+        price: "140",
         featured: true,
         features: [
           "Alt i Basic",
@@ -37,7 +37,7 @@ const content = {
       {
         name: "Premium",
         title: "Komplett takfornying",
-        price: "337",
+        price: "360",
         features: [
           "Alt i Standard",
           "Profesjonell takmaling",
@@ -61,13 +61,13 @@ const content = {
       {
         name: "Basic",
         title: "Roof cleaning",
-        price: "99",
+        price: "100",
         features: ["Roof inspection", "Moss treatment", "Gentle roof cleaning"],
       },
       {
         name: "Standard",
         title: "Cleaning + impregnation",
-        price: "138",
+        price: "140",
         featured: true,
         features: [
           "Everything in Basic",
@@ -78,7 +78,7 @@ const content = {
       {
         name: "Premium",
         title: "Complete roof renewal",
-        price: "337",
+        price: "360",
         features: [
           "Everything in Standard",
           "Professional roof painting",
