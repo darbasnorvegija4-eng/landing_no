@@ -8,7 +8,6 @@ import {
   useSiteSettings,
 } from "@/components/site-settings-provider";
 import { MarketingSettingsButton } from "@/components/analytics/marketing-analytics";
-import { CertificationBadges } from "@/components/trust/certification-badges";
 
 export function Footer() {
   const copy = usePageCopy();
@@ -108,10 +107,6 @@ export function Footer() {
             </li>
           </ul>
         </div>
-      </div>
-
-      <div className="container-narrow px-4 pb-12 sm:px-6 lg:px-8 lg:pb-16">
-        <CertificationBadges className="mx-auto max-w-[505px]" />
       </div>
 
       <div className="border-t border-white/5">
