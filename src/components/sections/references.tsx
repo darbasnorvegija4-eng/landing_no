@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useLocale } from "next-intl";
 import { Reveal } from "@/components/ui/reveal";
 import { usePageCopy } from "@/components/site-settings-provider";
 import type { CmsProject } from "@/lib/cms-content";
 import { optimizeRemoteImageUrl } from "@/lib/images";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/routing";
 
 type Props = {
   projects: CmsProject[];
@@ -75,6 +77,14 @@ export function ReferencesSection({ projects }: Props) {
                 {copy.references.note}
               </p>
             ) : null}
+            <Button asChild size="lg" className="mt-6">
+              <Link href="/#kontakt">
+                {locale === "no"
+                  ? "Få gratis taksjekk og pristilbud"
+                  : "Get a free roof inspection and quote"}
+                <ArrowRight />
+              </Link>
+            </Button>
           </div>
         </Reveal>
 

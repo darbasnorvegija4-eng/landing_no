@@ -40,7 +40,12 @@ export function leadPdfFilename(input: LeadEmailInput) {
   return `henvendelse-${input.id}-${slugName(input.name)}.pdf`;
 }
 
-function wrapLines(text: string, font: PDFFont, size: number, maxWidth: number): string[] {
+function wrapLines(
+  text: string,
+  font: PDFFont,
+  size: number,
+  maxWidth: number,
+): string[] {
   const safe = toPdfText(text);
   const paragraphs = safe.split(/\r?\n/);
   const lines: string[] = [];
@@ -89,7 +94,11 @@ function wrapLines(text: string, font: PDFFont, size: number, maxWidth: number):
   return lines;
 }
 
-function attachUriLink(page: PDFPage, uri: string, rect: [number, number, number, number]) {
+function attachUriLink(
+  page: PDFPage,
+  uri: string,
+  rect: [number, number, number, number],
+) {
   const linkRef = page.doc.context.register(
     page.doc.context.obj({
       Type: "Annot",
@@ -163,7 +172,8 @@ export async function buildLeadPdf(input: LeadEmailInput): Promise<Uint8Array> {
   };
 
   const drawField = (label: string, value?: string | number | null) => {
-    if (value === undefined || value === null || String(value).trim() === "") return;
+    if (value === undefined || value === null || String(value).trim() === "")
+      return;
     const size = 11;
     const labelText = `${label}: `;
     const labelWidth = fontBold.widthOfTextAtSize(toPdfText(labelText), size);
@@ -256,7 +266,12 @@ export async function buildLeadPdf(input: LeadEmailInput): Promise<Uint8Array> {
     timeStyle: "short",
   });
 
-  drawLines("TAKFORNYELSE", { size: 10, bold: true, color: accent, gapAfter: 4 });
+  drawLines("TAKFORNYELSE", {
+    size: 10,
+    bold: true,
+    color: accent,
+    gapAfter: 4,
+  });
   drawLines("Ny henvendelse", { size: 20, bold: true, gapAfter: 2 });
   drawLines(`Lead #${input.id}  |  ${created}`, {
     size: 10,
@@ -284,6 +299,12 @@ export async function buildLeadPdf(input: LeadEmailInput): Promise<Uint8Array> {
   drawField("Ca. m2", input.approxSqm);
   drawField("Språk", languageLabelNo(input.locale));
   drawField("Antall bilder", String(input.photoUrls.length));
+  drawField("UTM-kilde", input.utmSource);
+  drawField("UTM-medium", input.utmMedium);
+  drawField("Kampanje", input.utmCampaign);
+  drawField("Annonse", input.utmContent);
+  drawField("Søkeord", input.utmTerm);
+  drawField("Landingsside", input.landingPage);
 
   if (input.message?.trim()) {
     y -= 4;

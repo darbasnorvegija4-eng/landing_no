@@ -1,7 +1,8 @@
 import { siteConfig } from "@/lib/site";
 import { inquiryTypeLabelNo, languageLabelNo } from "@/lib/inquiry-labels";
+import type { LeadAttribution } from "@/lib/lead-attribution";
 
-export type LeadEmailInput = {
+export type LeadEmailInput = LeadAttribution & {
   id: string | number;
   token: string;
   name: string;
@@ -15,6 +16,18 @@ export type LeadEmailInput = {
   message?: string;
   photoUrls: string[];
 };
+
+function attributionSummary(input: LeadEmailInput) {
+  const source = [input.utmSource, input.utmMedium].filter(Boolean).join(" / ");
+  return (
+    source ||
+    (input.gclid || input.gbraid || input.wbraid
+      ? "Google Ads"
+      : input.fbclid
+        ? "Meta"
+        : "Direct / unknown")
+  );
+}
 
 function escapeHtml(value: string) {
   return value
@@ -77,6 +90,15 @@ export function buildLeadEmailText(input: LeadEmailInput) {
     input.approxSqm ? `Ca. m²: ${input.approxSqm}` : null,
     `Tjeneste: ${inquiryTypeLabelNo(input.type)}`,
     `Språk: ${languageLabelNo(input.locale)}`,
+    `Reklamekilde: ${attributionSummary(input)}`,
+    input.utmCampaign ? `Kampanje: ${input.utmCampaign}` : null,
+    input.utmContent ? `Annonseinnhold: ${input.utmContent}` : null,
+    input.utmTerm ? `Søkeord: ${input.utmTerm}` : null,
+    input.landingPage ? `Landingsside: ${input.landingPage}` : null,
+    input.referrer ? `Henviser: ${input.referrer}` : null,
+    input.marketingConsent
+      ? `Markedsføringssamtykke: ${input.marketingConsent}`
+      : null,
     input.photoUrls.length
       ? `Bilder: ${input.photoUrls.length} – ${gallery}`
       : null,
@@ -165,6 +187,10 @@ export function buildLeadEmailHtml(input: LeadEmailInput) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 ${input.approxSqm ? row("Ca. m²", String(input.approxSqm)) : ""}
                 ${row("Språk", languageLabelNo(input.locale))}
+                ${row("Reklamekilde", escapeHtml(attributionSummary(input)))}
+                ${input.utmCampaign ? row("Kampanje", escapeHtml(input.utmCampaign)) : ""}
+                ${input.utmContent ? row("Annonse", escapeHtml(input.utmContent)) : ""}
+                ${input.utmTerm ? row("Søkeord", escapeHtml(input.utmTerm)) : ""}
                 ${
                   input.message?.trim()
                     ? row(
