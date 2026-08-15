@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { useLocale } from "next-intl";
 import { toast } from "sonner";
@@ -19,8 +19,16 @@ import {
   TurnstileWidget,
   turnstileConfigured,
 } from "@/components/leads/turnstile-widget";
-import { trackLeadConversion } from "@/components/analytics/marketing-analytics";
+import {
+  getMarketingConsentChoice,
+  trackLeadConversion,
+  trackLeadFormEvent,
+} from "@/components/analytics/marketing-analytics";
 import { CertificationBadges } from "@/components/trust/certification-badges";
+import {
+  captureLeadAttribution,
+  type LeadAttribution,
+} from "@/lib/lead-attribution";
 
 const MAX_PHOTOS = 15;
 const MAX_SOURCE_BYTES = 20 * 1024 * 1024;
@@ -246,8 +254,17 @@ export function ContactSection() {
   const activeRef = useRef(0);
   const uploadTicketRef = useRef<string | null>(null);
   const turnstileTokenRef = useRef<string | null>(null);
+  const attributionRef = useRef<LeadAttribution>({});
+  const formStartedRef = useRef(false);
   photosRef.current = photos;
   turnstileTokenRef.current = turnstileToken;
+
+  useEffect(() => {
+    attributionRef.current = captureLeadAttribution(
+      window.location.href,
+      document.referrer,
+    );
+  }, []);
 
   const typeLabels: Record<InquiryType, string> = {
     takvask: copy.contact.form.typeWash,
@@ -367,14 +384,27 @@ export function ContactSection() {
       type: form.type,
     });
     if (!parsed.success) {
+      trackLeadFormEvent("lead_form_validation_error", {
+        step: 1,
+        inquiryType: form.type,
+        errorType: "required_fields",
+      });
       toast.error(copy.contact.form.required);
       return;
     }
+    trackLeadFormEvent("lead_form_step_complete", {
+      step: 1,
+      inquiryType: parsed.data.type,
+    });
     setStep(2);
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    trackLeadFormEvent("lead_form_submit_attempt", {
+      step: 2,
+      inquiryType: form.type,
+    });
 
     const step1 = step1Schema.safeParse({
       name: form.name,
@@ -383,6 +413,11 @@ export function ContactSection() {
       type: form.type,
     });
     if (!step1.success) {
+      trackLeadFormEvent("lead_form_validation_error", {
+        step: 1,
+        inquiryType: form.type,
+        errorType: "required_fields",
+      });
       setStep(1);
       toast.error(copy.contact.form.required);
       return;
@@ -403,10 +438,20 @@ export function ContactSection() {
       } else {
         toast.error(copy.contact.form.required);
       }
+      trackLeadFormEvent("lead_form_validation_error", {
+        step: 2,
+        inquiryType: step1.data.type,
+        errorType: String(issue?.path[0] || "required_fields"),
+      });
       return;
     }
 
     if (!hasContactMethod(step1.data.phone, step2.data.email || "")) {
+      trackLeadFormEvent("lead_form_validation_error", {
+        step: 2,
+        inquiryType: step1.data.type,
+        errorType: "contact_method",
+      });
       toast.error(
         locale === "no"
           ? "Oppgi telefon, e-post eller begge."
@@ -457,6 +502,8 @@ export function ContactSection() {
           turnstileToken: turnstileToken || undefined,
           consent: true as const,
           consentText,
+          ...attributionRef.current,
+          marketingConsent: getMarketingConsentChoice(),
           website: honeypot.website,
           company_url_hp: honeypot.company_url_hp,
         }),
@@ -567,6 +614,14 @@ export function ContactSection() {
         <Reveal delay={0.1}>
           <form
             onSubmit={onSubmit}
+            onFocusCapture={() => {
+              if (formStartedRef.current) return;
+              formStartedRef.current = true;
+              trackLeadFormEvent("lead_form_start", {
+                step: 1,
+                inquiryType: form.type,
+              });
+            }}
             className="surface-card relative space-y-4 p-5 sm:p-8"
             noValidate
           >

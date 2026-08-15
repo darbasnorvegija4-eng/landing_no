@@ -15,6 +15,9 @@ import { verifyTurnstile } from "@/lib/turnstile";
 import { captureException } from "@/lib/monitoring";
 import { contactMethodSchema } from "@/lib/lead-contact-validation";
 
+const optionalAttributionText = (max: number) =>
+  z.string().trim().max(max).optional();
+
 const inquiryTypes = [
   "takvask",
   "takvask_impregnering",
@@ -50,6 +53,19 @@ const leadSchema = z
     turnstileToken: z.string().max(2048).optional(),
     consent: z.literal(true),
     consentText: z.string().min(10).max(1000),
+    utmSource: optionalAttributionText(255),
+    utmMedium: optionalAttributionText(255),
+    utmCampaign: optionalAttributionText(255),
+    utmContent: optionalAttributionText(255),
+    utmTerm: optionalAttributionText(255),
+    gclid: optionalAttributionText(512),
+    gbraid: optionalAttributionText(512),
+    wbraid: optionalAttributionText(512),
+    fbclid: optionalAttributionText(512),
+    msclkid: optionalAttributionText(512),
+    landingPage: optionalAttributionText(1000),
+    referrer: optionalAttributionText(1000),
+    marketingConsent: z.enum(["granted", "denied", "unknown"]).optional(),
   })
   .refine((data) => contactMethodSchema.safeParse(data).success, {
     message: "Phone or email is required",
@@ -171,6 +187,19 @@ export async function POST(request: Request) {
       roofSize,
       photoUrls = [],
       consentText,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      utmContent,
+      utmTerm,
+      gclid,
+      gbraid,
+      wbraid,
+      fbclid,
+      msclkid,
+      landingPage,
+      referrer,
+      marketingConsent,
       ...rest
     } = parsed.data;
 
@@ -192,6 +221,19 @@ export async function POST(request: Request) {
         ...(photoUrls.length ? { photoUrls: photoUrls.join("\n") } : {}),
         consentAt: new Date().toISOString(),
         consentText,
+        ...(utmSource ? { utmSource } : {}),
+        ...(utmMedium ? { utmMedium } : {}),
+        ...(utmCampaign ? { utmCampaign } : {}),
+        ...(utmContent ? { utmContent } : {}),
+        ...(utmTerm ? { utmTerm } : {}),
+        ...(gclid ? { gclid } : {}),
+        ...(gbraid ? { gbraid } : {}),
+        ...(wbraid ? { wbraid } : {}),
+        ...(fbclid ? { fbclid } : {}),
+        ...(msclkid ? { msclkid } : {}),
+        ...(landingPage ? { landingPage } : {}),
+        ...(referrer ? { referrer } : {}),
+        ...(marketingConsent ? { marketingConsent } : {}),
         status: "new",
       },
       overrideAccess: true,
@@ -212,6 +254,19 @@ export async function POST(request: Request) {
         approxSqm && Number.isFinite(approxSqm) ? approxSqm : undefined,
       message,
       photoUrls,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      utmContent,
+      utmTerm,
+      gclid,
+      gbraid,
+      wbraid,
+      fbclid,
+      msclkid,
+      landingPage,
+      referrer,
+      marketingConsent,
     };
 
     if (process.env.RESEND_API_KEY) {

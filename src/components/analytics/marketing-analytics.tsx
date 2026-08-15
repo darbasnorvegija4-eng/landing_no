@@ -14,7 +14,7 @@ const googleAdsLeadLabel =
 const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
 const marketingConfigured = Boolean(googleAdsId || metaPixelId);
 
-type ConsentChoice = "granted" | "denied";
+export type ConsentChoice = "granted" | "denied";
 type MetaPixelFunction = ((...args: unknown[]) => void) & {
   callMethod?: (...args: unknown[]) => void;
   queue: unknown[][];
@@ -37,6 +37,46 @@ function sendGoogleEvent(name: string, params?: Record<string, unknown>) {
 
 function sendMetaEvent(name: string, params?: Record<string, unknown>) {
   window.fbq?.("track", name, params || {});
+}
+
+function sendMetaCustomEvent(name: string, params?: Record<string, unknown>) {
+  window.fbq?.("trackCustom", name, params || {});
+}
+
+export function getMarketingConsentChoice(): ConsentChoice | "unknown" {
+  if (typeof window === "undefined") return "unknown";
+  const stored = window.localStorage.getItem(CONSENT_STORAGE_KEY);
+  return stored === "granted" || stored === "denied" ? stored : "unknown";
+}
+
+type LeadFormEvent =
+  | "lead_form_start"
+  | "lead_form_step_complete"
+  | "lead_form_submit_attempt"
+  | "lead_form_validation_error";
+
+const metaLeadFormEvents: Record<LeadFormEvent, string> = {
+  lead_form_start: "LeadFormStart",
+  lead_form_step_complete: "LeadFormStepComplete",
+  lead_form_submit_attempt: "LeadFormSubmitAttempt",
+  lead_form_validation_error: "LeadFormValidationError",
+};
+
+export function trackLeadFormEvent(
+  name: LeadFormEvent,
+  params?: {
+    step?: number;
+    inquiryType?: string;
+    errorType?: string;
+  },
+) {
+  const eventParams = {
+    ...(params?.step ? { form_step: params.step } : {}),
+    ...(params?.inquiryType ? { inquiry_type: params.inquiryType } : {}),
+    ...(params?.errorType ? { error_type: params.errorType } : {}),
+  };
+  sendGoogleEvent(name, eventParams);
+  sendMetaCustomEvent(metaLeadFormEvents[name], eventParams);
 }
 
 export function trackLeadConversion(params?: { inquiryType?: string }) {
