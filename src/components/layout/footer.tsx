@@ -9,9 +9,45 @@ import {
 } from "@/components/site-settings-provider";
 import { MarketingSettingsButton } from "@/components/analytics/marketing-analytics";
 
+const serviceLinks = [
+  { href: "/takvask", no: "Takvask", en: "Roof cleaning" },
+  {
+    href: "/takvask-og-impregnering",
+    no: "Vask og impregnering",
+    en: "Cleaning and impregnation",
+  },
+  { href: "/takmaling", no: "Takmaling", en: "Roof coating" },
+  { href: "/takfornying", no: "Takfornying", en: "Roof renewal" },
+  { href: "/priser", no: "Priser", en: "Prices" },
+] as const;
+
+const areaLinks = [
+  { href: "/takvask-oslo", no: "Takvask i Oslo", en: "Roof cleaning in Oslo" },
+  {
+    href: "/takfornying-baerum",
+    no: "Takfornying i Bærum",
+    en: "Roof renewal in Bærum",
+  },
+  {
+    href: "/takmaling-drammen",
+    no: "Takmaling i Drammen",
+    en: "Roof coating in Drammen",
+  },
+  {
+    href: "/takvask-og-impregnering-lillestrom",
+    no: "Takvask i Lillestrøm",
+    en: "Roof cleaning in Lillestrøm",
+  },
+  {
+    href: "/takfornying-viken",
+    no: "Takfornying i Viken",
+    en: "Roof renewal in Viken",
+  },
+] as const;
+
 export function Footer() {
   const copy = usePageCopy();
-  const locale = useLocale();
+  const locale = useLocale() as "no" | "en";
   const settings = useSiteSettings();
   const year = new Date().getFullYear();
 
@@ -33,7 +69,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-[#080a0e] pb-24 md:pb-0">
-      <div className="container-narrow section-pad grid gap-10 md:grid-cols-3">
+      <div className="container-narrow section-pad grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
         <div className="space-y-4">
           <Link
             href="/"
@@ -82,6 +118,42 @@ export function Footer() {
 
         <div>
           <p className="mb-4 text-sm font-semibold tracking-wider uppercase">
+            {locale === "no" ? "Tjenester" : "Services"}
+          </p>
+          <ul className="space-y-2">
+            {serviceLinks.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-muted-foreground hover:text-accent text-sm transition-colors"
+                >
+                  {item[locale]}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="mb-4 text-sm font-semibold tracking-wider uppercase">
+            {locale === "no" ? "Områder" : "Areas"}
+          </p>
+          <ul className="space-y-2">
+            {areaLinks.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="text-muted-foreground hover:text-accent text-sm transition-colors"
+                >
+                  {item[locale]}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="mb-4 text-sm font-semibold tracking-wider uppercase">
             {copy.footer.contact}
           </p>
           <ul className="text-muted-foreground space-y-2 text-sm">
@@ -116,7 +188,7 @@ export function Footer() {
           </p>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href="/personvern" className="hover:text-accent">
-              {settings.privacy.linkLabel[locale as "no" | "en"]}
+              {settings.privacy.linkLabel[locale]}
             </Link>
             <MarketingSettingsButton />
           </div>
