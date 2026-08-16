@@ -1031,7 +1031,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Viken dekker kyst, dalfører, byområder og skogsnære boliger med svært ulike vær- og fuktforhold. Vi bruker befaringen til å velge riktig nivå og viser dokumenterte resultater fra et 240 m² takmalingsprosjekt i regionen.",
       "Viken spans coast, valleys, urban areas and homes near woodland with varied weather and moisture. We use the inspection to select the right level and show documented results from a 240 m² coating project in the region.",
     ),
-    image: "/references/takmaling-viken/before-1.webp",
+    image: "/references/takmaling-viken/before-1-mossy.webp",
     imageAlt: l(
       "Dokumentert 240 m² tak i Viken før takfornying",
       "Documented 240 m² roof in Viken before renewal",
