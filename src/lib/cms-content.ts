@@ -274,6 +274,22 @@ function mediaFromUploadOrUrl(
   return fallbackUrl ? { url: fallbackUrl, alt: fallback.alt } : fallback;
 }
 
+const projectImageOverrides: Record<string, string> = {
+  "/references/takmaling-viken/before-1.webp":
+    "/references/takmaling-viken/before-1-mossy.webp",
+};
+
+function projectMediaFromUploadOrUrl(
+  media: MediaLike,
+  url: string | null | undefined,
+  fallback: CmsMedia,
+): CmsMedia {
+  const resolved = mediaFromUploadOrUrl(media, url, fallback, "card");
+  const override = projectImageOverrides[resolved.url];
+
+  return override ? { ...resolved, url: override } : resolved;
+}
+
 function parseOpeningDays(
   value: string | null | undefined,
   fallback: string[],
@@ -517,11 +533,10 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
               }) => ({
                 label: stage.label,
                 caption: { no: stage.captionNo, en: stage.captionEn },
-                image: mediaFromUploadOrUrl(
+                image: projectMediaFromUploadOrUrl(
                   stage.image,
                   stage.imageUrl,
                   fallback.settings.images.hero,
-                  "card",
                 ),
               }),
             ),

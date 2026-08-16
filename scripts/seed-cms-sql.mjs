@@ -187,7 +187,7 @@ const projects = [
     stages: [
       {
         label: "before",
-        imageUrl: "/references/takmaling-viken/before-1.webp",
+        imageUrl: "/references/takmaling-viken/before-1-mossy.webp",
         captionNo: "Falmet betongtakstein før maling",
         captionEn: "Faded concrete tiles before painting",
       },
