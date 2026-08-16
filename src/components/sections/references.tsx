@@ -3,7 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowRight, ChevronLeft, ChevronRight, X } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  X,
+} from "lucide-react";
 import { useLocale } from "next-intl";
 import { Reveal } from "@/components/ui/reveal";
 import { usePageCopy } from "@/components/site-settings-provider";
@@ -24,6 +30,8 @@ type LightboxState = {
   index: number;
 };
 
+const stageOrder = ["before", "during", "after"] as const;
+
 function groupStages(stages: Stage[]) {
   return {
     before: stages.filter((stage) => stage.label === "before"),
@@ -38,10 +46,13 @@ export function ReferencesSection({ projects }: Props) {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
   const openStage = (project: CmsProject, stage: Stage) => {
-    const index = project.stages.indexOf(stage);
+    const orderedStages = stageOrder.flatMap((label) =>
+      project.stages.filter((item) => item.label === label),
+    );
+    const index = orderedStages.indexOf(stage);
     setLightbox({
       title: project.title[locale],
-      stages: project.stages,
+      stages: orderedStages,
       index: index >= 0 ? index : 0,
     });
   };
@@ -85,26 +96,39 @@ export function ReferencesSection({ projects }: Props) {
               >
                 <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
                   <div className="border-b border-white/10 px-4 py-4 sm:px-5">
-                    <h3 className="font-semibold">{project.title[locale]}</h3>
+                    <p className="text-accent text-[10px] font-bold tracking-[0.18em] uppercase">
+                      {locale === "no" ? "Prosjekt" : "Project"}{" "}
+                      {projectIndex + 1} / {projects.length}
+                    </p>
+                    <h3 className="mt-1 font-semibold">
+                      {project.title[locale]}
+                    </h3>
                     <p className="text-muted-foreground mt-1 text-xs">
                       {locale === "no"
-                        ? "Bildene er gruppert etter status – trykk for å se hele bildet"
-                        : "Photos are grouped by status – tap to view the full image"}
+                        ? "Følg arbeidet fra tilstand før start til ferdig resultat"
+                        : "Follow the work from the initial condition to the finished result"}
                     </p>
                   </div>
 
-                  <div className="space-y-5 p-3 sm:space-y-6 sm:p-4">
-                    {(["before", "after", "during"] as const).map((label) =>
-                      groups[label].length > 0 ? (
-                        <StageGroup
+                  <div
+                    className={`grid gap-3 p-3 sm:gap-4 sm:p-4 ${
+                      groups.during.length > 0
+                        ? "lg:grid-cols-3"
+                        : "lg:grid-cols-2"
+                    }`}
+                  >
+                    {stageOrder
+                      .filter((label) => groups[label].length > 0)
+                      .map((label, stageIndex) => (
+                        <StageColumn
                           key={`${project.id}-${label}`}
                           stages={groups[label]}
                           label={copy.references[label]}
                           locale={locale}
+                          step={stageIndex + 1}
                           onOpen={(stage) => openStage(project, stage)}
                         />
-                      ) : null,
-                    )}
+                      ))}
                   </div>
                 </article>
               </Reveal>
@@ -128,53 +152,74 @@ export function ReferencesSection({ projects }: Props) {
   );
 }
 
-function StageGroup({
+function StageColumn({
   stages,
   label,
   locale,
+  step,
   onOpen,
 }: {
   stages: Stage[];
   label: string;
   locale: "no" | "en";
+  step: number;
   onOpen: (stage: Stage) => void;
 }) {
+  const countLabel =
+    locale === "no"
+      ? stages.length === 1
+        ? "1 bilde"
+        : `${stages.length} bilder`
+      : stages.length === 1
+        ? "1 photo"
+        : `${stages.length} photos`;
+
   return (
-    <div>
-      <div className="mb-2 flex items-center gap-2 sm:mb-3">
-        <span className="bg-primary size-1.5 rounded-full" aria-hidden />
-        <h4 className="text-xs font-semibold tracking-wider text-white/75 uppercase">
-          {label}
-        </h4>
+    <section className="rounded-xl border border-white/10 bg-white/[0.025] p-2.5 sm:p-3">
+      <div className="mb-3 flex items-center gap-2.5 border-b border-white/10 pb-3">
+        <span className="bg-accent text-accent-foreground inline-flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold">
+          {step}
+        </span>
+        <div>
+          <h4 className="text-xs font-bold tracking-wider text-white uppercase">
+            {label}
+          </h4>
+          <p className="text-muted-foreground mt-0.5 text-[11px]">
+            {countLabel}
+          </p>
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+      <div className="space-y-3">
         {stages.map((stage, index) => (
-          <PhotoCell
+          <PhotoCard
             key={`${stage.image.url}-${index}`}
             stage={stage}
             label={label}
             locale={locale}
+            position={index + 1}
+            total={stages.length}
             onOpen={() => onOpen(stage)}
-            wide={stages.length % 2 === 1 && index === stages.length - 1}
           />
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-function PhotoCell({
+function PhotoCard({
   stage,
   label,
   locale,
+  position,
+  total,
   onOpen,
-  wide = false,
 }: {
   stage: Stage;
   label: string;
   locale: "no" | "en";
+  position: number;
+  total: number;
   onOpen: () => void;
-  wide?: boolean;
 }) {
   const src = optimizeRemoteImageUrl(stage.image.url, {
     width: 1200,
@@ -182,49 +227,49 @@ function PhotoCell({
   });
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className={`group relative overflow-hidden rounded-xl border border-white/10 bg-[#15171c] text-left ${
-        wide ? "aspect-[4/3] sm:col-span-2 sm:aspect-video" : "aspect-[4/3]"
-      }`}
-      aria-label={stage.caption[locale]}
-    >
-      <Image
-        src={src}
-        alt=""
-        width={1200}
-        height={900}
-        sizes="(max-width: 640px) 100vw, 1120px"
-        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-2xl"
-        loading="lazy"
-        aria-hidden
-      />
-      <div className="absolute inset-0 bg-black/20" aria-hidden />
-      <Image
-        src={src}
-        alt={stage.image.alt || stage.caption[locale]}
-        width={1200}
-        height={900}
-        sizes={
-          wide
-            ? "(max-width: 640px) 100vw, 1120px"
-            : "(max-width: 640px) 50vw, 420px"
-        }
-        className="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
-        loading="lazy"
-      />
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
-        aria-hidden
-      />
-      <span className="absolute top-2 left-2 inline-flex rounded-md bg-black/55 px-2 py-1 text-[10px] font-bold tracking-wider text-white uppercase backdrop-blur-sm sm:top-3 sm:left-3 sm:text-[11px]">
-        {label}
-      </span>
-      <p className="absolute inset-x-2 bottom-2 line-clamp-2 text-[11px] leading-snug font-medium text-white/95 sm:inset-x-3 sm:bottom-3 sm:text-sm">
-        {stage.caption[locale]}
-      </p>
-    </button>
+    <figure className="overflow-hidden rounded-lg border border-white/10 bg-[#15171c]">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="group relative block aspect-[4/3] w-full overflow-hidden text-left"
+        aria-label={stage.caption[locale]}
+      >
+        <Image
+          src={src}
+          alt=""
+          width={1200}
+          height={900}
+          sizes="(max-width: 1024px) 100vw, 360px"
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-2xl"
+          loading="lazy"
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-black/20" aria-hidden />
+        <Image
+          src={src}
+          alt={stage.image.alt || stage.caption[locale]}
+          width={1200}
+          height={900}
+          sizes="(max-width: 1024px) 100vw, 360px"
+          className="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+          loading="lazy"
+        />
+        <span className="absolute top-2 right-2 inline-flex size-8 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-sm">
+          <Maximize2 className="size-3.5" aria-hidden />
+          <span className="sr-only">
+            {locale === "no" ? "Vis hele bildet" : "View full image"}
+          </span>
+        </span>
+      </button>
+      <figcaption className="min-h-[4.5rem] border-t border-white/10 px-3 py-2.5">
+        <p className="text-accent text-[10px] font-bold tracking-wider uppercase">
+          {label} {position} / {total}
+        </p>
+        <p className="mt-1 text-xs leading-snug font-medium text-white/90 sm:text-sm">
+          {stage.caption[locale]}
+        </p>
+      </figcaption>
+    </figure>
   );
 }
 
