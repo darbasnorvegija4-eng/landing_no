@@ -170,7 +170,7 @@ export const projects = [
     stages: [
       {
         label: "before" as const,
-        image: "/references/takmaling-viken/before-1.webp",
+        image: "/references/takmaling-viken/before-1-mossy.webp",
         caption: {
           no: "Falmet betongtakstein før maling",
           en: "Faded concrete tiles before painting",
