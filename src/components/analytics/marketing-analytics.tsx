@@ -8,9 +8,22 @@ import { Link } from "@/i18n/routing";
 const CONSENT_STORAGE_KEY = "takfornyelse_marketing_consent";
 const OPEN_CONSENT_EVENT = "takfornyelse:open-marketing-consent";
 
+const TAKPROFF_GOOGLE_ADS_ID = "AW-18213788044";
+const TAKPROFF_ACTIVE_LEAD_LABEL = "DA32CPiP8N4cEIyzge1D";
+const TAKPROFF_INACTIVE_LEAD_LABEL = "oHJeCIutstUcEIyzge1D";
+
 const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim();
-const googleAdsLeadLabel =
+const configuredGoogleAdsLeadLabel =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL?.trim();
+
+// The inactive label was briefly configured in production. Keep the override
+// until every deployment environment has been updated to the active Takproff
+// conversion action so completed forms cannot be sent to the wrong goal.
+const googleAdsLeadLabel =
+  googleAdsId === TAKPROFF_GOOGLE_ADS_ID &&
+  configuredGoogleAdsLeadLabel === TAKPROFF_INACTIVE_LEAD_LABEL
+    ? TAKPROFF_ACTIVE_LEAD_LABEL
+    : configuredGoogleAdsLeadLabel;
 const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID?.trim();
 const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
 const marketingConfigured = Boolean(
