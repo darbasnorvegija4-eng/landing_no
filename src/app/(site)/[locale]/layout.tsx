@@ -59,9 +59,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: meta.description,
     applicationName: content.settings.brandName,
     icons: {
-      icon: [{ url: "/icon", type: "image/png" }],
-      apple: [{ url: "/apple-icon", type: "image/png" }],
+      icon: [{ url: "/icon.png", type: "image/png" }],
+      apple: [{ url: "/apple-icon.png", type: "image/png" }],
     },
+    verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : undefined,
     alternates: {
       canonical: `${siteConfig.url}/${locale}`,
       languages: {
@@ -110,7 +113,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   ]);
 
   return (
-    <html lang={locale} className="dark" suppressHydrationWarning>
+    <html
+      lang={locale === "no" ? "nb-NO" : "en"}
+      className="dark"
+      suppressHydrationWarning
+    >
       <body className={`${manrope.variable} font-sans antialiased`}>
         {isDraftMode && <LivePreviewRefresh />}
         <NextIntlClientProvider messages={messages}>
