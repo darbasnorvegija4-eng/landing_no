@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Reveal } from "@/components/ui/reveal";
-import { Link } from "@/i18n/routing";
+import { Link, useRouter } from "@/i18n/routing";
 import {
   usePageCopy,
   useSiteSettings,
@@ -237,6 +237,7 @@ async function uploadViaServer(file: File, ticket: string): Promise<string> {
 export function ContactSection() {
   const copy = usePageCopy();
   const locale = useLocale() as "no" | "en";
+  const router = useRouter();
   const settings = useSiteSettings();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
@@ -533,6 +534,7 @@ export function ContactSection() {
       queueRef.current = [];
       if (photosInputRef.current) photosInputRef.current.value = "";
       setStep(1);
+      window.setTimeout(() => router.push("/takk"), 250);
     } catch (err) {
       console.error("Lead submit failed:", err);
       toast.error(copy.contact.form.error);
