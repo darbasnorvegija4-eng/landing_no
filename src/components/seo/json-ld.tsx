@@ -1,5 +1,4 @@
 import type { CmsFaq, CmsService, CmsSettings } from "@/lib/cms-content";
-import type { PageCopy } from "@/lib/page-copy";
 import { siteConfig } from "@/lib/site";
 
 type Props = {
@@ -7,7 +6,6 @@ type Props = {
   settings: CmsSettings;
   faq: CmsFaq[];
   services: CmsService[];
-  testimonials: PageCopy["testimonials"]["items"];
   description: string;
 };
 
@@ -24,35 +22,12 @@ export function JsonLd({
   settings,
   faq,
   services,
-  testimonials,
   description,
 }: Props) {
   const pageUrl = `${siteConfig.url}/${locale}`;
   const organizationId = `${siteConfig.url}/#organization`;
   const businessId = `${siteConfig.url}/#local-business`;
   const websiteId = `${siteConfig.url}/#website`;
-
-  const reviews = testimonials
-    .map((item, index) => ({
-      quote: item.quote[locale]?.trim(),
-      author: item.author[locale]?.trim(),
-      index,
-    }))
-    .filter((item): item is { quote: string; author: string; index: number } =>
-      Boolean(item.quote && item.author),
-    )
-    .map((item) => ({
-      "@type": "Review",
-      "@id": `${pageUrl}#review-${item.index + 1}`,
-      reviewBody: item.quote,
-      author: {
-        "@type": "Person",
-        name: item.author,
-      },
-      itemReviewed: {
-        "@id": businessId,
-      },
-    }));
 
   const business = {
     "@type": "LocalBusiness",
@@ -71,22 +46,12 @@ export function JsonLd({
     },
     areaServed: settings.seo.areaServed[locale],
     priceRange: "$$",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: settings.trust.rating.split("/")[0] || "4.9",
-      reviewCount: settings.trust.happyCustomers.replace(/\D/g, "") || "100",
-    },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: settings.seo.openingHours.days,
       opens: settings.seo.openingHours.opens,
       closes: settings.seo.openingHours.closes,
     },
-    ...(reviews.length > 0
-      ? {
-          review: reviews.map((review) => ({ "@id": review["@id"] })),
-        }
-      : {}),
     ...(settings.parentOrg
       ? {
           parentOrganization: {
@@ -163,14 +128,7 @@ export function JsonLd({
 
   const schema = {
     "@context": "https://schema.org",
-    "@graph": [
-      organization,
-      website,
-      business,
-      ...serviceSchemas,
-      ...reviews,
-      faqSchema,
-    ],
+    "@graph": [organization, website, business, ...serviceSchemas, faqSchema],
   };
 
   return (

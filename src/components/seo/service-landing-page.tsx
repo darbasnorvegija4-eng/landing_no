@@ -2,27 +2,88 @@ import Image from "next/image";
 import { Check, Phone } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
-import type { SeoLandingPage } from "@/content/seo-landing-pages";
+import {
+  seoLandingPages,
+  type SeoLandingPage,
+} from "@/content/seo-landing-pages";
+import { projects } from "@/content/site-content";
 import type { CmsSettings } from "@/lib/cms-content";
 import type { Locale } from "@/lib/site";
 
 type Props = { page: SeoLandingPage; locale: Locale; settings: CmsSettings };
 
+const relatedPageSlugs: Record<string, string[]> = {
+  takvask: [
+    "takvask-oslo",
+    "takvask-og-impregnering",
+    "takvask-og-impregnering-lillestrom",
+    "priser",
+  ],
+  "takvask-og-impregnering": [
+    "takvask",
+    "takvask-oslo",
+    "takvask-og-impregnering-lillestrom",
+    "priser",
+  ],
+  takmaling: [
+    "takmaling-drammen",
+    "takfornying",
+    "takfornying-viken",
+    "priser",
+  ],
+  takfornying: [
+    "takfornying-baerum",
+    "takfornying-viken",
+    "takmaling",
+    "priser",
+  ],
+  "nytt-tak": ["takfornying", "takmaling", "takfornying-viken", "priser"],
+  priser: ["takvask", "takvask-og-impregnering", "takmaling", "takfornying"],
+  "takvask-oslo": [
+    "takvask",
+    "takvask-og-impregnering",
+    "takfornying-baerum",
+    "priser",
+  ],
+  "takfornying-baerum": [
+    "takfornying",
+    "takvask-oslo",
+    "takfornying-viken",
+    "priser",
+  ],
+  "takmaling-drammen": [
+    "takmaling",
+    "takfornying-viken",
+    "takfornying",
+    "priser",
+  ],
+  "takvask-og-impregnering-lillestrom": [
+    "takvask-og-impregnering",
+    "takvask-oslo",
+    "takfornying-viken",
+    "priser",
+  ],
+  "takfornying-viken": [
+    "takfornying",
+    "takmaling-drammen",
+    "takfornying-baerum",
+    "priser",
+  ],
+};
+
 export function ServiceLandingPage({ page, locale, settings }: Props) {
-  const relatedPages = [
-    { slug: "takvask", no: "Takvask", en: "Roof cleaning" },
-    { slug: "takmaling", no: "Takmaling", en: "Roof coating" },
-    { slug: "takfornying", no: "Takfornying", en: "Roof renewal" },
-    { slug: "takvask-oslo", no: "Takvask i Oslo", en: "Roof cleaning in Oslo" },
-    {
-      slug: "takfornying-viken",
-      no: "Takfornying i Viken",
-      en: "Roof renewal in Viken",
-    },
-    { slug: "priser", no: "Priser", en: "Prices" },
-  ]
-    .filter((item) => item.slug !== page.slug)
-    .slice(0, 4);
+  const relatedPages = (relatedPageSlugs[page.slug] ?? [])
+    .map((slug) => seoLandingPages.find((item) => item.slug === slug))
+    .filter((item): item is SeoLandingPage => Boolean(item));
+  const referenceProject = projects.find(
+    (project) => project.id === page.referenceProjectId,
+  );
+  const beforeStage = referenceProject?.stages.find(
+    (stage) => stage.label === "before",
+  );
+  const afterStage = referenceProject?.stages.find(
+    (stage) => stage.label === "after",
+  );
 
   return (
     <article>
@@ -123,6 +184,54 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
         </div>
       </section>
 
+      {referenceProject && beforeStage && afterStage ? (
+        <section className="section-pad border-b border-white/10">
+          <div className="container-narrow">
+            <p className="eyebrow">
+              {locale === "no" ? "Dokumentert arbeid" : "Documented work"}
+            </p>
+            <h2 className="heading-display mt-3 text-balance">
+              {referenceProject.title[locale]}
+            </h2>
+            <p className="text-muted-foreground mt-4 max-w-3xl leading-7">
+              {locale === "no"
+                ? "Bildene viser samme prosjekt før og etter arbeidet. Slik kan du vurdere et reelt resultat, ikke bare illustrasjonsbilder."
+                : "The photos show the same project before and after the work, so you can assess a real result rather than stock imagery."}
+            </p>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {[beforeStage, afterStage].map((stage) => (
+                <figure
+                  key={`${referenceProject.id}-${stage.label}`}
+                  className="surface-card overflow-hidden"
+                >
+                  <div className="relative">
+                    <Image
+                      src={stage.image}
+                      alt={stage.caption[locale]}
+                      width={900}
+                      height={600}
+                      className="aspect-[3/2] w-full object-cover"
+                    />
+                    <span className="bg-background/90 absolute top-4 left-4 rounded-full px-3 py-1 text-sm font-bold">
+                      {stage.label === "before"
+                        ? locale === "no"
+                          ? "Før"
+                          : "Before"
+                        : locale === "no"
+                          ? "Etter"
+                          : "After"}
+                    </span>
+                  </div>
+                  <figcaption className="text-muted-foreground p-4 text-sm">
+                    {stage.caption[locale]}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section-pad">
         <div className="container-narrow">
           <p className="eyebrow">
@@ -194,7 +303,7 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
                 href={`/${item.slug}`}
                 className="surface-card hover:border-accent/40 hover:text-accent p-5 font-semibold transition"
               >
-                {item[locale]} <span aria-hidden>→</span>
+                {item.eyebrow[locale]} <span aria-hidden>→</span>
               </Link>
             ))}
           </div>

@@ -51,7 +51,6 @@ export default async function HomePage({ params }: Props) {
         settings={content.settings}
         faq={content.faq}
         services={content.services}
-        testimonials={content.copy.testimonials.items}
         description={content.copy.meta.description[locale as "no" | "en"]}
       />
       <HeroSection heroImage={content.settings.images.hero} />
