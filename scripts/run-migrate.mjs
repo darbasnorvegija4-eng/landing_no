@@ -66,9 +66,14 @@ const jiti = require("jiti")(import.meta.url, {
 });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const configModule = jiti(path.resolve(__dirname, "../src/payload.config.ts"));
+// Use Jiti's async loader because the Payload config conditionally imports the
+// active database adapter with top-level await. The sync loader rewrites that
+// await into invalid CommonJS when Vercel runs the migration on Node 24.
+const configModule = await jiti.import(
+  path.resolve(__dirname, "../src/payload.config.ts"),
+);
 const config = configModule.default ?? configModule;
-const { migrations } = jiti(
+const { migrations } = await jiti.import(
   path.resolve(__dirname, "../src/payload/migrations/index.ts"),
 );
 
