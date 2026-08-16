@@ -88,7 +88,7 @@ export function HeroSection({ heroImage }: Props) {
               size="lg"
               className="shadow-accent/15 h-11 w-full rounded-lg shadow-md sm:h-12 sm:w-auto sm:rounded-xl"
             >
-              <Link href="/#bestill">{copy.hero.cta}</Link>
+              <Link href="/#kontakt">{copy.hero.cta}</Link>
             </Button>
             <Button
               asChild

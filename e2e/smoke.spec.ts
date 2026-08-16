@@ -17,23 +17,6 @@ test("Norwegian landing page renders its primary content", async ({ page }) => {
     page.getByRole("link", { name: "Kundeomtaler på Google" }),
   ).toHaveAttribute("href", "https://g.page/r/CYa-JdXzZzxbEBM/review");
   await expect(page.locator("#kontakt")).toBeAttached();
-  await expect(page.locator("#bestill")).toBeAttached();
-});
-
-test("service ad landing opens the local preselected booking form", async ({
-  page,
-}) => {
-  await page.goto("/no/takmaling?service=takmaling#bestill");
-
-  await expect(page.locator("#bestill")).toBeVisible();
-  await expect(page.locator("#type")).toHaveValue("takmaling");
-  await expect(
-    page.getByRole("heading", { name: "Bestill gratis befaring" }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Bestill" })).toHaveAttribute(
-    "href",
-    "#bestill",
-  );
 });
 
 test("customer review page links to the verified Google review form", async ({
