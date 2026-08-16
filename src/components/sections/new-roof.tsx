@@ -34,7 +34,7 @@ export function NewRoofSection({ image }: Props) {
             {copy.newRoof.body}
           </p>
           <Button asChild size="lg" className="mt-8">
-            <Link href="/#bestill">{copy.newRoof.cta}</Link>
+            <Link href="/#kontakt">{copy.newRoof.cta}</Link>
           </Button>
         </Reveal>
 
