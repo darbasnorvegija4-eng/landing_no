@@ -1,3 +1,5 @@
+import { googleTrustLabel } from "@/lib/testimonials";
+
 /** Localized marketing copy for the landing page (NO + EN). */
 
 export type LocaleText = { no: string; en: string };
@@ -698,11 +700,17 @@ export function pageCopyFromSettingsDoc(
         hero?.trustCustomersEn,
         fallback.hero.trustCustomers,
       ),
-      trustRating: pickField(
-        hero?.trustRatingNo,
-        hero?.trustRatingEn,
-        fallback.hero.trustRating,
-      ),
+      trustRating: (() => {
+        const value = pickField(
+          hero?.trustRatingNo,
+          hero?.trustRatingEn,
+          fallback.hero.trustRating,
+        );
+        return {
+          no: googleTrustLabel(value.no, "no"),
+          en: googleTrustLabel(value.en, "en"),
+        };
+      })(),
     },
     trustBar: {
       items: pickTypesList(

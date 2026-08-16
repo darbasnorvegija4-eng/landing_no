@@ -219,7 +219,7 @@ export const SiteSettings: GlobalConfig = {
                   admin: { hidden: true },
                 },
                 { name: "happyCustomers", type: "text", defaultValue: "100+" },
-                { name: "rating", type: "text", defaultValue: "4.9/5" },
+                { name: "rating", type: "text", defaultValue: "Google" },
               ],
             },
           ],

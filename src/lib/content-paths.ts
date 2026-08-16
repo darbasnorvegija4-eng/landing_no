@@ -1,4 +1,8 @@
-export const RESERVED_PAGE_SLUGS = ["blogg", "personvern"] as const;
+export const RESERVED_PAGE_SLUGS = [
+  "blogg",
+  "personvern",
+  "kundeomtaler",
+] as const;
 
 const reservedPageSlugs = new Set<string>(RESERVED_PAGE_SLUGS);
 const slugPattern = /^[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*$/u;
@@ -15,7 +19,8 @@ export function validateContentSlug(
 
   const trimmed = value.trim();
   if (trimmed !== value) return "Slug cannot start or end with spaces";
-  if (trimmed !== trimmed.toLowerCase()) return "Slug must use lowercase letters";
+  if (trimmed !== trimmed.toLowerCase())
+    return "Slug must use lowercase letters";
   if (!slugPattern.test(trimmed)) {
     return "Use letters, numbers, and single hyphens only";
   }
@@ -32,10 +37,7 @@ export function normalizeRedirectPath(path: string): string {
   return trimmed.replace(/\/+$/, "");
 }
 
-export function redirectPathCandidates(
-  locale: string,
-  path: string,
-): string[] {
+export function redirectPathCandidates(locale: string, path: string): string[] {
   const normalized = normalizeRedirectPath(path);
   const localizedPrefix = `/${locale}`;
   const withoutLocale = normalized.startsWith(`${localizedPrefix}/`)
