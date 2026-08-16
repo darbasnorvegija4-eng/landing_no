@@ -96,7 +96,7 @@ export function trackLeadConversion(params?: { inquiryType?: string }) {
   sendMetaEvent("Lead", eventParams);
 }
 
-function initializeGoogleTracking() {
+function ensureGoogleTag() {
   const loaderId = googleAnalyticsId || googleAdsId;
   if (!loaderId) return;
 
@@ -104,15 +104,14 @@ function initializeGoogleTracking() {
   window.gtag ||= (...args: unknown[]) => {
     window.dataLayer?.push(args);
   };
+  window.gtag("consent", "default", {
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+    analytics_storage: "denied",
+    wait_for_update: 500,
+  });
   window.gtag("js", new Date());
-
-  for (const measurementId of [googleAnalyticsId, googleAdsId]) {
-    if (!measurementId) continue;
-    window.gtag("config", measurementId, {
-      anonymize_ip: true,
-      send_page_view: false,
-    });
-  }
 
   if (!document.querySelector("script[data-google-tag]")) {
     const script = document.createElement("script");
@@ -120,6 +119,24 @@ function initializeGoogleTracking() {
     script.dataset.googleTag = loaderId;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(loaderId)}`;
     document.head.appendChild(script);
+  }
+}
+
+function grantGoogleTrackingConsent() {
+  ensureGoogleTag();
+  window.gtag?.("consent", "update", {
+    ad_storage: "granted",
+    ad_user_data: "granted",
+    ad_personalization: "granted",
+    analytics_storage: "granted",
+  });
+
+  for (const measurementId of [googleAnalyticsId, googleAdsId]) {
+    if (!measurementId) continue;
+    window.gtag?.("config", measurementId, {
+      anonymize_ip: true,
+      send_page_view: false,
+    });
   }
 }
 
@@ -139,6 +156,7 @@ function initializeMetaPixel() {
   }
 
   window.fbq("init", metaPixelId);
+  window.fbq("consent", "grant");
   if (!document.querySelector(`script[data-meta-pixel="${metaPixelId}"]`)) {
     const script = document.createElement("script");
     script.async = true;
@@ -173,8 +191,12 @@ export function MarketingAnalytics() {
   }, []);
 
   useEffect(() => {
+    ensureGoogleTag();
+  }, []);
+
+  useEffect(() => {
     if (choice !== "granted") return;
-    initializeGoogleTracking();
+    grantGoogleTrackingConsent();
     initializeMetaPixel();
   }, [choice]);
 
