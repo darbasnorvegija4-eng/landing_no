@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { TrustBarSection } from "@/components/sections/trust-bar";
 import { usePageCopy } from "@/components/site-settings-provider";
+import { googleBusinessProfile } from "@/content/google-business";
 import { siteImages } from "@/content/images";
 import type { CmsMedia } from "@/lib/cms-content";
 import { optimizeRemoteImageUrl } from "@/lib/images";
@@ -105,18 +106,40 @@ export function HeroSection({ heroImage }: Props) {
             {[
               { icon: Shield, label: copy.hero.trustWarranty },
               { icon: Users, label: copy.hero.trustCustomers },
-              { icon: Star, label: copy.hero.trustRating },
-            ].map(({ icon: Icon, label }) => (
-              <li
-                key={label}
-                className="flex flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-black/30 px-2 py-3 text-center backdrop-blur-sm sm:flex-row sm:items-center sm:justify-center sm:gap-2 sm:px-3"
-              >
-                <Icon className="text-accent size-4 shrink-0" />
-                <span className="text-[10px] leading-tight font-medium text-white/90 sm:text-xs">
-                  {label}
-                </span>
-              </li>
-            ))}
+              {
+                icon: Star,
+                label: copy.hero.trustRating,
+                href: googleBusinessProfile.reviewUrl,
+              },
+            ].map(({ icon: Icon, label, href }) => {
+              const content = (
+                <>
+                  <Icon className="text-accent size-4 shrink-0" />
+                  <span className="text-[10px] leading-tight font-medium text-white/90 sm:text-xs">
+                    {label}
+                  </span>
+                </>
+              );
+
+              return (
+                <li key={label} className="min-w-0">
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:border-accent/60 focus-visible:ring-accent flex h-full cursor-pointer flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-black/30 px-2 py-3 text-center backdrop-blur-sm transition hover:bg-black/45 focus-visible:ring-2 focus-visible:outline-none sm:flex-row sm:items-center sm:justify-center sm:gap-2 sm:px-3"
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <div className="flex h-full flex-col items-center gap-1.5 rounded-xl border border-white/10 bg-black/30 px-2 py-3 text-center backdrop-blur-sm sm:flex-row sm:items-center sm:justify-center sm:gap-2 sm:px-3">
+                      {content}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </Reveal>
       </div>
