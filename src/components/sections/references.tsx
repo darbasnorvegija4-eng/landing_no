@@ -24,26 +24,12 @@ type LightboxState = {
   index: number;
 };
 
-type Pair = {
-  before: Stage;
-  after: Stage;
-};
-
-/** Pair equal before/after counts; leftover photos render as singles (never empty cells). */
-function splitStages(stages: Stage[]) {
-  const before = stages.filter((s) => s.label === "before");
-  const after = stages.filter((s) => s.label === "after");
-  const during = stages.filter((s) => s.label === "during");
-
-  const pairCount = Math.min(before.length, after.length);
-  const pairs: Pair[] = [];
-  for (let i = 0; i < pairCount; i++) {
-    pairs.push({ before: before[i], after: after[i] });
-  }
-
-  const singles = [...before.slice(pairCount), ...after.slice(pairCount)];
-
-  return { pairs, during, singles };
+function groupStages(stages: Stage[]) {
+  return {
+    before: stages.filter((stage) => stage.label === "before"),
+    after: stages.filter((stage) => stage.label === "after"),
+    during: stages.filter((stage) => stage.label === "during"),
+  };
 }
 
 export function ReferencesSection({ projects }: Props) {
@@ -90,7 +76,7 @@ export function ReferencesSection({ projects }: Props) {
 
         <div className="mt-10 space-y-8">
           {projects.map((project, projectIndex) => {
-            const { pairs, during, singles } = splitStages(project.stages);
+            const groups = groupStages(project.stages);
 
             return (
               <Reveal
@@ -100,63 +86,25 @@ export function ReferencesSection({ projects }: Props) {
                 <article className="overflow-hidden rounded-2xl border border-white/10 bg-black/20">
                   <div className="border-b border-white/10 px-4 py-4 sm:px-5">
                     <h3 className="font-semibold">{project.title[locale]}</h3>
-                    {pairs.length > 0 ? (
-                      <p className="text-muted-foreground mt-1 text-xs">
-                        {copy.references.comparisonHint}
-                      </p>
-                    ) : null}
+                    <p className="text-muted-foreground mt-1 text-xs">
+                      {locale === "no"
+                        ? "Bildene er gruppert etter status – trykk for å se hele bildet"
+                        : "Photos are grouped by status – tap to view the full image"}
+                    </p>
                   </div>
 
-                  <div className="space-y-3 p-3 sm:space-y-4 sm:p-4">
-                    {pairs.map((pair, pairIndex) => (
-                      <div
-                        key={`${project.id}-pair-${pairIndex}`}
-                        className="grid grid-cols-2 gap-2 sm:gap-3"
-                      >
-                        <PhotoCell
-                          stage={pair.before}
-                          label={copy.references.before}
+                  <div className="space-y-5 p-3 sm:space-y-6 sm:p-4">
+                    {(["before", "after", "during"] as const).map((label) =>
+                      groups[label].length > 0 ? (
+                        <StageGroup
+                          key={`${project.id}-${label}`}
+                          stages={groups[label]}
+                          label={copy.references[label]}
                           locale={locale}
-                          onOpen={() => openStage(project, pair.before)}
+                          onOpen={(stage) => openStage(project, stage)}
                         />
-                        <PhotoCell
-                          stage={pair.after}
-                          label={copy.references.after}
-                          locale={locale}
-                          onOpen={() => openStage(project, pair.after)}
-                        />
-                      </div>
-                    ))}
-
-                    {singles.length > 0 ? (
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
-                        {singles.map((stage, i) => (
-                          <PhotoCell
-                            key={`${project.id}-single-${i}`}
-                            stage={stage}
-                            label={copy.references[stage.label]}
-                            locale={locale}
-                            onOpen={() => openStage(project, stage)}
-                            wide
-                          />
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {during.length > 0 ? (
-                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
-                        {during.map((stage, i) => (
-                          <PhotoCell
-                            key={`${project.id}-during-${i}`}
-                            stage={stage}
-                            label={copy.references.during}
-                            locale={locale}
-                            onOpen={() => openStage(project, stage)}
-                            wide
-                          />
-                        ))}
-                      </div>
-                    ) : null}
+                      ) : null,
+                    )}
                   </div>
                 </article>
               </Reveal>
@@ -177,6 +125,41 @@ export function ReferencesSection({ projects }: Props) {
         />
       ) : null}
     </section>
+  );
+}
+
+function StageGroup({
+  stages,
+  label,
+  locale,
+  onOpen,
+}: {
+  stages: Stage[];
+  label: string;
+  locale: "no" | "en";
+  onOpen: (stage: Stage) => void;
+}) {
+  return (
+    <div>
+      <div className="mb-2 flex items-center gap-2 sm:mb-3">
+        <span className="bg-primary size-1.5 rounded-full" aria-hidden />
+        <h4 className="text-xs font-semibold tracking-wider text-white/75 uppercase">
+          {label}
+        </h4>
+      </div>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
+        {stages.map((stage, index) => (
+          <PhotoCell
+            key={`${stage.image.url}-${index}`}
+            stage={stage}
+            label={label}
+            locale={locale}
+            onOpen={() => onOpen(stage)}
+            wide={stages.length % 2 === 1 && index === stages.length - 1}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -202,11 +185,22 @@ function PhotoCell({
     <button
       type="button"
       onClick={onOpen}
-      className={`group relative overflow-hidden rounded-xl bg-black/40 text-left ${
-        wide ? "aspect-[16/10] sm:aspect-[4/3]" : "aspect-[4/3]"
+      className={`group relative overflow-hidden rounded-xl border border-white/10 bg-[#15171c] text-left ${
+        wide ? "aspect-[4/3] sm:col-span-2 sm:aspect-video" : "aspect-[4/3]"
       }`}
       aria-label={stage.caption[locale]}
     >
+      <Image
+        src={src}
+        alt=""
+        width={1200}
+        height={900}
+        sizes="(max-width: 640px) 100vw, 1120px"
+        className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-2xl"
+        loading="lazy"
+        aria-hidden
+      />
+      <div className="absolute inset-0 bg-black/20" aria-hidden />
       <Image
         src={src}
         alt={stage.image.alt || stage.caption[locale]}
@@ -214,10 +208,10 @@ function PhotoCell({
         height={900}
         sizes={
           wide
-            ? "(max-width: 640px) 100vw, 560px"
+            ? "(max-width: 640px) 100vw, 1120px"
             : "(max-width: 640px) 50vw, 420px"
         }
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
         loading="lazy"
       />
       <div
