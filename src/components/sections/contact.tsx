@@ -45,7 +45,11 @@ const inquiryTypes = [
   "usikker",
 ] as const;
 
-type InquiryType = (typeof inquiryTypes)[number];
+export type InquiryType = (typeof inquiryTypes)[number];
+
+type ContactSectionProps = {
+  initialService?: InquiryType;
+};
 
 type PhotoItem = {
   id: string;
@@ -234,14 +238,23 @@ async function uploadViaServer(file: File, ticket: string): Promise<string> {
   return data.downloadUrl || data.url;
 }
 
-export function ContactSection() {
+function isInquiryType(value: string | null): value is InquiryType {
+  return Boolean(value && (inquiryTypes as readonly string[]).includes(value));
+}
+
+export function ContactSection({
+  initialService = "usikker",
+}: ContactSectionProps = {}) {
   const copy = usePageCopy();
   const locale = useLocale() as "no" | "en";
   const router = useRouter();
   const settings = useSiteSettings();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
-  const [form, setForm] = useState<FormState>(initial);
+  const [form, setForm] = useState<FormState>(() => ({
+    ...initial,
+    type: initialService,
+  }));
   const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const [photosLimitNotice, setPhotosLimitNotice] = useState<string | null>(
     null,
@@ -265,6 +278,19 @@ export function ContactSection() {
       window.location.href,
       document.referrer,
     );
+
+    const requestedService = new URLSearchParams(window.location.search).get(
+      "service",
+    );
+    if (isInquiryType(requestedService)) {
+      setForm((prev) => ({ ...prev, type: requestedService }));
+    }
+
+    if (window.location.hash === "#bestill") {
+      window.requestAnimationFrame(() => {
+        document.getElementById("bestill")?.scrollIntoView({ block: "start" });
+      });
+    }
   }, []);
 
   const typeLabels: Record<InquiryType, string> = {
@@ -544,9 +570,12 @@ export function ContactSection() {
   }
 
   return (
-    <section id="kontakt" className="section-pad bg-background-elevated/50">
+    <section
+      id="kontakt"
+      className="section-pad bg-background-elevated/50 scroll-mt-24"
+    >
       <div className="container-narrow grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <Reveal>
+        <Reveal className="order-2 lg:order-none">
           <p className="eyebrow">{copy.contact.eyebrow}</p>
           <h2 className="heading-display mt-3 text-balance">
             {copy.contact.title}
@@ -613,8 +642,9 @@ export function ContactSection() {
           <CertificationBadges className="mt-8 max-w-[505px]" />
         </Reveal>
 
-        <Reveal delay={0.1}>
+        <Reveal className="order-first lg:order-none" delay={0.1}>
           <form
+            id="bestill"
             onSubmit={onSubmit}
             onFocusCapture={() => {
               if (formStartedRef.current) return;
@@ -624,9 +654,26 @@ export function ContactSection() {
                 inquiryType: form.type,
               });
             }}
-            className="surface-card relative space-y-4 p-5 sm:p-8"
+            className="surface-card relative scroll-mt-24 space-y-4 p-5 sm:p-8"
             noValidate
           >
+            <div>
+              <p className="text-accent text-sm font-semibold">
+                {locale === "no"
+                  ? "Gratis og uforpliktende"
+                  : "Free and no obligation"}
+              </p>
+              <h3 className="mt-1 text-2xl font-bold text-balance">
+                {locale === "no"
+                  ? "Bestill gratis befaring"
+                  : "Book a free inspection"}
+              </h3>
+              <p className="text-muted-foreground mt-2 text-sm">
+                {locale === "no"
+                  ? "Start med fire korte felt. Det tar omtrent ett minutt."
+                  : "Start with four short fields. It takes about one minute."}
+              </p>
+            </div>
             <p className="text-muted-foreground text-xs">
               {copy.contact.form.step.replace("{n}", String(step))}
             </p>
@@ -729,97 +776,110 @@ export function ContactSection() {
                       : "Enter the full address where the work will be carried out."}
                   </p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="roofSize">{copy.contact.form.roofSize}</Label>
-                  <Input
-                    id="roofSize"
-                    name="roofArea"
-                    type="number"
-                    min={1}
-                    max={2000}
-                    step={1}
-                    inputMode="numeric"
-                    autoComplete="off"
-                    value={form.roofSize}
-                    onChange={(e) => update("roofSize", e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="photos">{copy.contact.form.photos}</Label>
-                  <input
-                    ref={photosInputRef}
-                    id="photos"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    className="sr-only"
-                    onChange={(e) => onPhotosSelected(e.target.files)}
-                  />
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={loading}
-                      onClick={() => photosInputRef.current?.click()}
-                    >
-                      {ui.choosePhotos}
-                    </Button>
-                    <span className="text-muted-foreground text-sm">
-                      {photos.length
-                        ? ui.photosSelected(photos.length)
-                        : ui.noPhotos}
-                    </span>
-                  </div>
-                  <p className="text-muted-foreground text-xs">
-                    {copy.contact.form.photosHint}
-                  </p>
-                  {photosLimitNotice ? (
-                    <p
-                      className="text-accent text-xs font-medium"
-                      role="status"
-                    >
-                      {photosLimitNotice}
-                    </p>
-                  ) : null}
-                  {photos.length > 0 ? (
-                    <ul className="text-muted-foreground space-y-1 text-xs">
-                      {photos.map((item) => (
-                        <li
-                          key={item.id}
-                          className="flex items-center justify-between gap-3"
+                <details className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                  <summary className="cursor-pointer text-sm font-semibold">
+                    {locale === "no"
+                      ? "Legg til takstørrelse, bilder eller melding (valgfritt)"
+                      : "Add roof size, photos or a message (optional)"}
+                  </summary>
+                  <div className="mt-4 space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="roofSize">
+                        {copy.contact.form.roofSize}
+                      </Label>
+                      <Input
+                        id="roofSize"
+                        name="roofArea"
+                        type="number"
+                        min={1}
+                        max={2000}
+                        step={1}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        value={form.roofSize}
+                        onChange={(e) => update("roofSize", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="photos">{copy.contact.form.photos}</Label>
+                      <input
+                        ref={photosInputRef}
+                        id="photos"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        className="sr-only"
+                        onChange={(e) => onPhotosSelected(e.target.files)}
+                      />
+                      <div className="flex flex-wrap items-center gap-3">
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          disabled={loading}
+                          onClick={() => photosInputRef.current?.click()}
                         >
-                          <span className="truncate">{item.file.name}</span>
-                          <span
-                            className={
-                              item.status === "ready"
-                                ? "text-accent shrink-0"
-                                : item.status === "error"
-                                  ? "shrink-0 text-red-400"
-                                  : "shrink-0"
-                            }
-                          >
-                            {item.status === "ready"
-                              ? ui.photoReady
-                              : item.status === "error"
-                                ? ui.photoFailed
-                                : item.status === "queued"
-                                  ? ui.photoQueued
-                                  : ui.photoUploading}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">{copy.contact.form.message}</Label>
-                  <Textarea
-                    id="message"
-                    value={form.message}
-                    onChange={(e) => update("message", e.target.value)}
-                    rows={3}
-                  />
-                </div>
+                          {ui.choosePhotos}
+                        </Button>
+                        <span className="text-muted-foreground text-sm">
+                          {photos.length
+                            ? ui.photosSelected(photos.length)
+                            : ui.noPhotos}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-xs">
+                        {copy.contact.form.photosHint}
+                      </p>
+                      {photosLimitNotice ? (
+                        <p
+                          className="text-accent text-xs font-medium"
+                          role="status"
+                        >
+                          {photosLimitNotice}
+                        </p>
+                      ) : null}
+                      {photos.length > 0 ? (
+                        <ul className="text-muted-foreground space-y-1 text-xs">
+                          {photos.map((item) => (
+                            <li
+                              key={item.id}
+                              className="flex items-center justify-between gap-3"
+                            >
+                              <span className="truncate">{item.file.name}</span>
+                              <span
+                                className={
+                                  item.status === "ready"
+                                    ? "text-accent shrink-0"
+                                    : item.status === "error"
+                                      ? "shrink-0 text-red-400"
+                                      : "shrink-0"
+                                }
+                              >
+                                {item.status === "ready"
+                                  ? ui.photoReady
+                                  : item.status === "error"
+                                    ? ui.photoFailed
+                                    : item.status === "queued"
+                                      ? ui.photoQueued
+                                      : ui.photoUploading}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="message">
+                        {copy.contact.form.message}
+                      </Label>
+                      <Textarea
+                        id="message"
+                        value={form.message}
+                        onChange={(e) => update("message", e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                </details>
                 {/* Honeypot — hidden from users, bots often fill these. */}
                 <div
                   aria-hidden="true"

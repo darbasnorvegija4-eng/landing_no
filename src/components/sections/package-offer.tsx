@@ -193,7 +193,7 @@ export function PackageOfferSection({ locale }: { locale: Locale }) {
 
         <div className="mt-8 flex flex-col items-center">
           <Button asChild size="lg" className="w-full sm:w-auto">
-            <Link href="/#kontakt">
+            <Link href="/#bestill">
               {copy.cta}
               <ArrowRight aria-hidden />
             </Link>

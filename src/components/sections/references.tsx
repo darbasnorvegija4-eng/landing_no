@@ -75,7 +75,7 @@ export function ReferencesSection({ projects }: Props) {
               </p>
             ) : null}
             <Button asChild size="lg" className="mt-6">
-              <Link href="/#kontakt">
+              <Link href="/#bestill">
                 {locale === "no"
                   ? "Få gratis taksjekk og pristilbud"
                   : "Get a free roof inspection and quote"}

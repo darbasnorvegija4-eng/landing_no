@@ -3,6 +3,10 @@ import { Check, Phone } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import {
+  ContactSection,
+  type InquiryType,
+} from "@/components/sections/contact";
+import {
   seoLandingPages,
   type SeoLandingPage,
 } from "@/content/seo-landing-pages";
@@ -11,6 +15,25 @@ import type { CmsSettings } from "@/lib/cms-content";
 import type { Locale } from "@/lib/site";
 
 type Props = { page: SeoLandingPage; locale: Locale; settings: CmsSettings };
+
+const inquiryTypeByServiceKey: Record<string, InquiryType> = {
+  wash: "takvask",
+  impregnation: "takvask_impregnering",
+  paint: "takmaling",
+  inspection: "usikker",
+  newRoof: "nytt_tak",
+};
+
+function getInitialService(page: SeoLandingPage): InquiryType {
+  if (page.serviceKey && inquiryTypeByServiceKey[page.serviceKey]) {
+    return inquiryTypeByServiceKey[page.serviceKey];
+  }
+  if (page.slug.includes("takmaling")) return "takmaling";
+  if (page.slug.includes("impregnering")) return "takvask_impregnering";
+  if (page.slug.includes("takvask")) return "takvask";
+  if (page.slug.includes("nytt-tak")) return "nytt_tak";
+  return "usikker";
+}
 
 const relatedPageSlugs: Record<string, string[]> = {
   takvask: [
@@ -115,11 +138,11 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="xl">
-                <Link href="/#kontakt">
+                <a href="#bestill">
                   {locale === "no"
                     ? "Få gratis befaring"
                     : "Book a free inspection"}
-                </Link>
+                </a>
               </Button>
               <Button asChild size="xl" variant="secondary">
                 <a href={settings.phoneHref}>
@@ -141,6 +164,8 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
           </div>
         </div>
       </section>
+
+      <ContactSection initialService={getInitialService(page)} />
 
       <section className="section-pad bg-background-elevated/40 border-y border-white/10">
         <div className="container-narrow grid gap-8 lg:grid-cols-[.8fr_1.2fr]">
@@ -326,11 +351,11 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
               : "Send the address and preferably photos. We clarify the need and arrange a free, no-obligation inspection."}
           </p>
           <Button asChild size="xl" className="mt-8">
-            <Link href="/#kontakt">
+            <a href="#bestill">
               {locale === "no"
                 ? "Be om gratis befaring"
                 : "Request a free inspection"}
-            </Link>
+            </a>
           </Button>
         </div>
       </section>
