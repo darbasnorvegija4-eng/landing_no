@@ -61,7 +61,7 @@ export function AboutSection({
               ) : null}
             </div>
             <Button asChild size="lg" className="mt-8">
-              <Link href="/#kontakt">{copy.about.cta}</Link>
+              <Link href="/#bestill">{copy.about.cta}</Link>
             </Button>
           </Reveal>
 

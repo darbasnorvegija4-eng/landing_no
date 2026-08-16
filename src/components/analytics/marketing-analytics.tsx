@@ -224,6 +224,9 @@ export function MarketingAnalytics() {
       } else if (href.startsWith("mailto:")) {
         sendGoogleEvent("email_click");
         sendMetaEvent("Contact", { contact_method: "email" });
+      } else if (href.includes("#bestill") || href.includes("#kontakt")) {
+        sendGoogleEvent("booking_click", { link_url: href });
+        sendMetaCustomEvent("BookingClick", { link_url: href });
       }
     };
 
