@@ -276,7 +276,7 @@ try {
         'Lyngveien 28', '1182', 'Oslo', '916 693 168', 'Fornyelse Gruppen AS',
         $1, $2, $3,
         2500, 360, 50, 500, 150,
-        '2.000.000+', 10, '100+', '4.9/5',
+        '2.000.000+', 10, '100+', 'Google',
         now(), now()
       )`,
       [siteImages.hero, siteImages.about, siteImages.newRoof],

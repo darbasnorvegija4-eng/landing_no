@@ -30,7 +30,7 @@ export const siteConfig = {
     sqmRenewed: "2.000.000+",
     warrantyYears: 10,
     happyCustomers: "100+",
-    rating: "4.9/5",
+    rating: "Google",
   },
 };
 

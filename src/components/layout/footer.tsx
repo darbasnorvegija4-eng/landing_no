@@ -66,6 +66,13 @@ export function Footer() {
           { href: "/#om-oss", label: copy.nav.about },
           { href: "/#kontakt", label: copy.nav.contact },
         ];
+  const reviewsLink = {
+    href: "/kundeomtaler",
+    label: locale === "no" ? "Kundeomtaler" : "Customer reviews",
+  };
+  const quickWithReviews = quick.some((item) => item.href === reviewsLink.href)
+    ? quick
+    : [...quick, reviewsLink];
 
   return (
     <footer className="border-t border-white/10 bg-[#080a0e] pb-24 md:pb-0">
@@ -103,7 +110,7 @@ export function Footer() {
             {copy.footer.quickLinks}
           </p>
           <ul className="space-y-2">
-            {quick.map((item, index) => (
+            {quickWithReviews.map((item, index) => (
               <li key={`${item.href}-${index}`}>
                 <Link
                   href={item.href}
