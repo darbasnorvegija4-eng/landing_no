@@ -43,4 +43,31 @@ describe("SEO landing pages", () => {
       expect(getSeoLandingPage(page.slug)).toBe(page);
     }
   });
+
+  it("keeps renewal prices aligned with the published packages", () => {
+    const renewalCopy = seoLandingPages
+      .filter(
+        (page) => page.slug.includes("takfornying") || page.slug === "priser",
+      )
+      .map(
+        (page) =>
+          `${page.price.no} ${page.priceNote.no} ${page.faq.map((item) => item.answer.no).join(" ")}`,
+      )
+      .join(" ");
+
+    expect(renewalCopy).toContain("360 kr");
+    expect(renewalCopy).not.toContain("600–1 200");
+  });
+
+  it("connects priority service pages to documented projects", () => {
+    for (const slug of [
+      "takvask",
+      "takmaling",
+      "takfornying",
+      "takvask-oslo",
+      "takfornying-viken",
+    ]) {
+      expect(getSeoLandingPage(slug)?.referenceProjectId).toBeTruthy();
+    }
+  });
 });

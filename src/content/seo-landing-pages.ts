@@ -12,6 +12,8 @@ export type SeoLandingPage = {
   intro: Localized;
   image: string;
   imageAlt: Localized;
+  areaServed?: Localized;
+  referenceProjectId?: string;
   price: Localized;
   priceNote: Localized;
   benefits: Localized[];
@@ -41,6 +43,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask",
     serviceKey: "wash",
+    referenceProjectId: "takvask-oslo",
     title: l(
       "Takvask som fjerner mose, alger og smuss",
       "Professional roof cleaning",
@@ -134,6 +137,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask-og-impregnering",
     serviceKey: "impregnation",
+    referenceProjectId: "takvask-oslo",
     title: l(
       "Takvask og impregnering i én trygg prosess",
       "Roof cleaning and impregnation",
@@ -233,6 +237,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takmaling",
     serviceKey: "paint",
+    referenceProjectId: "takmaling-viken",
     title: l(
       "Takmaling med riktig vask og forarbeid",
       "Roof coating with proper preparation",
@@ -326,6 +331,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takfornying",
     serviceKey: "inspection",
+    referenceProjectId: "borettslag",
     title: l(
       "Komplett takfornying uten unødvendig takbytte",
       "Complete roof renewal",
@@ -348,10 +354,13 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Luftfoto av ferdig takfornyet borettslag",
       "Aerial view of a renewed housing association",
     ),
-    price: l("Typisk 600–1 200 kr per m²", "Typically NOK 600–1,200 per m²"),
+    price: l(
+      "Komplett takfornying fra 360 kr/m² + mva",
+      "Complete roof renewal from NOK 360/m² + VAT",
+    ),
     priceNote: l(
-      "Veiledende intervall. Valgt behandling, tilstand, størrelse, sikring og adkomst avgjør endelig pris.",
-      "Indicative range. Treatment, condition, size, safety and access determine the final price.",
+      "Veiledende fra-pris for Premium-pakken. Valgt behandling, tilstand, størrelse, sikring og adkomst avgjør endelig pris.",
+      "Indicative starting price for the Premium package. Treatment, condition, size, safety and access determine the final price.",
     ),
     benefits: [
       l("Vurdering før tiltak velges", "Assessment before choosing treatment"),
@@ -537,12 +546,12 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Roof coating in progress with a clear before-and-after contrast",
     ),
     price: l(
-      "Takfornying: typisk 600–1 200 kr per m²",
-      "Roof renewal: typically NOK 600–1,200 per m²",
+      "Takvask fra 100, vask + impregnering fra 140 og takfornying fra 360 kr/m² + mva",
+      "Cleaning from NOK 100, cleaning + impregnation from NOK 140 and renewal from NOK 360/m² + VAT",
     ),
     priceNote: l(
-      "Dette er et veiledende intervall, ikke et bindende tilbud. Takvask, impregnering og nytt tak prises etter valgt omfang.",
-      "This is an indicative range, not a binding quotation. Cleaning, impregnation and replacement are priced according to scope.",
+      "Dette er veiledende fra-priser, ikke et bindende tilbud. Taktype, tilstand, adkomst og valgt omfang avgjør endelig pris.",
+      "These are indicative starting prices, not a binding quotation. Roof type, condition, access and scope determine the final price.",
     ),
     benefits: [
       l("Takareal og taktype", "Roof area and type"),
@@ -603,6 +612,8 @@ export const seoLandingPages: SeoLandingPage[] = [
   },
   {
     slug: "takvask-oslo",
+    areaServed: l("Oslo", "Oslo"),
+    referenceProjectId: "takvask-oslo",
     title: l("Takvask i Oslo tilpasset byens boliger", "Roof cleaning in Oslo"),
     metaTitle: l(
       "Takvask Oslo – pris og gratis befaring | Takfornyelse",
@@ -698,6 +709,8 @@ export const seoLandingPages: SeoLandingPage[] = [
   },
   {
     slug: "takfornying-baerum",
+    areaServed: l("Bærum", "Bærum"),
+    referenceProjectId: "borettslag",
     title: l(
       "Takfornying i Bærum med vurdering før behandling",
       "Roof renewal in Bærum",
@@ -771,8 +784,8 @@ export const seoLandingPages: SeoLandingPage[] = [
           "What does roof renewal cost in Bærum?",
         ),
         answer: l(
-          "Komplett takfornying ligger ofte i et veiledende intervall på 600–1 200 kr per m², men befaring avgjør riktig behandling og endelig pris.",
-          "Complete renewal is often in an indicative range of NOK 600–1,200 per m², but inspection determines the treatment and final price.",
+          "Premium-pakken for komplett takfornying starter veiledende fra 360 kr per m² + mva. Befaringen avgjør riktig behandling og endelig pris.",
+          "The Premium package for complete roof renewal has an indicative starting price of NOK 360 per m² + VAT. Inspection determines the treatment and final price.",
         ),
       },
       {
@@ -799,6 +812,8 @@ export const seoLandingPages: SeoLandingPage[] = [
   },
   {
     slug: "takmaling-drammen",
+    areaServed: l("Drammen og nærområdene", "Drammen and nearby areas"),
+    referenceProjectId: "takmaling-viken",
     title: l(
       "Takmaling i Drammen med grundig forarbeid",
       "Roof coating in Drammen",
@@ -900,6 +915,8 @@ export const seoLandingPages: SeoLandingPage[] = [
   },
   {
     slug: "takvask-og-impregnering-lillestrom",
+    areaServed: l("Lillestrøm og nærområdene", "Lillestrøm and nearby areas"),
+    referenceProjectId: "takvask-oslo",
     title: l(
       "Takvask og impregnering i Lillestrøm",
       "Roof cleaning and impregnation in Lillestrøm",
@@ -995,6 +1012,8 @@ export const seoLandingPages: SeoLandingPage[] = [
   },
   {
     slug: "takfornying-viken",
+    areaServed: l("Viken-regionen", "the Viken region"),
+    referenceProjectId: "takmaling-viken",
     title: l(
       "Takfornying i Viken dokumentert med ekte prosjekter",
       "Roof renewal in Viken with documented projects",
@@ -1018,12 +1037,12 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Documented 240 m² roof in Viken before renewal",
     ),
     price: l(
-      "Takfornying typisk 600–1 200 kr per m²",
-      "Roof renewal typically NOK 600–1,200 per m²",
+      "Komplett takfornying fra 360 kr/m² + mva",
+      "Complete roof renewal from NOK 360/m² + VAT",
     ),
     priceNote: l(
-      "Intervaller er veiledende. Befaring avklarer behandling, reparasjoner, sikring, logistikk og endelig tilbud.",
-      "Ranges are indicative. Inspection clarifies treatment, repairs, safety, logistics and the final quotation.",
+      "Veiledende fra-pris for Premium-pakken. Befaring avklarer behandling, reparasjoner, sikring, logistikk og endelig tilbud.",
+      "Indicative starting price for the Premium package. Inspection clarifies treatment, repairs, safety, logistics and the final quotation.",
     ),
     benefits: [
       l(

@@ -119,25 +119,56 @@ export default async function CmsPage({ params }: Props) {
   if (seoPage) {
     const content = await getSiteContent();
     const pageUrl = `${siteConfig.url}/${locale}/${slug}`;
+    const webPageId = `${pageUrl}#webpage`;
+    const serviceId = `${pageUrl}#service`;
+    const breadcrumbId = `${pageUrl}#breadcrumb`;
+    const businessId = `${siteConfig.url}/#local-business`;
+    const areaServed =
+      seoPage.areaServed?.[loc] ?? content.settings.seo.areaServed[loc];
+    const serviceSchema =
+      seoPage.slug === "priser"
+        ? null
+        : {
+            "@type": "Service",
+            "@id": serviceId,
+            name: seoPage.title[loc],
+            serviceType: seoPage.eyebrow[loc],
+            description: seoPage.metaDescription[loc],
+            url: pageUrl,
+            image: new URL(seoPage.image, `${siteConfig.url}/`).toString(),
+            provider: {
+              "@type": "LocalBusiness",
+              "@id": businessId,
+              name: content.settings.brandName,
+              url: siteConfig.url,
+              telephone: content.settings.phoneHref.replace("tel:", ""),
+            },
+            areaServed,
+          };
     const schema = {
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@type": seoPage.slug === "priser" ? "WebPage" : "Service",
-          "@id": `${pageUrl}#service`,
+          "@type": "WebPage",
+          "@id": webPageId,
           name: seoPage.title[loc],
           description: seoPage.metaDescription[loc],
           url: pageUrl,
-          provider: {
-            "@type": "LocalBusiness",
-            name: content.settings.brandName,
-            url: siteConfig.url,
-            telephone: content.settings.phoneHref.replace("tel:", ""),
+          inLanguage: loc === "no" ? "nb-NO" : "en",
+          isPartOf: {
+            "@id": `${siteConfig.url}/#website`,
           },
-          areaServed: content.settings.seo.areaServed[loc],
+          breadcrumb: { "@id": breadcrumbId },
+          primaryImageOfPage: {
+            "@type": "ImageObject",
+            url: new URL(seoPage.image, `${siteConfig.url}/`).toString(),
+          },
+          ...(serviceSchema ? { about: { "@id": serviceId } } : {}),
         },
+        ...(serviceSchema ? [serviceSchema] : []),
         {
           "@type": "BreadcrumbList",
+          "@id": breadcrumbId,
           itemListElement: [
             {
               "@type": "ListItem",
@@ -155,6 +186,8 @@ export default async function CmsPage({ params }: Props) {
         },
         {
           "@type": "FAQPage",
+          "@id": `${pageUrl}#faq`,
+          isPartOf: { "@id": webPageId },
           mainEntity: seoPage.faq.map((item) => ({
             "@type": "Question",
             name: item.question[loc],

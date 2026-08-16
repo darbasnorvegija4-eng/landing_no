@@ -49,12 +49,15 @@ function localizedEntries(
     changeFrequency,
     priority,
     alternates: {
-      languages: Object.fromEntries(
-        siteConfig.locales.map((language) => [
-          language,
-          `${siteConfig.url}/${language}${path}`,
-        ]),
-      ),
+      languages: {
+        ...Object.fromEntries(
+          siteConfig.locales.map((language) => [
+            language,
+            `${siteConfig.url}/${language}${path}`,
+          ]),
+        ),
+        "x-default": `${siteConfig.url}/no${path}`,
+      },
     },
   }));
 }
