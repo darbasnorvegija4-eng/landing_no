@@ -113,43 +113,115 @@ export default async function BlogPostPage({ params }: Props) {
   const localized = localizeContent(post, loc);
   const hero = resolveMedia(post.heroImage, "hero");
   const date = post.publishedAt || post.createdAt;
+  const postUrl = `${siteConfig.url}/${locale}/blogg/${slug}`;
+  const heroUrl = hero
+    ? new URL(hero.url, siteConfig.url).toString()
+    : undefined;
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${postUrl}#article`,
+        headline: localized.title,
+        description: localized.seoDescription,
+        url: postUrl,
+        mainEntityOfPage: { "@id": `${postUrl}#webpage` },
+        datePublished: post.publishedAt || post.createdAt,
+        dateModified: post.updatedAt,
+        inLanguage: loc === "no" ? "nb-NO" : "en",
+        ...(heroUrl ? { image: heroUrl } : {}),
+        author: {
+          "@type": "Organization",
+          "@id": `${siteConfig.url}/#organization`,
+          name: siteConfig.name,
+          url: siteConfig.url,
+        },
+        publisher: { "@id": `${siteConfig.url}/#organization` },
+      },
+      {
+        "@type": "WebPage",
+        "@id": `${postUrl}#webpage`,
+        name: localized.title,
+        description: localized.seoDescription,
+        url: postUrl,
+        inLanguage: loc === "no" ? "nb-NO" : "en",
+        isPartOf: { "@id": `${siteConfig.url}/${locale}/blogg#collection` },
+        breadcrumb: { "@id": `${postUrl}#breadcrumb` },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${postUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: loc === "no" ? "Forside" : "Home",
+            item: `${siteConfig.url}/${locale}`,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: loc === "no" ? "Takguide" : "Roof guide",
+            item: `${siteConfig.url}/${locale}/blogg`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: localized.title,
+            item: postUrl,
+          },
+        ],
+      },
+    ],
+  };
 
   return (
-    <article className="section-pad">
-      <div className="container-narrow max-w-3xl">
-        <p className="eyebrow">
-          <Link href="/blogg" className="hover:text-accent-hover">
-            {loc === "no" ? "Tilbake til bloggen" : "Back to the blog"}
-          </Link>
-        </p>
-        <h1 className="heading-display mt-3 text-balance">{localized.title}</h1>
-        <time
-          dateTime={date}
-          className="mt-4 block text-sm text-muted-foreground"
-        >
-          {formatDate(date, loc)}
-        </time>
-        {localized.excerpt && (
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
-            {localized.excerpt}
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+        }}
+      />
+      <article className="section-pad">
+        <div className="container-narrow max-w-3xl">
+          <p className="eyebrow">
+            <Link href="/blogg" className="hover:text-accent-hover">
+              {loc === "no" ? "Tilbake til bloggen" : "Back to the blog"}
+            </Link>
           </p>
-        )}
-        {hero && (
-          <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10">
-            <Image
-              src={hero.url}
-              alt={hero.alt || localized.title}
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, 768px"
-              className="object-cover"
-            />
+          <h1 className="heading-display mt-3 text-balance">
+            {localized.title}
+          </h1>
+          <time
+            dateTime={date}
+            className="text-muted-foreground mt-4 block text-sm"
+          >
+            {formatDate(date, loc)}
+          </time>
+          {localized.excerpt && (
+            <p className="text-muted-foreground mt-6 text-lg leading-8">
+              {localized.excerpt}
+            </p>
+          )}
+          {hero && (
+            <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-white/10">
+              <Image
+                src={hero.url}
+                alt={hero.alt || localized.title}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="object-cover"
+              />
+            </div>
+          )}
+          <div className="mt-10">
+            <MarkdownLite content={localized.content} />
           </div>
-        )}
-        <div className="mt-10">
-          <MarkdownLite content={localized.content} />
         </div>
-      </div>
-    </article>
+      </article>
+    </>
   );
 }

@@ -36,3 +36,21 @@ test("customer review page links to the verified Google review form", async ({
   await expect(page.getByText("4.9/5 på Google")).toHaveCount(0);
   await expect(page.getByText("Kunde, Oslo")).toHaveCount(0);
 });
+
+test("roof guide links visitors to the priority service pages", async ({
+  page,
+}) => {
+  await page.goto("/no/blogg");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Takguide for boligeiere",
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Les guiden" })).toHaveCount(6);
+  await expect(
+    page.getByRole("link", { name: "Les guiden" }).first(),
+  ).toHaveAttribute("href", "/no/takvask");
+  await expect(page.getByText("Ingen publiserte innlegg ennå.")).toHaveCount(0);
+});
