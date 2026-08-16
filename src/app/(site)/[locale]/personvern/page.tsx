@@ -68,9 +68,14 @@ function renderMarkdownLite(body: string) {
 function withMarketingDisclosure(body: string, locale: "no" | "en") {
   const trackingConfigured = Boolean(
     process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ||
+    process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID ||
     process.env.NEXT_PUBLIC_META_PIXEL_ID,
   );
-  if (!trackingConfigured || /Google Ads|Meta Pixel/i.test(body)) return body;
+  if (
+    !trackingConfigured ||
+    /Google Analytics|Google Ads|Meta Pixel/i.test(body)
+  )
+    return body;
 
   const outdated =
     locale === "no"
@@ -79,9 +84,9 @@ function withMarketingDisclosure(body: string, locale: "no" | "en") {
   const disclosure =
     locale === "no"
       ? `## Annonsemåling og informasjonskapsler
-Hvis du samtykker i informasjonskapselbanneret, bruker vi Google Ads og Meta Pixel til å måle sidevisninger, henvendelser og klikk på telefon- og e-postlenker. Vi sender ikke navn, telefonnummer, e-postadresse, adresse, melding eller bilder til disse annonsetjenestene. Markedsføringssporing aktiveres ikke hvis du avslår. Du kan når som helst endre valget via «Informasjonskapsler» nederst på nettsiden.`
+Hvis du samtykker i informasjonskapselbanneret, bruker vi Google Analytics, Google Ads og Meta Pixel til å måle sidevisninger, henvendelser og klikk på telefon- og e-postlenker. Vi sender ikke navn, telefonnummer, e-postadresse, adresse, melding eller bilder til disse analyse- og annonsetjenestene. Markedsføringssporing aktiveres ikke hvis du avslår. Du kan når som helst endre valget via «Informasjonskapsler» nederst på nettsiden.`
       : `## Advertising measurement and cookies
-If you consent in the cookie banner, we use Google Ads and Meta Pixel to measure page views, enquiries, and clicks on phone and email links. We do not send names, phone numbers, email addresses, addresses, messages, or photos to these advertising services. Marketing tracking is not activated if you decline. You can change your choice at any time through “Cookie settings” in the website footer.`;
+If you consent in the cookie banner, we use Google Analytics, Google Ads and Meta Pixel to measure page views, enquiries, and clicks on phone and email links. We do not send names, phone numbers, email addresses, addresses, messages, or photos to these analytics and advertising services. Marketing tracking is not activated if you decline. You can change your choice at any time through “Cookie settings” in the website footer.`;
 
   return `${body.replace(outdated, "").trim()}\n\n${disclosure}`;
 }

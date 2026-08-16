@@ -11,8 +11,11 @@ const OPEN_CONSENT_EVENT = "takfornyelse:open-marketing-consent";
 const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim();
 const googleAdsLeadLabel =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL?.trim();
+const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID?.trim();
 const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
-const marketingConfigured = Boolean(googleAdsId || metaPixelId);
+const marketingConfigured = Boolean(
+  googleAdsId || googleAnalyticsId || metaPixelId,
+);
 
 export type ConsentChoice = "granted" | "denied";
 type MetaPixelFunction = ((...args: unknown[]) => void) & {
@@ -93,24 +96,29 @@ export function trackLeadConversion(params?: { inquiryType?: string }) {
   sendMetaEvent("Lead", eventParams);
 }
 
-function initializeGoogleAds() {
-  if (!googleAdsId) return;
+function initializeGoogleTracking() {
+  const loaderId = googleAnalyticsId || googleAdsId;
+  if (!loaderId) return;
 
   window.dataLayer ||= [];
   window.gtag ||= (...args: unknown[]) => {
     window.dataLayer?.push(args);
   };
   window.gtag("js", new Date());
-  window.gtag("config", googleAdsId, {
-    anonymize_ip: true,
-    send_page_view: false,
-  });
 
-  if (!document.querySelector(`script[data-google-ads="${googleAdsId}"]`)) {
+  for (const measurementId of [googleAnalyticsId, googleAdsId]) {
+    if (!measurementId) continue;
+    window.gtag("config", measurementId, {
+      anonymize_ip: true,
+      send_page_view: false,
+    });
+  }
+
+  if (!document.querySelector("script[data-google-tag]")) {
     const script = document.createElement("script");
     script.async = true;
-    script.dataset.googleAds = googleAdsId;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(googleAdsId)}`;
+    script.dataset.googleTag = loaderId;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(loaderId)}`;
     document.head.appendChild(script);
   }
 }
@@ -166,7 +174,7 @@ export function MarketingAnalytics() {
 
   useEffect(() => {
     if (choice !== "granted") return;
-    initializeGoogleAds();
+    initializeGoogleTracking();
     initializeMetaPixel();
   }, [choice]);
 
@@ -217,14 +225,14 @@ export function MarketingAnalytics() {
     locale === "no"
       ? {
           title: "Valgfri annonsemåling",
-          body: "Vi bruker Google Ads og Meta Pixel for å måle hvilke annonser som gir henvendelser. Markedsføringssporing aktiveres bare hvis du samtykker.",
+          body: "Vi bruker Google Analytics, Google Ads og Meta Pixel for å måle hvilke annonser som gir henvendelser. Markedsføringssporing aktiveres bare hvis du samtykker.",
           accept: "Godta",
           decline: "Avslå",
           privacy: "Les personvernerklæringen",
         }
       : {
           title: "Optional advertising measurement",
-          body: "We use Google Ads and Meta Pixel to measure which ads generate enquiries. Marketing tracking is activated only if you consent.",
+          body: "We use Google Analytics, Google Ads and Meta Pixel to measure which ads generate enquiries. Marketing tracking is activated only if you consent.",
           accept: "Accept",
           decline: "Decline",
           privacy: "Read the privacy policy",
