@@ -54,3 +54,23 @@ test("roof guide links visitors to the priority service pages", async ({
   ).toHaveAttribute("href", "/no/takvask");
   await expect(page.getByText("Ingen publiserte innlegg ennå.")).toHaveCount(0);
 });
+
+test("project gallery presents photos in a clear chronological order", async ({
+  page,
+}) => {
+  await page.goto("/no#referanser");
+
+  const paintingProject = page
+    .getByRole("article")
+    .filter({ hasText: "Takmaling – 240 m² tak i Viken" });
+
+  await expect(paintingProject.getByRole("heading", { level: 4 })).toHaveText([
+    "Før",
+    "Under arbeid",
+    "Etter",
+  ]);
+  await expect(paintingProject.locator("figure")).toHaveCount(5);
+  await expect(paintingProject.getByText("Før 1 / 2")).toBeVisible();
+  await expect(paintingProject.getByText("Under arbeid 1 / 1")).toBeVisible();
+  await expect(paintingProject.getByText("Etter 1 / 2")).toBeVisible();
+});
