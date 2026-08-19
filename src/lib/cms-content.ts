@@ -271,23 +271,17 @@ function mediaFromUploadOrUrl(
   const uploaded = resolveMedia(media, preferredSize);
   if (uploaded) return uploaded;
   const fallbackUrl = url?.trim();
+  if (
+    fallbackUrl &&
+    [
+      "photo-1568605114967-8130f3a36994",
+      "photo-1475855581690-80accde3ae2b",
+      "photo-1449844908441-8829872d2607",
+    ].some((id) => fallbackUrl.includes(id))
+  ) {
+    return fallback;
+  }
   return fallbackUrl ? { url: fallbackUrl, alt: fallback.alt } : fallback;
-}
-
-const projectImageOverrides: Record<string, string> = {
-  "/references/takmaling-viken/before-1.webp":
-    "/references/takmaling-viken/before-1-mossy.webp",
-};
-
-function projectMediaFromUploadOrUrl(
-  media: MediaLike,
-  url: string | null | undefined,
-  fallback: CmsMedia,
-): CmsMedia {
-  const resolved = mediaFromUploadOrUrl(media, url, fallback, "card");
-  const override = projectImageOverrides[resolved.url];
-
-  return override ? { ...resolved, url: override } : resolved;
 }
 
 function parseOpeningDays(
@@ -517,8 +511,19 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
           }))
         : fallback.services;
 
+    const cmsProjectsHaveLegacyImages = projectsRes.docs.some((doc) =>
+      (doc.stages || []).some(
+        (stage: { image?: MediaLike; imageUrl?: string | null }) => {
+          const imageUrl =
+            resolveMediaUrl(stage.image, "card") || stage.imageUrl?.trim();
+
+          return imageUrl?.startsWith("/references/");
+        },
+      ),
+    );
+
     const projects: CmsProject[] =
-      projectsRes.docs.length > 0
+      projectsRes.docs.length > 0 && !cmsProjectsHaveLegacyImages
         ? projectsRes.docs.map((doc) => ({
             id: String(doc.id),
             title: { no: doc.titleNo, en: doc.titleEn },
@@ -533,10 +538,11 @@ export const getSiteContent = cache(async (): Promise<SiteContent> => {
               }) => ({
                 label: stage.label,
                 caption: { no: stage.captionNo, en: stage.captionEn },
-                image: projectMediaFromUploadOrUrl(
+                image: mediaFromUploadOrUrl(
                   stage.image,
                   stage.imageUrl,
                   fallback.settings.images.hero,
+                  "card",
                 ),
               }),
             ),

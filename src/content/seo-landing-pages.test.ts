@@ -4,6 +4,7 @@ import {
   seoLandingPages,
   seoLandingSlugs,
 } from "./seo-landing-pages";
+import { projects } from "./site-content";
 
 describe("SEO landing pages", () => {
   it("contains every priority Norwegian search page", () => {
@@ -39,9 +40,21 @@ describe("SEO landing pages", () => {
       expect(page.benefits.length).toBeGreaterThanOrEqual(4);
       expect(page.process.length).toBeGreaterThanOrEqual(4);
       expect(page.faq.length).toBeGreaterThanOrEqual(3);
-      expect(page.image).toMatch(/^\/references\//);
+      expect(page.image).toMatch(/^\/gallery\/takfornyelse\//);
       expect(getSeoLandingPage(page.slug)).toBe(page);
     }
+  });
+
+  it("publishes all 12 new Takfornyelse gallery images", () => {
+    const images = projects.flatMap((project) =>
+      project.stages.map((stage) => stage.image),
+    );
+
+    expect(images).toHaveLength(12);
+    expect(new Set(images).size).toBe(12);
+    expect(
+      images.every((image) => image.startsWith("/gallery/takfornyelse/")),
+    ).toBe(true);
   });
 
   it("keeps renewal prices aligned with the published packages", () => {

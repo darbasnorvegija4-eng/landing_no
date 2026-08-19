@@ -12,10 +12,17 @@ import { dirname, join } from "node:path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 
-const noMessages = JSON.parse(readFileSync(join(root, "src/i18n/messages/no.json"), "utf8"));
-const enMessages = JSON.parse(readFileSync(join(root, "src/i18n/messages/en.json"), "utf8"));
+const noMessages = JSON.parse(
+  readFileSync(join(root, "src/i18n/messages/no.json"), "utf8"),
+);
+const enMessages = JSON.parse(
+  readFileSync(join(root, "src/i18n/messages/en.json"), "utf8"),
+);
 
-const url = process.env.DATABASE_URL?.replace(/[&?]channel_binding=require/g, "");
+const url = process.env.DATABASE_URL?.replace(
+  /[&?]channel_binding=require/g,
+  "",
+);
 if (!url?.startsWith("postgres")) {
   console.error("DATABASE_URL must be postgres");
   process.exit(1);
@@ -29,11 +36,9 @@ const pool = new pg.Pool({
 });
 
 const siteImages = {
-  hero: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=2000&q=80",
-  newRoof:
-    "https://images.unsplash.com/photo-1475855581690-80accde3ae2b?auto=format&fit=crop&w=1400&q=80",
-  about:
-    "https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1400&q=80",
+  hero: "/gallery/takfornyelse/06-L-finished-house-roof.jpg",
+  newRoof: "/gallery/takfornyelse/12-S-finished-house-roof.jpg",
+  about: "/gallery/takfornyelse/04-L-worker-pressure-washing.jpg",
 };
 
 const serviceKeys = [
@@ -80,8 +85,18 @@ const products = [
       "Vannbasert nanoimpregnering uten farlige tilsetninger. Skaper en usynlig, vannavvisende barriere uten film – underlaget puster fritt mens fukt og smuss holdes ute.",
     descriptionEn:
       "Water-based nano impregnation without harmful additives. Creates an invisible water-repellent barrier without a film – the substrate breathes while moisture and dirt stay out.",
-    badgesNo: ["Nanoteknologi", "Diffusjonsåpen", "Usynlig beskyttelse", "Miljøvennlig"],
-    badgesEn: ["Nanotechnology", "Vapour-open", "Invisible protection", "Eco-friendly"],
+    badgesNo: [
+      "Nanoteknologi",
+      "Diffusjonsåpen",
+      "Usynlig beskyttelse",
+      "Miljøvennlig",
+    ],
+    badgesEn: [
+      "Nanotechnology",
+      "Vapour-open",
+      "Invisible protection",
+      "Eco-friendly",
+    ],
   },
   {
     name: "NowoDry WB",
@@ -91,8 +106,18 @@ const products = [
       "Kraftig vannbasert impregnering for langvarig beskyttelse mot fukt. Ideell for takstein, heller og murverk der maksimal vannavvisning og frostbeskyttelse trengs.",
     descriptionEn:
       "Strong water-based impregnation for lasting moisture protection. Ideal for tiles, paving and masonry where maximum water repellence and frost protection are needed.",
-    badgesNo: ["Sterk vannavvisning", "Frostbeskyttelse", "Langvarig", "Enkel påføring"],
-    badgesEn: ["Strong water repellence", "Frost protection", "Long-lasting", "Easy to apply"],
+    badgesNo: [
+      "Sterk vannavvisning",
+      "Frostbeskyttelse",
+      "Langvarig",
+      "Enkel påføring",
+    ],
+    badgesEn: [
+      "Strong water repellence",
+      "Frost protection",
+      "Long-lasting",
+      "Easy to apply",
+    ],
   },
   {
     name: "NowoClean",
@@ -102,8 +127,18 @@ const products = [
       "Effektivt rengjøringsmiddel for skånsom vask av papp-, skifer- og shingeltak. Fjerner smuss og alger uten å skade overflaten – og gir godt underlag for videre behandling.",
     descriptionEn:
       "Effective cleaner for gentle washing of felt, slate and shingle roofs. Removes dirt and algae without damaging the surface – and prepares for further treatment.",
-    badgesNo: ["Skånsom vask", "Fjerner alger", "For alle taktyper", "Biologisk nedbrytbar"],
-    badgesEn: ["Gentle wash", "Removes algae", "All roof types", "Biodegradable"],
+    badgesNo: [
+      "Skånsom vask",
+      "Fjerner alger",
+      "For alle taktyper",
+      "Biologisk nedbrytbar",
+    ],
+    badgesEn: [
+      "Gentle wash",
+      "Removes algae",
+      "All roof types",
+      "Biodegradable",
+    ],
   },
 ];
 
@@ -152,104 +187,93 @@ const faqItems = [
 
 const projects = [
   {
-    titleNo: "Takvask og impregnering – enebolig i Oslo",
-    titleEn: "Roof wash and impregnation – detached house in Oslo",
+    titleNo: "Takvask – før, under og etter",
+    titleEn: "Roof washing – before, during and after",
     stages: [
       {
         label: "before",
-        imageUrl: "/references/takvask-oslo/before-1.webp",
-        captionNo: "Mosegrodd takstein før vask",
-        captionEn: "Moss-covered tiles before washing",
+        imageUrl: "/gallery/takfornyelse/01-L-before-heavy-moss.jpg",
+        captionNo: "Skitten og mosegrodd takstein før vask",
+        captionEn: "Dirty, moss-covered roof tiles before washing",
+      },
+      {
+        label: "after",
+        imageUrl: "/gallery/takfornyelse/05-L-after-clean-roof.jpg",
+        captionNo: "Ren takflate etter grundig vask",
+        captionEn: "Clean roof surface after thorough washing",
       },
       {
         label: "before",
-        imageUrl: "/references/takvask-oslo/before-2.webp",
-        captionNo: "Skitten takflate med kraftig mosevekst",
-        captionEn: "Dirty roof surface with heavy moss growth",
+        imageUrl: "/gallery/takfornyelse/02-L-before-tile-detail.jpg",
+        captionNo: "Mose og begroing mellom taksteinene før behandling",
+        captionEn: "Moss and organic growth between tiles before treatment",
       },
       {
-        label: "after",
-        imageUrl: "/references/takvask-oslo/after-1.webp",
-        captionNo: "Enebolig etter takvask – Oslo",
-        captionEn: "Detached house after roof wash – Oslo",
-      },
-      {
-        label: "after",
-        imageUrl: "/references/takvask-oslo/after-2.webp",
-        captionNo: "Ren takstein klar for impregnering",
-        captionEn: "Clean tiles ready for impregnation",
+        label: "during",
+        imageUrl: "/gallery/takfornyelse/04-L-worker-pressure-washing.jpg",
+        captionNo: "Takvask under utførelse",
+        captionEn: "Roof washing in progress",
       },
     ],
   },
   {
-    titleNo: "Takmaling – 240 m² tak i Viken",
-    titleEn: "Roof painting – 240 m² roof in Viken",
+    titleNo: "Takmaling – tydelig før og etter",
+    titleEn: "Roof painting – a clear before and after",
     stages: [
       {
-        label: "before",
-        imageUrl: "/references/takmaling-viken/before-1-mossy.webp",
-        captionNo: "Falmet betongtakstein før maling",
-        captionEn: "Faded concrete tiles before painting",
-      },
-      {
-        label: "before",
-        imageUrl: "/references/takmaling-viken/before-2.webp",
-        captionNo: "Slitt takflate rundt pipe og beslag",
-        captionEn: "Worn roof surface around chimney and flashings",
+        label: "during",
+        imageUrl: "/gallery/takfornyelse/03-L-before-after-painting.jpg",
+        captionNo: "Tydelig kontrast mellom ubehandlet og malt tak",
+        captionEn: "Clear contrast between untreated and painted roof tiles",
       },
       {
         label: "during",
-        imageUrl: "/references/takmaling-viken/during-1.webp",
-        captionNo: "Maling underveis – tydelig før/etter-kontrast",
-        captionEn: "Painting in progress – clear before/after contrast",
+        imageUrl: "/gallery/takfornyelse/08-S-before-after-washing-worker.jpg",
+        captionNo: "Rengjøring og klargjøring før videre behandling",
+        captionEn: "Cleaning and preparation before further treatment",
+      },
+      {
+        label: "during",
+        imageUrl: "/gallery/takfornyelse/09-S-before-after-painting.jpg",
+        captionNo: "Takmaling underveis med synlig før-og-etter-effekt",
+        captionEn:
+          "Roof painting in progress with a visible before-and-after effect",
       },
       {
         label: "after",
-        imageUrl: "/references/takmaling-viken/after-1.webp",
-        captionNo: "Ferdig sort tak – 240 m² enebolig",
-        captionEn: "Finished black roof – 240 m² detached house",
-      },
-      {
-        label: "after",
-        imageUrl: "/references/takmaling-viken/after-2.webp",
-        captionNo: "Jeven, beskyttet overflate etter maling",
-        captionEn: "Even, protected surface after painting",
+        imageUrl: "/gallery/takfornyelse/10-S-after-coated-detail.jpg",
+        captionNo: "Jevn og beskyttet takflate etter behandling",
+        captionEn: "Even, protected roof surface after treatment",
       },
     ],
   },
   {
-    titleNo: "Takfornying av borettslag – 18 boliger",
-    titleEn: "Housing association roof renewal – 18 homes",
+    titleNo: "Ferdig behandlede tak – ulike boliger",
+    titleEn: "Finished roofs – different homes",
     stages: [
       {
         label: "before",
-        imageUrl: "/references/borettslag/before-1.webp",
-        captionNo: "Mosegrodde tak før fornying",
-        captionEn: "Mossy roofs before renewal",
+        imageUrl: "/gallery/takfornyelse/07-S-before-moss-ridge.jpg",
+        captionNo: "Mosegrodd møne og takstein før fornying",
+        captionEn: "Moss-covered ridge and roof tiles before renewal",
       },
       {
         label: "after",
-        imageUrl: "/references/borettslag/after-1.webp",
-        captionNo: "Fornyede tak over 18 boliger",
-        captionEn: "Renewed roofs across 18 homes",
+        imageUrl: "/gallery/takfornyelse/11-S-finished-clean-roof.jpg",
+        captionNo: "Rent og ferdig behandlet tak",
+        captionEn: "Clean, fully treated roof",
       },
       {
         label: "after",
-        imageUrl: "/references/borettslag/after-2.webp",
-        captionNo: "Luftfoto av ferdig borettslag",
-        captionEn: "Aerial view of completed housing association",
+        imageUrl: "/gallery/takfornyelse/06-L-finished-house-roof.jpg",
+        captionNo: "Ferdig fornyet tak på enebolig",
+        captionEn: "Completed roof renewal on a detached home",
       },
       {
         label: "after",
-        imageUrl: "/references/borettslag/after-3.webp",
-        captionNo: "Store takflater med jevn finish",
-        captionEn: "Large roof areas with an even finish",
-      },
-      {
-        label: "during",
-        imageUrl: "/references/borettslag/during-1.webp",
-        captionNo: "Kontroll av takflate under arbeidet",
-        captionEn: "Roof surface check during the work",
+        imageUrl: "/gallery/takfornyelse/12-S-finished-house-roof.jpg",
+        captionNo: "Bolig med ferdig behandlet tak og jevn finish",
+        captionEn: "Home with a fully treated roof and an even finish",
       },
     ],
   },
@@ -399,7 +423,9 @@ try {
     console.log("· FAQ already present");
   }
 
-  console.log("Done. Edit content in /admin → Site Settings, Services, Projects, Products, FAQ.");
+  console.log(
+    "Done. Edit content in /admin → Site Settings, Services, Projects, Products, FAQ.",
+  );
 } catch (err) {
   console.error(err);
   process.exitCode = 1;
