@@ -11,12 +11,12 @@ export function GoogleReviewActions({ locale, size = "default" }: Props) {
   const copy =
     locale === "no"
       ? {
-          write: "Skriv en omtale på Google",
-          view: "Se Google-profilen",
+          write: "Vurder Takfornyelse på Google",
+          view: "Se Takfornyelse på Google",
         }
       : {
-          write: "Write a review on Google",
-          view: "View the Google profile",
+          write: "Review Takfornyelse on Google",
+          view: "View Takfornyelse on Google",
         };
 
   return (

@@ -4,7 +4,8 @@
 
 - Be om omtale: <https://g.page/r/CYa-JdXzZzxbEBM/review>
 - Se bedriftsprofilen: <https://www.google.com/maps?cid=6574243853004816006>
-- Profilnavn: **Fornyelse Gruppen AS** (selskapet bak Takfornyelse)
+- Profilnavn: **Takfornyelse**
+- Juridisk selskap: **Fornyelse Gruppen AS**, org.nr. 916 693 168
 
 ## Når forespørselen sendes
 

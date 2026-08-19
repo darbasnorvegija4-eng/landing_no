@@ -24,9 +24,11 @@ describe("customer testimonials", () => {
 
   it("does not publish an unsupported numeric Google rating", () => {
     expect(googleTrustLabel("4.9/5 på Google", "no")).toBe(
-      "Kundeomtaler på Google",
+      "Vurder Takfornyelse på Google",
     );
-    expect(googleTrustLabel("4.9/5 on Google", "en")).toBe("Reviews on Google");
+    expect(googleTrustLabel("4.9/5 on Google", "en")).toBe(
+      "Review Takfornyelse on Google",
+    );
   });
 
   it("sanitizes the existing CMS rating before it reaches the page", () => {
@@ -42,8 +44,17 @@ describe("customer testimonials", () => {
     );
 
     expect(copy.hero.trustRating).toEqual({
-      no: "Kundeomtaler på Google",
-      en: "Reviews on Google",
+      no: "Vurder Takfornyelse på Google",
+      en: "Review Takfornyelse on Google",
     });
+  });
+
+  it("replaces legacy generic Google labels with the Takfornyelse CTA", () => {
+    expect(googleTrustLabel("Kundeomtaler på Google", "no")).toBe(
+      "Vurder Takfornyelse på Google",
+    );
+    expect(googleTrustLabel("Reviews on Google", "en")).toBe(
+      "Review Takfornyelse on Google",
+    );
   });
 });
