@@ -16,14 +16,14 @@ export function TestimonialsSection() {
     locale === "no"
       ? {
           intro:
-            "Vi samler nye, verifiserbare kundeomtaler på Google-profilen til Fornyelse Gruppen AS – selskapet bak Takfornyelse.",
+            "Vi samler nye, verifiserbare kundeomtaler på Google-profilen til Takfornyelse.",
           empty:
             "Har vi utført arbeid for deg? Vi setter pris på en ærlig tilbakemelding om kommunikasjonen, arbeidet og resultatet.",
           all: "Les om kundeomtaler",
         }
       : {
           intro:
-            "We collect new, verifiable customer reviews on the Google profile of Fornyelse Gruppen AS – the company behind Takfornyelse.",
+            "We collect new, verifiable customer reviews on the Takfornyelse Google profile.",
           empty:
             "Have we completed work for you? We appreciate honest feedback about the communication, work and result.",
           all: "Read about customer reviews",

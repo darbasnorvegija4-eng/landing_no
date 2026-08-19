@@ -7,6 +7,8 @@ export type Testimonial = {
 const genericAuthorPattern =
   /^(kunde|customer|borettslag|housing association)(?:\s*,|$)/i;
 const numericGoogleRatingPattern = /\d(?:[.,]\d)?\s*\/\s*5.*google/i;
+const legacyGoogleLabelPattern =
+  /^(kundeomtaler på google|reviews on google)$/i;
 
 export function isPublishableTestimonial(item: Testimonial): boolean {
   const quote = item.quote.trim();
@@ -21,9 +23,16 @@ export function isPublishableTestimonial(item: Testimonial): boolean {
 
 export function googleTrustLabel(value: string, locale: "no" | "en"): string {
   const fallback =
-    locale === "no" ? "Kundeomtaler på Google" : "Reviews on Google";
+    locale === "no"
+      ? "Vurder Takfornyelse på Google"
+      : "Review Takfornyelse on Google";
   const label = value.trim();
 
-  if (!label || numericGoogleRatingPattern.test(label)) return fallback;
+  if (
+    !label ||
+    numericGoogleRatingPattern.test(label) ||
+    legacyGoogleLabelPattern.test(label)
+  )
+    return fallback;
   return label;
 }

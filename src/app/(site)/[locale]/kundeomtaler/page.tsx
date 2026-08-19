@@ -23,11 +23,11 @@ const pageCopy = {
   no: {
     metaTitle: "Kundeomtaler om takvask og takfornying",
     metaDescription:
-      "Les dokumenterte kundeerfaringer og legg igjen en ærlig Google-omtale av Takfornyelse og Fornyelse Gruppen AS.",
+      "Les dokumenterte kundeerfaringer og legg igjen en ærlig Google-omtale av Takfornyelse.",
     eyebrow: "Kundeomtaler",
     title: "Del din erfaring med Takfornyelse",
     intro:
-      "Vi samler nye, verifiserbare kundeomtaler på Google-profilen til Fornyelse Gruppen AS – selskapet bak Takfornyelse. Tilbakemeldingene hjelper andre boligeiere med å velge riktig takbehandling.",
+      "Vi samler nye, verifiserbare kundeomtaler på Google-profilen til Takfornyelse. Tilbakemeldingene hjelper andre boligeiere med å velge riktig takbehandling.",
     reviewsTitle: "Dokumenterte kundeerfaringer",
     emptyTitle: "Vi bygger en åpen og etterprøvbar omtalehistorikk",
     emptyBody:
@@ -41,18 +41,17 @@ const pageCopy = {
     ctaTitle: "Har vi jobbet på taket ditt?",
     ctaBody:
       "Fortell gjerne hva vi utførte, hvor arbeidet ble gjort og hvordan du opplevde kommunikasjonen og resultatet. Du velger selv vurdering og innhold.",
-    profileNote:
-      "Google-omtalen publiseres på profilen til Fornyelse Gruppen AS, organisasjonen bak Takfornyelse.",
+    profileNote: "Google-omtalen publiseres på profilen til Takfornyelse.",
     home: "Forside",
   },
   en: {
     metaTitle: "Customer reviews of roof cleaning and renewal",
     metaDescription:
-      "Read documented customer experiences and leave an honest Google review of Takfornyelse and Fornyelse Gruppen AS.",
+      "Read documented customer experiences and leave an honest Google review of Takfornyelse.",
     eyebrow: "Customer reviews",
     title: "Share your experience with Takfornyelse",
     intro:
-      "We collect new, verifiable customer reviews on the Google profile of Fornyelse Gruppen AS – the company behind Takfornyelse. The feedback helps other homeowners choose the right roof treatment.",
+      "We collect new, verifiable customer reviews on the Takfornyelse Google profile. The feedback helps other homeowners choose the right roof treatment.",
     reviewsTitle: "Documented customer experiences",
     emptyTitle: "We are building an open and verifiable review history",
     emptyBody:
@@ -66,8 +65,7 @@ const pageCopy = {
     ctaTitle: "Have we worked on your roof?",
     ctaBody:
       "Tell others what we completed, where the work took place, and how you experienced the communication and result. You choose the rating and wording.",
-    profileNote:
-      "The Google review is published on the profile of Fornyelse Gruppen AS, the company behind Takfornyelse.",
+    profileNote: "The Google review is published on the Takfornyelse profile.",
     home: "Home",
   },
 } as const;
