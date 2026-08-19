@@ -43,7 +43,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask",
     serviceKey: "wash",
-    referenceProjectId: "takvask-oslo",
+    referenceProjectId: "takvask-for-og-etter",
     title: l(
       "Takvask som fjerner mose, alger og smuss",
       "Professional roof cleaning",
@@ -61,7 +61,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Mose og alger holder på fukt og gjør taket glatt og slitt. Vi vurderer taket først og velger trykk, kjemi og arbeidsmetode som passer materialet.",
       "Moss and algae retain moisture and leave the roof slippery and worn. We inspect first and choose pressure, products and a method suited to the material.",
     ),
-    image: "/references/takvask-oslo/after-1.webp",
+    image: "/gallery/takfornyelse/05-L-after-clean-roof.jpg",
     imageAlt: l(
       "Enebolig i Oslo etter profesjonell takvask",
       "Oslo home after professional roof cleaning",
@@ -137,7 +137,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask-og-impregnering",
     serviceKey: "impregnation",
-    referenceProjectId: "takvask-oslo",
+    referenceProjectId: "takvask-for-og-etter",
     title: l(
       "Takvask og impregnering i én trygg prosess",
       "Roof cleaning and impregnation",
@@ -155,7 +155,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Et rent tak er utgangspunktet for god impregnering. Når taksteinen er egnet, trenger behandlingen inn i overflaten og reduserer fuktopptak uten å skjule takets uttrykk.",
       "A clean roof is the basis for effective impregnation. On suitable tiles, the treatment penetrates the surface and reduces moisture absorption without changing the roof's appearance.",
     ),
-    image: "/references/takvask-oslo/after-2.webp",
+    image: "/gallery/takfornyelse/11-S-finished-clean-roof.jpg",
     imageAlt: l(
       "Ren takstein klar for impregnering",
       "Clean roof tiles ready for impregnation",
@@ -237,7 +237,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takmaling",
     serviceKey: "paint",
-    referenceProjectId: "takmaling-viken",
+    referenceProjectId: "takmaling-for-og-etter",
     title: l(
       "Takmaling med riktig vask og forarbeid",
       "Roof coating with proper preparation",
@@ -255,7 +255,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Takmaling kan gi falmet betongtakstein ny beskyttelse og et jevnt uttrykk når selve taket er teknisk egnet. Resultatet avgjøres av tilstand, rengjøring, heft og værforhold.",
       "Roof coating can give faded concrete tiles renewed protection and an even finish when the roof is technically suitable. Condition, cleaning, adhesion and weather determine the result.",
     ),
-    image: "/references/takmaling-viken/after-1.webp",
+    image: "/gallery/takfornyelse/10-S-after-coated-detail.jpg",
     imageAlt: l(
       "Ferdig malt sort tak på enebolig i Viken",
       "Finished black coated roof on a Viken home",
@@ -331,7 +331,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takfornying",
     serviceKey: "inspection",
-    referenceProjectId: "borettslag",
+    referenceProjectId: "ferdig-behandlede-tak",
     title: l(
       "Komplett takfornying uten unødvendig takbytte",
       "Complete roof renewal",
@@ -349,7 +349,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Takfornying er en samlet prosess for tak som fortsatt har et godt teknisk grunnlag. Vi undersøker først om vedlikehold er riktig – og anbefaler nytt tak dersom skadene er for omfattende.",
       "Roof renewal is a complete process for roofs with a sound technical basis. We first determine whether maintenance is appropriate and recommend replacement if damage is too extensive.",
     ),
-    image: "/references/borettslag/after-2.webp",
+    image: "/gallery/takfornyelse/12-S-finished-house-roof.jpg",
     imageAlt: l(
       "Luftfoto av ferdig takfornyet borettslag",
       "Aerial view of a renewed housing association",
@@ -448,7 +448,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Når takstein, undertak eller konstruksjon har omfattende skader, kan komplett takbytte være tryggere og mer økonomisk enn overflatebehandling. Vi vurderer hele takoppbygningen.",
       "When tiles, underlay or construction have extensive damage, full replacement may be safer and more economical than surface treatment. We assess the whole roof build-up.",
     ),
-    image: "/references/borettslag/during-1.webp",
+    image: "/gallery/takfornyelse/04-L-worker-pressure-washing.jpg",
     imageAlt: l(
       "Kontroll av takflate under takarbeid",
       "Roof surface inspection during roofing work",
@@ -540,7 +540,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "To like store tak kan kreve ulik behandling. Derfor viser vi prisdrivere og veiledende nivåer, mens den endelige prisen settes etter at vi har vurdert taket og avklart omfanget.",
       "Two roofs of the same size can require different treatment. We therefore explain price factors and indicative levels, while the final price follows an assessment and agreed scope.",
     ),
-    image: "/references/takmaling-viken/during-1.webp",
+    image: "/gallery/takfornyelse/09-S-before-after-painting.jpg",
     imageAlt: l(
       "Takmaling under arbeid med tydelig før- og etterkontrast",
       "Roof coating in progress with a clear before-and-after contrast",
@@ -613,7 +613,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask-oslo",
     areaServed: l("Oslo", "Oslo"),
-    referenceProjectId: "takvask-oslo",
+    referenceProjectId: "takvask-for-og-etter",
     title: l("Takvask i Oslo tilpasset byens boliger", "Roof cleaning in Oslo"),
     metaTitle: l(
       "Takvask Oslo – pris og gratis befaring | Takfornyelse",
@@ -628,7 +628,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Tak i Oslo påvirkes ulikt av skygge, trær, trafikkstøv og tett bebyggelse. I områder med krevende adkomst må også sikring, naboer og beskyttelse av utearealer planlegges før vask.",
       "Oslo roofs are affected differently by shade, trees, traffic dust and dense housing. Where access is difficult, safety, neighbours and protection of outdoor areas must be planned before cleaning.",
     ),
-    image: "/references/takvask-oslo/after-1.webp",
+    image: "/gallery/takfornyelse/05-L-after-clean-roof.jpg",
     imageAlt: l(
       "Dokumentert enebolig i Oslo etter takvask",
       "Documented Oslo home after roof cleaning",
@@ -710,7 +710,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takfornying-baerum",
     areaServed: l("Bærum", "Bærum"),
-    referenceProjectId: "borettslag",
+    referenceProjectId: "ferdig-behandlede-tak",
     title: l(
       "Takfornying i Bærum med vurdering før behandling",
       "Roof renewal in Bærum",
@@ -728,7 +728,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Bærum har både eldre eneboliger, nyere boligfelt og hus nær skog og fjord. Skygge, vegetasjon, værside og takets alder påvirker om vask og overflatebehandling er riktig, eller om større tiltak bør vurderes.",
       "Bærum has older detached homes, newer developments and houses near woods and the fjord. Shade, vegetation, exposure and roof age affect whether cleaning and treatment are suitable or larger measures are needed.",
     ),
-    image: "/references/borettslag/after-1.webp",
+    image: "/gallery/takfornyelse/06-L-finished-house-roof.jpg",
     imageAlt: l(
       "Ferdig fornyede tak på boliger",
       "Completed renewed roofs on homes",
@@ -813,7 +813,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takmaling-drammen",
     areaServed: l("Drammen og nærområdene", "Drammen and nearby areas"),
-    referenceProjectId: "takmaling-viken",
+    referenceProjectId: "takmaling-for-og-etter",
     title: l(
       "Takmaling i Drammen med grundig forarbeid",
       "Roof coating in Drammen",
@@ -831,7 +831,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Boliger i Drammensområdet kan ha stor variasjon i sol, skygge og fukt mellom dalsider og åpne områder. Før maling undersøker vi derfor begroing, slitasje, taksteinens styrke og om overflaten gir riktig heft.",
       "Homes around Drammen can vary greatly in sun, shade and moisture between valley sides and open areas. Before coating we assess growth, wear, tile strength and surface adhesion.",
     ),
-    image: "/references/takmaling-viken/after-2.webp",
+    image: "/gallery/takfornyelse/03-L-before-after-painting.jpg",
     imageAlt: l(
       "Dokumentert malt tak i Viken etter ferdig behandling",
       "Documented coated roof in Viken after treatment",
@@ -916,7 +916,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takvask-og-impregnering-lillestrom",
     areaServed: l("Lillestrøm og nærområdene", "Lillestrøm and nearby areas"),
-    referenceProjectId: "takvask-oslo",
+    referenceProjectId: "takvask-for-og-etter",
     title: l(
       "Takvask og impregnering i Lillestrøm",
       "Roof cleaning and impregnation in Lillestrøm",
@@ -934,7 +934,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Flate områder, fuktige perioder og vegetasjon rundt boligen kan gi gode vekstvilkår for mose og alger i Lillestrøm. Vi undersøker om taksteinen er egnet for vask og impregnering og planlegger behandlingen etter vær og tørketid.",
       "Flat terrain, damp periods and vegetation can create favourable conditions for moss and algae in Lillestrøm. We assess whether tiles suit cleaning and impregnation and plan around weather and drying time.",
     ),
-    image: "/references/takvask-oslo/after-2.webp",
+    image: "/gallery/takfornyelse/11-S-finished-clean-roof.jpg",
     imageAlt: l(
       "Ren takstein etter vask og før beskyttende behandling",
       "Clean roof tiles after washing and before protective treatment",
@@ -1013,7 +1013,7 @@ export const seoLandingPages: SeoLandingPage[] = [
   {
     slug: "takfornying-viken",
     areaServed: l("Viken-regionen", "the Viken region"),
-    referenceProjectId: "takmaling-viken",
+    referenceProjectId: "takmaling-for-og-etter",
     title: l(
       "Takfornying i Viken dokumentert med ekte prosjekter",
       "Roof renewal in Viken with documented projects",
@@ -1031,7 +1031,7 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Viken dekker kyst, dalfører, byområder og skogsnære boliger med svært ulike vær- og fuktforhold. Vi bruker befaringen til å velge riktig nivå og viser dokumenterte resultater fra et 240 m² takmalingsprosjekt i regionen.",
       "Viken spans coast, valleys, urban areas and homes near woodland with varied weather and moisture. We use the inspection to select the right level and show documented results from a 240 m² coating project in the region.",
     ),
-    image: "/references/takmaling-viken/before-1-mossy.webp",
+    image: "/gallery/takfornyelse/02-L-before-tile-detail.jpg",
     imageAlt: l(
       "Dokumentert 240 m² tak i Viken før takfornying",
       "Documented 240 m² roof in Viken before renewal",
