@@ -13,6 +13,15 @@ test("Norwegian landing page renders its primary content", async ({ page }) => {
   await expect(page.getByText("99", { exact: true })).toBeVisible();
   await expect(page.getByText("138", { exact: true })).toBeVisible();
   await expect(page.getByText("337", { exact: true })).toBeVisible();
+  await expect(page.getByText("375 000 kr", { exact: true })).toBeVisible();
+  await expect(page.getByText("63 188 kr", { exact: true })).toBeVisible();
+  await expect(page.getByText("311 813 kr", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(
+      "I dette regneeksempelet er takfornying omtrent 83 % rimeligere",
+      { exact: true },
+    ),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "5,0/5 på Google · 2 omtaler" }),
   ).toHaveAttribute("href", "https://g.page/r/CYa-JdXzZzxbEBM/review");

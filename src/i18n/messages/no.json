@@ -97,14 +97,14 @@
   "calculator": {
     "eyebrow": "Kalkulator",
     "title": "Se hva du kan spare",
-    "subtitle": "Sammenlign estimert pris for takfornying med å legge helt nytt tak.",
-    "hint": "Dra for å justere takets størrelse",
-    "sizeLabel": "Takets størrelse",
-    "newRoof": "Nytt tak",
-    "renewal": "Takfornying",
-    "youSave": "Estimert besparelse",
-    "cheaper": "I dette eksempelet er takfornying omtrent {percent} % rimeligere enn nytt tak",
-    "disclaimer": "Veiledende totalestimat som inkluderer typisk forarbeid, sikring og adkomst. Pakkeprisene er fra-priser. Nøyaktig pris fastsettes etter gratis befaring.",
+    "subtitle": "Sammenlign en veiledende markedspris for nytt tak med vår fra-pris for komplett takfornying.",
+    "hint": "Velg beregnet takflate. Takflaten er vanligvis større enn boligens grunnflate.",
+    "sizeLabel": "Takflate",
+    "newRoof": "Nytt tak – markedsestimat",
+    "renewal": "Komplett takfornying – fra",
+    "youSave": "Estimert prisforskjell",
+    "cheaper": "I dette regneeksempelet er takfornying omtrent {percent} % rimeligere",
+    "disclaimer": "Alle beløp er inkludert mva. Nytt tak beregnes med et veiledende markedsestimat på 2 500 kr/m². Komplett takfornying beregnes fra 421,25 kr/m² for vask, impregnering og maling. Tilstand, helling, adkomst og sikring kan påvirke endelig pris, som fastsettes etter gratis befaring.",
     "cta": "Få gratis befaring og tilbud"
   },
   "newRoof": {

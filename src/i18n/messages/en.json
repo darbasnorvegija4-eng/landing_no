@@ -97,14 +97,14 @@
   "calculator": {
     "eyebrow": "Calculator",
     "title": "See what you can save",
-    "subtitle": "Compare an estimated price for roof renewal with installing a completely new roof.",
-    "hint": "Drag to adjust roof size",
-    "sizeLabel": "Roof size",
-    "newRoof": "New roof",
-    "renewal": "Roof renewal",
-    "youSave": "Estimated savings",
-    "cheaper": "In this example, roof renewal is approximately {percent}% less than a new roof",
-    "disclaimer": "Indicative total estimate including typical preparation, safety and access. Package prices are starting prices. The exact price is set after a free inspection.",
+    "subtitle": "Compare an indicative market price for a new roof with our starting price for complete roof renewal.",
+    "hint": "Select the estimated roof surface. The roof surface is usually larger than the home's floor area.",
+    "sizeLabel": "Roof surface",
+    "newRoof": "New roof – market estimate",
+    "renewal": "Complete roof renewal – from",
+    "youSave": "Estimated price difference",
+    "cheaper": "In this example, roof renewal is approximately {percent}% less expensive",
+    "disclaimer": "All amounts include VAT. A new roof is calculated using an indicative market estimate of NOK 2,500/m². Complete roof renewal is calculated from NOK 421.25/m² for cleaning, impregnation and painting. Condition, pitch, access and safety requirements may affect the final price, which is set after a free inspection.",
     "cta": "Get a free inspection and quote"
   },
   "newRoof": {

@@ -12,3 +12,11 @@ export function formatNok(value: number, locale: string = "nb-NO") {
     maximumFractionDigits: 0,
   }).format(value);
 }
+
+export function formatNokRate(value: number, locale: string = "nb-NO") {
+  return new Intl.NumberFormat(locale === "en" ? "en-NO" : "nb-NO", {
+    style: "currency",
+    currency: "NOK",
+    maximumFractionDigits: 2,
+  }).format(value);
+}
