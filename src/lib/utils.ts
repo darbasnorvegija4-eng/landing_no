@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatNok(value: number, locale: string = "nb-NO") {
-  return new Intl.NumberFormat(locale === "en" ? "en-NO" : "nb-NO", {
+  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "nb-NO", {
     style: "currency",
     currency: "NOK",
     maximumFractionDigits: 0,
@@ -14,7 +14,7 @@ export function formatNok(value: number, locale: string = "nb-NO") {
 }
 
 export function formatNokRate(value: number, locale: string = "nb-NO") {
-  return new Intl.NumberFormat(locale === "en" ? "en-NO" : "nb-NO", {
+  return new Intl.NumberFormat(locale === "en" ? "en-GB" : "nb-NO", {
     style: "currency",
     currency: "NOK",
     maximumFractionDigits: 2,
