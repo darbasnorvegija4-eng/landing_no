@@ -1,3 +1,5 @@
+import { googleReviewSummary } from "@/content/google-business";
+
 export type Testimonial = {
   quote: string;
   author: string;
@@ -22,10 +24,7 @@ export function isPublishableTestimonial(item: Testimonial): boolean {
 }
 
 export function googleTrustLabel(value: string, locale: "no" | "en"): string {
-  const fallback =
-    locale === "no"
-      ? "Vurder Takfornyelse på Google"
-      : "Review Takfornyelse on Google";
+  const verifiedSummary = googleReviewSummary(locale);
   const label = value.trim();
 
   if (
@@ -33,6 +32,6 @@ export function googleTrustLabel(value: string, locale: "no" | "en"): string {
     numericGoogleRatingPattern.test(label) ||
     legacyGoogleLabelPattern.test(label)
   )
-    return fallback;
+    return verifiedSummary;
   return label;
 }
