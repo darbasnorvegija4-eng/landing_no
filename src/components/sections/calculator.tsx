@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { usePageCopy } from "@/components/site-settings-provider";
 import type { CmsSettings } from "@/lib/cms-content";
+import { calculateRoofComparison } from "@/lib/roof-calculator";
 import { siteConfig } from "@/lib/site";
-import { formatNok } from "@/lib/utils";
+import { formatNok, formatNokRate } from "@/lib/utils";
 
 type Props = {
   calculator?: CmsSettings["calculator"];
@@ -23,18 +24,10 @@ export function CalculatorSection({
     calculator;
   const [sqm, setSqm] = useState(defaultSqm);
 
-  const { newRoof, renewal, save, savingsPercent } = useMemo(() => {
-    const newRoofCost = sqm * newRoofPerSqm;
-    const renewalCost = sqm * renewalPerSqm;
-    return {
-      newRoof: newRoofCost,
-      renewal: renewalCost,
-      save: newRoofCost - renewalCost,
-      savingsPercent: Math.round(
-        ((newRoofCost - renewalCost) / newRoofCost) * 100,
-      ),
-    };
-  }, [sqm, newRoofPerSqm, renewalPerSqm]);
+  const { newRoof, renewal, difference, savingsPercent } = useMemo(
+    () => calculateRoofComparison(sqm, newRoofPerSqm, renewalPerSqm),
+    [sqm, newRoofPerSqm, renewalPerSqm],
+  );
 
   return (
     <section id="kalkulator" className="section-pad bg-background-elevated/50">
@@ -85,8 +78,11 @@ export function CalculatorSection({
                 <p className="text-muted-foreground text-sm">
                   {copy.calculator.newRoof}
                 </p>
-                <p className="mt-2 text-xl font-bold tabular-nums line-through decoration-white/30 sm:text-2xl">
+                <p className="mt-2 text-xl font-bold tabular-nums sm:text-2xl">
                   {formatNok(newRoof, locale)}
+                </p>
+                <p className="text-muted-foreground mt-2 text-xs">
+                  {formatNokRate(newRoofPerSqm, locale)}/m²
                 </p>
               </div>
               <div className="border-accent/30 bg-accent-soft rounded-2xl border p-5">
@@ -94,13 +90,16 @@ export function CalculatorSection({
                 <p className="text-accent mt-2 text-xl font-bold tabular-nums sm:text-2xl">
                   {formatNok(renewal, locale)}
                 </p>
+                <p className="text-accent/80 mt-2 text-xs">
+                  {formatNokRate(renewalPerSqm, locale)}/m²
+                </p>
               </div>
               <div className="border-success/30 bg-success/10 rounded-2xl border p-5">
                 <p className="text-success text-sm">
                   {copy.calculator.youSave}
                 </p>
                 <p className="text-success mt-2 text-xl font-bold tabular-nums sm:text-2xl">
-                  {formatNok(save, locale)}
+                  {formatNok(difference, locale)}
                 </p>
               </div>
             </div>

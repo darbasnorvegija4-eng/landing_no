@@ -196,7 +196,11 @@ export const SiteSettings: GlobalConfig = {
               type: "group",
               fields: [
                 { name: "newRoofPerSqm", type: "number", defaultValue: 2500 },
-                { name: "renewalPerSqm", type: "number", defaultValue: 750 },
+                {
+                  name: "renewalPerSqm",
+                  type: "number",
+                  defaultValue: 421.25,
+                },
                 { name: "minSqm", type: "number", defaultValue: 50 },
                 { name: "maxSqm", type: "number", defaultValue: 500 },
                 { name: "defaultSqm", type: "number", defaultValue: 150 },
