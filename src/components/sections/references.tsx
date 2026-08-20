@@ -30,13 +30,28 @@ type LightboxState = {
   index: number;
 };
 
-const stageOrder = ["before", "during", "after"] as const;
+function arrangeStages(stages: Stage[]) {
+  const before = stages.filter((stage) => stage.label === "before");
+  const after = stages.filter((stage) => stage.label === "after");
+  const during = stages.filter((stage) => stage.label === "during");
+  const pairCount = Math.min(before.length, after.length);
+  const pairs = Array.from({ length: pairCount }, (_, index) => ({
+    before: before[index],
+    after: after[index],
+  }));
+  const remaining = [
+    ...before.slice(pairCount),
+    ...during,
+    ...after.slice(pairCount),
+  ];
 
-function groupStages(stages: Stage[]) {
   return {
-    before: stages.filter((stage) => stage.label === "before"),
-    after: stages.filter((stage) => stage.label === "after"),
-    during: stages.filter((stage) => stage.label === "during"),
+    pairs,
+    remaining,
+    ordered: [
+      ...pairs.flatMap((pair) => [pair.before, pair.after]),
+      ...remaining,
+    ],
   };
 }
 
@@ -46,9 +61,7 @@ export function ReferencesSection({ projects }: Props) {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
   const openStage = (project: CmsProject, stage: Stage) => {
-    const orderedStages = stageOrder.flatMap((label) =>
-      project.stages.filter((item) => item.label === label),
-    );
+    const orderedStages = arrangeStages(project.stages).ordered;
     const index = orderedStages.indexOf(stage);
     setLightbox({
       title: project.title[locale],
@@ -87,7 +100,7 @@ export function ReferencesSection({ projects }: Props) {
 
         <div className="mt-10 space-y-8">
           {projects.map((project, projectIndex) => {
-            const groups = groupStages(project.stages);
+            const { pairs, remaining } = arrangeStages(project.stages);
 
             return (
               <Reveal
@@ -110,25 +123,83 @@ export function ReferencesSection({ projects }: Props) {
                     </p>
                   </div>
 
-                  <div
-                    className={`grid gap-3 p-3 sm:gap-4 sm:p-4 ${
-                      groups.during.length > 0
-                        ? "lg:grid-cols-3"
-                        : "lg:grid-cols-2"
-                    }`}
-                  >
-                    {stageOrder
-                      .filter((label) => groups[label].length > 0)
-                      .map((label, stageIndex) => (
-                        <StageColumn
-                          key={`${project.id}-${label}`}
-                          stages={groups[label]}
-                          label={copy.references[label]}
-                          locale={locale}
-                          step={stageIndex + 1}
-                          onOpen={(stage) => openStage(project, stage)}
-                        />
-                      ))}
+                  <div className="space-y-8 p-3 sm:p-5">
+                    {pairs.length > 0 ? (
+                      <section aria-label={copy.references.comparisonHint}>
+                        <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                          <span className="bg-accent text-accent-foreground inline-flex size-7 items-center justify-center rounded-full text-xs font-bold">
+                            1
+                          </span>
+                          <div>
+                            <h4 className="text-sm font-bold tracking-wider text-white uppercase">
+                              {locale === "no"
+                                ? "Før og etter"
+                                : "Before and after"}
+                            </h4>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
+                              {locale === "no"
+                                ? "Sammenlign resultatet side ved side"
+                                : "Compare the result side by side"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          {pairs.map((pair, pairIndex) => (
+                            <div
+                              key={`${project.id}-pair-${pairIndex}`}
+                              className="grid grid-cols-2 items-start gap-2 sm:gap-4"
+                            >
+                              <PhotoCard
+                                stage={pair.before}
+                                label={copy.references.before}
+                                locale={locale}
+                                onOpen={() => openStage(project, pair.before)}
+                              />
+                              <PhotoCard
+                                stage={pair.after}
+                                label={copy.references.after}
+                                locale={locale}
+                                onOpen={() => openStage(project, pair.after)}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+                    ) : null}
+
+                    {remaining.length > 0 ? (
+                      <section>
+                        <div className="mb-3 flex items-center gap-3 sm:mb-4">
+                          <span className="bg-accent text-accent-foreground inline-flex size-7 items-center justify-center rounded-full text-xs font-bold">
+                            {pairs.length > 0 ? 2 : 1}
+                          </span>
+                          <div>
+                            <h4 className="text-sm font-bold tracking-wider text-white uppercase">
+                              {locale === "no" ? "Flere bilder" : "More photos"}
+                            </h4>
+                            <p className="text-muted-foreground mt-0.5 text-xs">
+                              {locale === "no"
+                                ? "Store bilder i originalt format"
+                                : "Large images in their original format"}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-5 sm:space-y-7">
+                          {remaining.map((stage, index) => (
+                            <PhotoCard
+                              key={`${stage.image.url}-${index}`}
+                              stage={stage}
+                              label={copy.references[stage.label]}
+                              locale={locale}
+                              onOpen={() => openStage(project, stage)}
+                              large
+                            />
+                          ))}
+                        </div>
+                      </section>
+                    ) : null}
                   </div>
                 </article>
               </Reveal>
@@ -152,106 +223,54 @@ export function ReferencesSection({ projects }: Props) {
   );
 }
 
-function StageColumn({
-  stages,
-  label,
-  locale,
-  step,
-  onOpen,
-}: {
-  stages: Stage[];
-  label: string;
-  locale: "no" | "en";
-  step: number;
-  onOpen: (stage: Stage) => void;
-}) {
-  const countLabel =
-    locale === "no"
-      ? stages.length === 1
-        ? "1 bilde"
-        : `${stages.length} bilder`
-      : stages.length === 1
-        ? "1 photo"
-        : `${stages.length} photos`;
-
-  return (
-    <section className="rounded-xl border border-white/10 bg-white/[0.025] p-2.5 sm:p-3">
-      <div className="mb-3 flex items-center gap-2.5 border-b border-white/10 pb-3">
-        <span className="bg-accent text-accent-foreground inline-flex size-7 shrink-0 items-center justify-center rounded-full text-xs font-bold">
-          {step}
-        </span>
-        <div>
-          <h4 className="text-xs font-bold tracking-wider text-white uppercase">
-            {label}
-          </h4>
-          <p className="text-muted-foreground mt-0.5 text-[11px]">
-            {countLabel}
-          </p>
-        </div>
-      </div>
-      <div className="space-y-3">
-        {stages.map((stage, index) => (
-          <PhotoCard
-            key={`${stage.image.url}-${index}`}
-            stage={stage}
-            label={label}
-            locale={locale}
-            position={index + 1}
-            total={stages.length}
-            onOpen={() => onOpen(stage)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function PhotoCard({
   stage,
   label,
   locale,
-  position,
-  total,
   onOpen,
+  large = false,
 }: {
   stage: Stage;
   label: string;
   locale: "no" | "en";
-  position: number;
-  total: number;
   onOpen: () => void;
+  large?: boolean;
 }) {
   const src = optimizeRemoteImageUrl(stage.image.url, {
     width: 1200,
     quality: 75,
   });
+  const isSquare = /\/\d{2}-S-/i.test(stage.image.url);
+  const isLandscape = /\/\d{2}-L-/i.test(stage.image.url);
+  const dimensions = isSquare
+    ? { width: 1200, height: 1200 }
+    : isLandscape
+      ? { width: 1200, height: 628 }
+      : { width: 1200, height: 900 };
 
   return (
-    <figure className="overflow-hidden rounded-lg border border-white/10 bg-[#15171c]">
+    <figure
+      className={`overflow-hidden border border-white/10 bg-[#0b0d12] ${
+        large ? "rounded-xl" : "rounded-lg"
+      }`}
+    >
       <button
         type="button"
         onClick={onOpen}
-        className="group relative block aspect-[4/3] w-full overflow-hidden text-left"
+        className="group relative block w-full overflow-hidden text-left"
         aria-label={stage.caption[locale]}
       >
         <Image
           src={src}
-          alt=""
-          width={1200}
-          height={900}
-          sizes="(max-width: 1024px) 100vw, 360px"
-          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-35 blur-2xl"
-          loading="lazy"
-          aria-hidden
-        />
-        <div className="absolute inset-0 bg-black/20" aria-hidden />
-        <Image
-          src={src}
           alt={stage.image.alt || stage.caption[locale]}
-          width={1200}
-          height={900}
-          sizes="(max-width: 1024px) 100vw, 360px"
-          className="absolute inset-0 h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
+          width={dimensions.width}
+          height={dimensions.height}
+          sizes={
+            large
+              ? "(max-width: 1280px) 100vw, 1150px"
+              : "(max-width: 640px) 50vw, 560px"
+          }
+          className="h-auto w-full object-contain transition-opacity duration-300 group-hover:opacity-90"
           loading="lazy"
         />
         <span className="absolute top-2 right-2 inline-flex size-8 items-center justify-center rounded-full border border-white/15 bg-black/60 text-white backdrop-blur-sm">
@@ -261,9 +280,13 @@ function PhotoCard({
           </span>
         </span>
       </button>
-      <figcaption className="min-h-[4.5rem] border-t border-white/10 px-3 py-2.5">
+      <figcaption
+        className={`border-t border-white/10 px-3 py-2.5 ${
+          large ? "sm:px-4 sm:py-3" : "min-h-[4.5rem]"
+        }`}
+      >
         <p className="text-accent text-[10px] font-bold tracking-wider uppercase">
-          {label} {position} / {total}
+          {label}
         </p>
         <p className="mt-1 text-xs leading-snug font-medium text-white/90 sm:text-sm">
           {stage.caption[locale]}
