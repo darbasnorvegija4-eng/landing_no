@@ -57,6 +57,14 @@ test("customer review page links to the verified Google review form", async ({
   ).toHaveCount(2);
 });
 
+test("English calculator uses English NOK formatting", async ({ page }) => {
+  await page.goto("/en#kalkulator");
+
+  await expect(page.getByText("NOK 375,000", { exact: true })).toBeVisible();
+  await expect(page.getByText("NOK 63,188", { exact: true })).toBeVisible();
+  await expect(page.getByText("NOK 421.25/m²", { exact: true })).toBeVisible();
+});
+
 test("roof guide links visitors to the priority service pages", async ({
   page,
 }) => {
