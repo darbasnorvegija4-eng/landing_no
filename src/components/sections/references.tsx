@@ -186,7 +186,7 @@ export function ReferencesSection({ projects }: Props) {
                           </div>
                         </div>
 
-                        <div className="space-y-5 sm:space-y-7">
+                        <div className="grid grid-cols-2 items-start gap-4 sm:gap-6 lg:gap-8">
                           {remaining.map((stage, index) => (
                             <PhotoCard
                               key={`${stage.image.url}-${index}`}
@@ -194,7 +194,6 @@ export function ReferencesSection({ projects }: Props) {
                               label={copy.references[stage.label]}
                               locale={locale}
                               onOpen={() => openStage(project, stage)}
-                              large
                             />
                           ))}
                         </div>
@@ -228,13 +227,11 @@ function PhotoCard({
   label,
   locale,
   onOpen,
-  large = false,
 }: {
   stage: Stage;
   label: string;
   locale: "no" | "en";
   onOpen: () => void;
-  large?: boolean;
 }) {
   const src = optimizeRemoteImageUrl(stage.image.url, {
     width: 1200,
@@ -249,11 +246,7 @@ function PhotoCard({
       : { width: 1200, height: 900 };
 
   return (
-    <figure
-      className={`overflow-hidden border border-white/10 bg-[#0b0d12] ${
-        large ? "rounded-xl" : "rounded-lg"
-      }`}
-    >
+    <figure className="overflow-hidden rounded-lg border border-white/10 bg-[#0b0d12]">
       <button
         type="button"
         onClick={onOpen}
@@ -265,11 +258,7 @@ function PhotoCard({
           alt={stage.image.alt || stage.caption[locale]}
           width={dimensions.width}
           height={dimensions.height}
-          sizes={
-            large
-              ? "(max-width: 1280px) 100vw, 1150px"
-              : "(max-width: 640px) 50vw, 560px"
-          }
+          sizes="(max-width: 640px) 50vw, 560px"
           className="h-auto w-full object-contain transition-opacity duration-300 group-hover:opacity-90"
           loading="lazy"
         />
@@ -280,11 +269,7 @@ function PhotoCard({
           </span>
         </span>
       </button>
-      <figcaption
-        className={`border-t border-white/10 px-3 py-2.5 ${
-          large ? "sm:px-4 sm:py-3" : "min-h-[4.5rem]"
-        }`}
-      >
+      <figcaption className="min-h-[4.5rem] border-t border-white/10 px-3 py-2.5">
         <p className="text-accent text-[10px] font-bold tracking-wider uppercase">
           {label}
         </p>
