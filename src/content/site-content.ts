@@ -94,8 +94,8 @@ export const faqItems = [
       en: "What does roof renovation cost?",
     },
     answer: {
-      no: "Takvask koster fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Nøyaktig pris avhenger av takets størrelse, takstein og tilstand. Du får alltid fast pris etter gratis befaring.",
-      en: "Roof washing costs from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. The exact price depends on roof size, tile type and condition. You always get a fixed price after a free inspection.",
+      no: "Takvask koster fra 99 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Nøyaktig pris avhenger av takets størrelse, takstein og tilstand. Du får alltid fast pris etter gratis befaring.",
+      en: "Roof washing costs from NOK 99/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. The exact price depends on roof size, tile type and condition. You always get a fixed price after a free inspection.",
     },
   },
   {
@@ -148,8 +148,8 @@ export const projects = [
   {
     id: "takvask-for-og-etter",
     title: {
-      no: "Takvask – før, under og etter",
-      en: "Roof washing – before, during and after",
+      no: "Takvask – dokumenterte arbeidseksempler",
+      en: "Roof cleaning – documented work examples",
     },
     stages: [
       {
@@ -189,8 +189,8 @@ export const projects = [
   {
     id: "takmaling-for-og-etter",
     title: {
-      no: "Takmaling – tydelig før og etter",
-      en: "Roof painting – a clear before and after",
+      no: "Takmaling – eksempler fra prosessen",
+      en: "Roof painting – examples from the process",
     },
     stages: [
       {
@@ -230,8 +230,8 @@ export const projects = [
   {
     id: "ferdig-behandlede-tak",
     title: {
-      no: "Ferdig behandlede tak – ulike boliger",
-      en: "Finished roofs – different homes",
+      no: "Før- og ettereksempler fra ulike boliger",
+      en: "Before and after examples from different homes",
     },
     stages: [
       {

@@ -19,16 +19,20 @@ export function CalculatorSection({
 }: Props) {
   const copy = usePageCopy();
   const locale = useLocale();
-  const { minSqm, maxSqm, defaultSqm, newRoofPerSqm, renewalPerSqm } = calculator;
+  const { minSqm, maxSqm, defaultSqm, newRoofPerSqm, renewalPerSqm } =
+    calculator;
   const [sqm, setSqm] = useState(defaultSqm);
 
-  const { newRoof, renewal, save } = useMemo(() => {
+  const { newRoof, renewal, save, savingsPercent } = useMemo(() => {
     const newRoofCost = sqm * newRoofPerSqm;
     const renewalCost = sqm * renewalPerSqm;
     return {
       newRoof: newRoofCost,
       renewal: renewalCost,
       save: newRoofCost - renewalCost,
+      savingsPercent: Math.round(
+        ((newRoofCost - renewalCost) / newRoofCost) * 100,
+      ),
     };
   }, [sqm, newRoofPerSqm, renewalPerSqm]);
 
@@ -37,20 +41,26 @@ export function CalculatorSection({
       <div className="container-narrow">
         <Reveal>
           <p className="eyebrow">{copy.calculator.eyebrow}</p>
-          <h2 className="heading-display mt-3 text-balance">{copy.calculator.title}</h2>
-          <p className="mt-4 max-w-2xl text-muted-foreground">{copy.calculator.subtitle}</p>
+          <h2 className="heading-display mt-3 text-balance">
+            {copy.calculator.title}
+          </h2>
+          <p className="text-muted-foreground mt-4 max-w-2xl">
+            {copy.calculator.subtitle}
+          </p>
         </Reveal>
 
         <Reveal delay={0.1}>
           <div className="surface-card mt-10 overflow-hidden p-5 sm:p-8 lg:p-10">
-            <p className="text-sm text-muted-foreground">{copy.calculator.hint}</p>
+            <p className="text-muted-foreground text-sm">
+              {copy.calculator.hint}
+            </p>
 
             <div className="mt-6">
               <div className="mb-3 flex items-end justify-between gap-4">
                 <label htmlFor="roof-size" className="text-sm font-medium">
                   {copy.calculator.sizeLabel}
                 </label>
-                <span className="text-2xl font-bold tabular-nums text-accent sm:text-3xl">
+                <span className="text-accent text-2xl font-bold tabular-nums sm:text-3xl">
                   {sqm} m²
                 </span>
               </div>
@@ -62,9 +72,9 @@ export function CalculatorSection({
                 step={5}
                 value={sqm}
                 onChange={(e) => setSqm(Number(e.target.value))}
-                className="h-3 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-accent [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent [&::-webkit-slider-thumb]:shadow-lg"
+                className="accent-accent [&::-webkit-slider-thumb]:bg-accent h-3 w-full cursor-pointer appearance-none rounded-full bg-white/10 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg"
               />
-              <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+              <div className="text-muted-foreground mt-2 flex justify-between text-xs">
                 <span>{minSqm} m²</span>
                 <span>{maxSqm} m²</span>
               </div>
@@ -72,29 +82,36 @@ export function CalculatorSection({
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl border border-white/10 bg-black/20 p-5">
-                <p className="text-sm text-muted-foreground">{copy.calculator.newRoof}</p>
+                <p className="text-muted-foreground text-sm">
+                  {copy.calculator.newRoof}
+                </p>
                 <p className="mt-2 text-xl font-bold tabular-nums line-through decoration-white/30 sm:text-2xl">
                   {formatNok(newRoof, locale)}
                 </p>
               </div>
-              <div className="rounded-2xl border border-accent/30 bg-accent-soft p-5">
-                <p className="text-sm text-accent">{copy.calculator.renewal}</p>
-                <p className="mt-2 text-xl font-bold tabular-nums text-accent sm:text-2xl">
+              <div className="border-accent/30 bg-accent-soft rounded-2xl border p-5">
+                <p className="text-accent text-sm">{copy.calculator.renewal}</p>
+                <p className="text-accent mt-2 text-xl font-bold tabular-nums sm:text-2xl">
                   {formatNok(renewal, locale)}
                 </p>
               </div>
-              <div className="rounded-2xl border border-success/30 bg-success/10 p-5">
-                <p className="text-sm text-success">{copy.calculator.youSave}</p>
-                <p className="mt-2 text-xl font-bold tabular-nums text-success sm:text-2xl">
+              <div className="border-success/30 bg-success/10 rounded-2xl border p-5">
+                <p className="text-success text-sm">
+                  {copy.calculator.youSave}
+                </p>
+                <p className="text-success mt-2 text-xl font-bold tabular-nums sm:text-2xl">
                   {formatNok(save, locale)}
                 </p>
               </div>
             </div>
 
-            <p className="mt-6 text-center text-lg font-semibold text-foreground">
-              {copy.calculator.cheaper}
+            <p className="text-foreground mt-6 text-center text-lg font-semibold">
+              {copy.calculator.cheaper.replace(
+                "{percent}",
+                String(savingsPercent),
+              )}
             </p>
-            <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
+            <p className="text-muted-foreground mt-3 text-center text-xs leading-relaxed">
               {copy.calculator.disclaimer}
             </p>
 

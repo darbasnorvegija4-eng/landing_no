@@ -72,6 +72,15 @@ describe("SEO landing pages", () => {
     expect(renewalCopy).not.toContain("600–1 200");
   });
 
+  it("keeps the advertised roof-cleaning entry price visible on landing pages", () => {
+    for (const slug of ["takvask", "takvask-oslo"]) {
+      const page = getSeoLandingPage(slug);
+
+      expect(page?.price.no).toContain("99 kr/m² + mva");
+      expect(page?.price.en).toContain("NOK 99/m² + VAT");
+    }
+  });
+
   it("connects priority service pages to documented projects", () => {
     for (const slug of [
       "takvask",
