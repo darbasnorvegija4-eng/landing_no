@@ -22,12 +22,12 @@ describe("customer testimonials", () => {
     ).toBe(true);
   });
 
-  it("does not publish an unsupported numeric Google rating", () => {
+  it("replaces a stale numeric Google rating with the verified summary", () => {
     expect(googleTrustLabel("4.9/5 på Google", "no")).toBe(
-      "Vurder Takfornyelse på Google",
+      "5,0/5 på Google · 2 omtaler",
     );
     expect(googleTrustLabel("4.9/5 on Google", "en")).toBe(
-      "Review Takfornyelse on Google",
+      "5.0/5 on Google · 2 reviews",
     );
   });
 
@@ -44,17 +44,17 @@ describe("customer testimonials", () => {
     );
 
     expect(copy.hero.trustRating).toEqual({
-      no: "Vurder Takfornyelse på Google",
-      en: "Review Takfornyelse on Google",
+      no: "5,0/5 på Google · 2 omtaler",
+      en: "5.0/5 on Google · 2 reviews",
     });
   });
 
-  it("replaces legacy generic Google labels with the Takfornyelse CTA", () => {
+  it("replaces legacy generic Google labels with the verified summary", () => {
     expect(googleTrustLabel("Kundeomtaler på Google", "no")).toBe(
-      "Vurder Takfornyelse på Google",
+      "5,0/5 på Google · 2 omtaler",
     );
     expect(googleTrustLabel("Reviews on Google", "en")).toBe(
-      "Review Takfornyelse on Google",
+      "5.0/5 on Google · 2 reviews",
     );
   });
 });

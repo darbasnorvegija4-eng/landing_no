@@ -14,7 +14,7 @@ test("Norwegian landing page renders its primary content", async ({ page }) => {
   await expect(page.getByText("138", { exact: true })).toBeVisible();
   await expect(page.getByText("337", { exact: true })).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Vurder Takfornyelse på Google" }),
+    page.getByRole("link", { name: "5,0/5 på Google · 2 omtaler" }),
   ).toHaveAttribute("href", "https://g.page/r/CYa-JdXzZzxbEBM/review");
   await expect(page.locator("#kontakt")).toBeAttached();
 });
