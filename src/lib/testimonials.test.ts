@@ -1,10 +1,22 @@
 import { describe, expect, it } from "vitest";
 import enMessages from "@/i18n/messages/en.json";
 import noMessages from "@/i18n/messages/no.json";
+import { featuredGoogleReviews } from "@/content/google-business";
 import { pageCopyFromMessages, pageCopyFromSettingsDoc } from "./page-copy";
 import { googleTrustLabel, isPublishableTestimonial } from "./testimonials";
 
 describe("customer testimonials", () => {
+  it("publishes the complete verified Google review snapshot", () => {
+    expect(featuredGoogleReviews).toHaveLength(2);
+    expect(featuredGoogleReviews.map((review) => review.author)).toEqual([
+      "Ola Brage Hansen",
+      "Gerda Rekevičiūtė",
+    ]);
+    expect(featuredGoogleReviews.every((review) => review.rating === 5)).toBe(
+      true,
+    );
+  });
+
   it("filters generic, untraceable testimonial labels", () => {
     expect(
       isPublishableTestimonial({

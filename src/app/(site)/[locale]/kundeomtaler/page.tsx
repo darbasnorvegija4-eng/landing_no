@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { setRequestLocale } from "next-intl/server";
 import { GoogleReviewActions } from "@/components/reviews/google-review-actions";
+import { GoogleReviewCards } from "@/components/reviews/google-review-cards";
 import { Link, routing } from "@/i18n/routing";
 import { getSiteContent } from "@/lib/cms-content";
 import { localizeCopy } from "@/lib/page-copy";
@@ -184,8 +185,10 @@ export default async function CustomerReviewsPage({ params }: Props) {
             <p className="eyebrow">{copy.eyebrow}</p>
             <h2 className="heading-display mt-3">{copy.reviewsTitle}</h2>
 
+            <GoogleReviewCards locale={loc} className="mt-10" />
+
             {testimonials.length > 0 ? (
-              <div className="mt-10 grid gap-6 md:grid-cols-3">
+              <div className="mt-6 grid gap-6 md:grid-cols-3">
                 {testimonials.map((item, index) => (
                   <blockquote
                     key={`${item.author}-${index}`}

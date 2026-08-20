@@ -16,6 +16,12 @@ test("Norwegian landing page renders its primary content", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "5,0/5 på Google · 2 omtaler" }),
   ).toHaveAttribute("href", "https://g.page/r/CYa-JdXzZzxbEBM/review");
+  const reviewSection = page.locator("#omtaler");
+  await expect(reviewSection.getByText("Ola Brage Hansen")).toBeVisible();
+  await expect(reviewSection.getByText("Gerda Rekevičiūtė")).toBeVisible();
+  await expect(
+    reviewSection.getByRole("link", { name: "Se omtalen på Google Maps" }),
+  ).toHaveCount(2);
   await expect(page.locator("#kontakt")).toBeAttached();
 });
 
@@ -35,6 +41,11 @@ test("customer review page links to the verified Google review form", async ({
   ).toHaveAttribute("href", "https://g.page/r/CYa-JdXzZzxbEBM/review");
   await expect(page.getByText("4.9/5 på Google")).toHaveCount(0);
   await expect(page.getByText("Kunde, Oslo")).toHaveCount(0);
+  await expect(page.getByText("Ola Brage Hansen")).toBeVisible();
+  await expect(page.getByText("Gerda Rekevičiūtė")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Se omtalen på Google Maps" }),
+  ).toHaveCount(2);
 });
 
 test("roof guide links visitors to the priority service pages", async ({

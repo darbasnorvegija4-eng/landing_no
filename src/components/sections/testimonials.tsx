@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, BadgeCheck, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { GoogleReviewActions } from "@/components/reviews/google-review-actions";
+import { GoogleReviewCards } from "@/components/reviews/google-review-cards";
 import { Link } from "@/i18n/routing";
 import { Reveal } from "@/components/ui/reveal";
 import { usePageCopy } from "@/components/site-settings-provider";
@@ -15,19 +16,15 @@ export function TestimonialsSection() {
   const text =
     locale === "no"
       ? {
-          verifiedTitle: "Verifiserte omtaler på Google",
+          verifiedTitle: "Offentlige omtaler på Google",
           intro:
             "Vi viser bare omtaler som kan knyttes til en offentlig eller dokumenterbar kilde.",
-          empty:
-            "Les den offentlige omtalehistorikken direkte på den offisielle Google-profilen til Takfornyelse. Har vi utført arbeid for deg, setter vi pris på en ærlig tilbakemelding.",
           all: "Les om kundeomtaler",
         }
       : {
-          verifiedTitle: "Verified reviews on Google",
+          verifiedTitle: "Public reviews on Google",
           intro:
             "We only display reviews that can be linked to a public or documented source.",
-          empty:
-            "Read the public review history directly on Takfornyelse's official Google profile. If we have completed work for you, we appreciate honest feedback.",
           all: "Read about customer reviews",
         };
 
@@ -73,19 +70,11 @@ export function TestimonialsSection() {
               </Reveal>
             ))}
           </div>
-        ) : (
-          <Reveal delay={0.06}>
-            <div className="bg-background/60 mt-8 flex max-w-2xl gap-4 rounded-2xl border border-white/10 p-5 sm:p-6">
-              <BadgeCheck
-                className="text-accent mt-0.5 size-6 shrink-0"
-                aria-hidden
-              />
-              <p className="text-muted-foreground leading-relaxed">
-                {text.empty}
-              </p>
-            </div>
-          </Reveal>
-        )}
+        ) : null}
+
+        <Reveal delay={0.06}>
+          <GoogleReviewCards locale={locale} className="mt-8" />
+        </Reveal>
 
         <Reveal delay={0.12}>
           <div className="mt-8 flex flex-col gap-4">
