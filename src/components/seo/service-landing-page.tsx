@@ -195,8 +195,8 @@ export function ServiceLandingPage({ page, locale, settings }: Props) {
             </h2>
             <p className="text-muted-foreground mt-4 max-w-3xl leading-7">
               {locale === "no"
-                ? "Bildene viser samme prosjekt før og etter arbeidet. Slik kan du vurdere et reelt resultat, ikke bare illustrasjonsbilder."
-                : "The photos show the same project before and after the work, so you can assess a real result rather than stock imagery."}
+                ? "Bildene er dokumenterte arbeidseksempler fra Takfornyelse. Før- og etterbildet kan være fra ulike tak eller kameravinkler, og skal derfor vurderes som separate eksempler."
+                : "These are documented Takfornyelse work examples. The before and after photos may show different roofs or camera angles and should be assessed as separate examples."}
             </p>
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {[beforeStage, afterStage].map((stage) => (

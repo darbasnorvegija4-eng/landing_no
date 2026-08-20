@@ -36,9 +36,9 @@ const pool = new pg.Pool({
 });
 
 const siteImages = {
-  hero: "/gallery/takfornyelse/06-L-finished-house-roof.jpg",
-  newRoof: "/gallery/takfornyelse/12-S-finished-house-roof.jpg",
-  about: "/gallery/takfornyelse/04-L-worker-pressure-washing.jpg",
+  hero: "/gallery/marketing/hero-finished-roof-v2.webp",
+  newRoof: "/gallery/marketing/new-roof-installation-v2.webp",
+  about: "/gallery/marketing/about-roof-specialist-v2.webp",
 };
 
 const serviceKeys = [
@@ -147,9 +147,9 @@ const faqItems = [
     questionNo: "Hva koster takrenovering?",
     questionEn: "What does roof renovation cost?",
     answerNo:
-      "Takvask koster fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Nøyaktig pris avhenger av takets størrelse, takstein og tilstand. Du får alltid fast pris etter gratis befaring.",
+      "Takvask koster fra 99 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Nøyaktig pris avhenger av takets størrelse, takstein og tilstand. Du får alltid fast pris etter gratis befaring.",
     answerEn:
-      "Roof washing costs from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. The exact price depends on roof size, tile type and condition. You always get a fixed price after a free inspection.",
+      "Roof washing costs from NOK 99/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. The exact price depends on roof size, tile type and condition. You always get a fixed price after a free inspection.",
   },
   {
     questionNo: "Hvordan impregneres tak?",
@@ -299,7 +299,7 @@ try {
         'Takfornyelse', '+47 47 73 58 88', 'post@takfornyelse.as',
         'Lyngveien 28', '1182', 'Oslo', '916 693 168', 'Fornyelse Gruppen AS',
         $1, $2, $3,
-        2500, 360, 50, 500, 150,
+        2500, 750, 50, 500, 150,
         '2.000.000+', 10, '100+', 'Google',
         now(), now()
       )`,

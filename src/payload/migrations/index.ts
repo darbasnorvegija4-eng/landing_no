@@ -6,6 +6,7 @@ import * as migration_4 from "./20260727_150000_pages_posts_redirects";
 import * as migration_5 from "./20260813_120000_contact_choice";
 import * as migration_6 from "./20260814_120000_update_service_prices";
 import * as migration_7 from "./20260815_120000_lead_attribution";
+import * as migration_8 from "./20260820_120000_align_marketing_claims";
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_7.up,
     down: migration_7.down,
     name: "20260815_120000_lead_attribution",
+  },
+  {
+    up: migration_8.up,
+    down: migration_8.down,
+    name: "20260820_120000_align_marketing_claims",
   },
 ];

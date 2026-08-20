@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, BadgeCheck, Star } from "lucide-react";
 import { useLocale } from "next-intl";
 import { GoogleReviewActions } from "@/components/reviews/google-review-actions";
 import { Link } from "@/i18n/routing";
@@ -15,17 +15,19 @@ export function TestimonialsSection() {
   const text =
     locale === "no"
       ? {
+          verifiedTitle: "Verifiserte omtaler på Google",
           intro:
-            "Vi samler nye, verifiserbare kundeomtaler på Google-profilen til Takfornyelse.",
+            "Vi viser bare omtaler som kan knyttes til en offentlig eller dokumenterbar kilde.",
           empty:
-            "Har vi utført arbeid for deg? Vi setter pris på en ærlig tilbakemelding om kommunikasjonen, arbeidet og resultatet.",
+            "Les den offentlige omtalehistorikken direkte på den offisielle Google-profilen til Takfornyelse. Har vi utført arbeid for deg, setter vi pris på en ærlig tilbakemelding.",
           all: "Les om kundeomtaler",
         }
       : {
+          verifiedTitle: "Verified reviews on Google",
           intro:
-            "We collect new, verifiable customer reviews on the Takfornyelse Google profile.",
+            "We only display reviews that can be linked to a public or documented source.",
           empty:
-            "Have we completed work for you? We appreciate honest feedback about the communication, work and result.",
+            "Read the public review history directly on Takfornyelse's official Google profile. If we have completed work for you, we appreciate honest feedback.",
           all: "Read about customer reviews",
         };
 
@@ -35,7 +37,7 @@ export function TestimonialsSection() {
         <Reveal>
           <p className="eyebrow">{copy.testimonials.eyebrow}</p>
           <h2 className="heading-display mt-3 text-balance">
-            {copy.testimonials.title}
+            {items.length > 0 ? copy.testimonials.title : text.verifiedTitle}
           </h2>
           <p className="text-muted-foreground mt-4 max-w-2xl leading-relaxed">
             {text.intro}
@@ -73,9 +75,15 @@ export function TestimonialsSection() {
           </div>
         ) : (
           <Reveal delay={0.06}>
-            <p className="text-muted-foreground mt-8 max-w-2xl leading-relaxed">
-              {text.empty}
-            </p>
+            <div className="bg-background/60 mt-8 flex max-w-2xl gap-4 rounded-2xl border border-white/10 p-5 sm:p-6">
+              <BadgeCheck
+                className="text-accent mt-0.5 size-6 shrink-0"
+                aria-hidden
+              />
+              <p className="text-muted-foreground leading-relaxed">
+                {text.empty}
+              </p>
+            </div>
           </Reveal>
         )}
 

@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Takfornying – takvask, impregnering og maling av takstein",
-    "description": "Takvask fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Gratis befaring og opptil 10 års garanti."
+    "description": "Takvask fra 99 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva. Gratis befaring og opptil 10 års garanti."
   },
   "nav": {
     "home": "Hjem",
@@ -18,7 +18,7 @@
     "localeEn": "English"
   },
   "hero": {
-    "badge": "",
+    "badge": "Takvask fra 99 kr/m² + mva",
     "title": "Spar opptil 70\u00a0% mot nytt tak",
     "titleAccent": "Takfornying med opptil 10 års garanti",
     "subtitle": "Vedlikehold eller nytt tak – vi tar hele jobben fra befaring til ferdig resultat.",
@@ -43,7 +43,7 @@
   "services": {
     "eyebrow": "Tjenester",
     "title": "Alt du trenger for et friskt tak",
-    "subtitle": "Takvask fra 100 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva – med fast pris og tydelig plan.",
+    "subtitle": "Takvask fra 99 kr/m² + mva, impregnering fra 40 kr/m² + mva og takmaling fra 220 kr/m² + mva – med fast pris og tydelig plan.",
     "showMore": "Vis flere tjenester",
     "showLess": "Vis færre",
     "items": {
@@ -59,7 +59,7 @@
       },
       "wash": {
         "title": "Takvask og mosefjerning",
-        "description": "Fra 100 kr/m² + mva. Skånsom høytrykksvask som fjerner mose, alger og smuss uten å skade taksteinen.",
+        "description": "Fra 99 kr/m² + mva. Skånsom høytrykksvask som fjerner mose, alger og smuss uten å skade taksteinen.",
         "featured": true
       },
       "impregnation": {
@@ -103,8 +103,8 @@
     "newRoof": "Nytt tak",
     "renewal": "Takfornying",
     "youSave": "Estimert besparelse",
-    "cheaper": "Takfornying kan i mange tilfeller koste opptil 70\u00a0% mindre enn nytt tak",
-    "disclaimer": "Estimat for dette eksempelet. Nøyaktig pris avhenger av takets tilstand og valgt behandling. Du får tilbud etter gratis befaring.",
+    "cheaper": "I dette eksempelet er takfornying omtrent {percent} % rimeligere enn nytt tak",
+    "disclaimer": "Veiledende totalestimat som inkluderer typisk forarbeid, sikring og adkomst. Pakkeprisene er fra-priser. Nøyaktig pris fastsettes etter gratis befaring.",
     "cta": "Få gratis befaring og tilbud"
   },
   "newRoof": {
@@ -126,11 +126,11 @@
     "eyebrow": "Referanser",
     "title": "Resultater du kan se",
     "subtitle": "Slik har vi fornyet tak for boliger og borettslag i Oslo, Viken og resten av vårt dekningsområde.",
-    "note": "",
+    "note": "Bildene er dokumenterte arbeidsbilder fra ulike Takfornyelse-prosjekter. Før- og ettereksempler er ikke nødvendigvis samme tak eller samme kameravinkel.",
     "before": "Før",
     "during": "Under arbeid",
     "after": "Etter",
-    "comparisonHint": "Venstre: før · Høyre: etter",
+    "comparisonHint": "Eksempel før · eksempel etter",
     "swipe": "sveip for å se mer"
   },
   "about": {

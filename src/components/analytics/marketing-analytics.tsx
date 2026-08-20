@@ -42,6 +42,10 @@ function sendMetaEvent(name: string, params?: Record<string, unknown>) {
   window.fbq?.("track", name, params || {});
 }
 
+function sendMetaLeadEvent(params: Record<string, unknown>, eventId: string) {
+  window.fbq?.("track", "Lead", params, { eventID: eventId });
+}
+
 function sendMetaCustomEvent(name: string, params?: Record<string, unknown>) {
   window.fbq?.("trackCustom", name, params || {});
 }
@@ -83,17 +87,27 @@ export function trackLeadFormEvent(
 }
 
 export function trackLeadConversion(params?: { inquiryType?: string }) {
-  const eventParams = params?.inquiryType
-    ? { inquiry_type: params.inquiryType }
-    : undefined;
+  const eventId = crypto.randomUUID();
+  const eventParams = {
+    value: 1,
+    currency: "NOK",
+    lead_event_id: eventId,
+    ...(params?.inquiryType ? { inquiry_type: params.inquiryType } : {}),
+  };
 
   sendGoogleEvent("generate_lead", eventParams);
+  // This exact GA4 event is the primary website conversion already imported
+  // in Google Ads account 493-800-5876.
+  sendGoogleEvent("manual_event_SUBMIT_LEAD_FORM", eventParams);
   if (googleAdsId && googleAdsLeadLabel) {
     sendGoogleEvent("conversion", {
       send_to: `${googleAdsId}/${googleAdsLeadLabel}`,
+      value: 1,
+      currency: "NOK",
+      transaction_id: eventId,
     });
   }
-  sendMetaEvent("Lead", eventParams);
+  sendMetaLeadEvent(eventParams, eventId);
 }
 
 function ensureGoogleTag() {

@@ -20,7 +20,7 @@ const content = {
       {
         name: "Basic",
         title: "Takvask",
-        price: "100",
+        price: "99",
         features: ["Taksjekk", "Mosebehandling", "Skånsom takvask"],
       },
       {
@@ -61,7 +61,7 @@ const content = {
       {
         name: "Basic",
         title: "Roof cleaning",
-        price: "100",
+        price: "99",
         features: ["Roof inspection", "Moss treatment", "Gentle roof cleaning"],
       },
       {

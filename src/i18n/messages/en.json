@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Roof renewal – wash, impregnation & painting",
-    "description": "Roof washing from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. Free inspection and up to 10-year warranty."
+    "description": "Roof washing from NOK 99/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT. Free inspection and up to 10-year warranty."
   },
   "nav": {
     "home": "Home",
@@ -18,7 +18,7 @@
     "localeEn": "English"
   },
   "hero": {
-    "badge": "",
+    "badge": "Roof cleaning from NOK 99/m² + VAT",
     "title": "Save up to 70%\u00a0vs a new roof",
     "titleAccent": "Roof renewal with up to 10-year warranty",
     "subtitle": "Maintenance or a new roof – we handle the full job from inspection to finished result.",
@@ -43,7 +43,7 @@
   "services": {
     "eyebrow": "Services",
     "title": "Everything your roof needs",
-    "subtitle": "Roof washing from NOK 100/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT – with fixed pricing and a clear plan.",
+    "subtitle": "Roof washing from NOK 99/m² + VAT, impregnation from NOK 40/m² + VAT and roof painting from NOK 220/m² + VAT – with fixed pricing and a clear plan.",
     "showMore": "Show more services",
     "showLess": "Show less",
     "items": {
@@ -59,7 +59,7 @@
       },
       "wash": {
         "title": "Roof washing & moss removal",
-        "description": "From NOK 100/m² + VAT. Gentle high-pressure washing that removes moss, algae and dirt without damaging the tiles.",
+        "description": "From NOK 99/m² + VAT. Gentle high-pressure washing that removes moss, algae and dirt without damaging the tiles.",
         "featured": true
       },
       "impregnation": {
@@ -103,8 +103,8 @@
     "newRoof": "New roof",
     "renewal": "Roof renewal",
     "youSave": "Estimated savings",
-    "cheaper": "Roof renewal can in many cases cost up to 70% less than a new roof",
-    "disclaimer": "Estimate for this example. Exact price depends on roof condition and chosen treatment. You get a quote after a free inspection.",
+    "cheaper": "In this example, roof renewal is approximately {percent}% less than a new roof",
+    "disclaimer": "Indicative total estimate including typical preparation, safety and access. Package prices are starting prices. The exact price is set after a free inspection.",
     "cta": "Get a free inspection and quote"
   },
   "newRoof": {
@@ -126,11 +126,11 @@
     "eyebrow": "References",
     "title": "Results you can see",
     "subtitle": "How we have renewed roofs for homes and housing associations in Oslo, Viken and across our service area.",
-    "note": "",
+    "note": "These are documented work photos from different Takfornyelse projects. Before and after examples do not necessarily show the same roof or camera angle.",
     "before": "Before",
     "during": "In progress",
     "after": "After",
-    "comparisonHint": "Left: before · Right: after",
+    "comparisonHint": "Before example · after example",
     "swipe": "swipe for more"
   },
   "about": {

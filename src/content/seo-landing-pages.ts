@@ -67,8 +67,8 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Oslo home after professional roof cleaning",
     ),
     price: l(
-      "Pris fastsettes etter takareal og befaring",
-      "Price is set after roof size and inspection",
+      "Takvask fra 99 kr/m² + mva",
+      "Roof cleaning from NOK 99/m² + VAT",
     ),
     priceNote: l(
       "Taktype, mosemengde, helling, sikring og adkomst påvirker prisen. Du får fast tilbud før oppstart.",
@@ -546,8 +546,8 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Roof coating in progress with a clear before-and-after contrast",
     ),
     price: l(
-      "Takvask fra 100, vask + impregnering fra 140 og takfornying fra 360 kr/m² + mva",
-      "Cleaning from NOK 100, cleaning + impregnation from NOK 140 and renewal from NOK 360/m² + VAT",
+      "Takvask fra 99, vask + impregnering fra 140 og takfornying fra 360 kr/m² + mva",
+      "Cleaning from NOK 99, cleaning + impregnation from NOK 140 and renewal from NOK 360/m² + VAT",
     ),
     priceNote: l(
       "Dette er veiledende fra-priser, ikke et bindende tilbud. Taktype, tilstand, adkomst og valgt omfang avgjør endelig pris.",
@@ -634,8 +634,8 @@ export const seoLandingPages: SeoLandingPage[] = [
       "Documented Oslo home after roof cleaning",
     ),
     price: l(
-      "Lokal pris etter takareal, adkomst og tilstand",
-      "Local price based on area, access and condition",
+      "Takvask fra 99 kr/m² + mva",
+      "Roof cleaning from NOK 99/m² + VAT",
     ),
     priceNote: l(
       "Stillas eller lift, parkering, bratt tak, mye vegetasjon og mengden mose kan påvirke omfanget i Oslo.",

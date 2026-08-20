@@ -118,8 +118,8 @@ export function ReferencesSection({ projects }: Props) {
                     </h3>
                     <p className="text-muted-foreground mt-1 text-xs">
                       {locale === "no"
-                        ? "Følg arbeidet fra tilstand før start til ferdig resultat"
-                        : "Follow the work from the initial condition to the finished result"}
+                        ? "Se dokumenterte bilder fra tak før, under og etter behandling"
+                        : "See documented roof photos before, during and after treatment"}
                     </p>
                   </div>
 
@@ -133,13 +133,13 @@ export function ReferencesSection({ projects }: Props) {
                           <div>
                             <h4 className="text-sm font-bold tracking-wider text-white uppercase">
                               {locale === "no"
-                                ? "Før og etter"
-                                : "Before and after"}
+                                ? "Før- og ettereksempler"
+                                : "Before and after examples"}
                             </h4>
                             <p className="text-muted-foreground mt-0.5 text-xs">
                               {locale === "no"
-                                ? "Sammenlign resultatet side ved side"
-                                : "Compare the result side by side"}
+                                ? "Dokumenterte bilder – ikke nødvendigvis samme tak"
+                                : "Documented photos – not necessarily the same roof"}
                             </p>
                           </div>
                         </div>
