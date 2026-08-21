@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { Shield, Star, Users } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { googleBusinessProfile } from "@/content/google-business";
 import { siteImages } from "@/content/images";
 import type { CmsMedia } from "@/lib/cms-content";
 import { optimizeRemoteImageUrl } from "@/lib/images";
+import { RoofAssemblyOverlay } from "@/components/sections/roof-assembly-overlay";
 
 type Props = {
   heroImage?: CmsMedia;
@@ -31,9 +33,11 @@ function HeroTitle({ title }: { title: string }) {
 }
 
 export function HeroSection({ heroImage }: Props) {
+  const [heroImageReady, setHeroImageReady] = useState(false);
   const copy = usePageCopy();
   const media = heroImage ?? { url: siteImages.hero, alt: "" };
   const src = optimizeRemoteImageUrl(media.url, { width: 2000, quality: 72 });
+  const hasCompatibleRoof = media.url.includes("hero-finished-roof-v2.webp");
 
   return (
     <section className="relative flex min-h-[100svh] flex-col overflow-hidden pt-28 md:pt-24">
@@ -46,13 +50,17 @@ export function HeroSection({ heroImage }: Props) {
         sizes="100vw"
         quality={72}
         className="absolute inset-0 h-full w-full object-cover"
+        onLoad={() => setHeroImageReady(true)}
       />
+      {hasCompatibleRoof ? (
+        <RoofAssemblyOverlay imageReady={heroImageReady} />
+      ) : null}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 z-[2]"
         style={{ background: "var(--hero-overlay)" }}
         aria-hidden
       />
-      <div className="grain absolute inset-0 opacity-60" aria-hidden />
+      <div className="grain absolute inset-0 z-[3] opacity-60" aria-hidden />
 
       <div className="container-narrow relative z-10 flex w-full flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:justify-center md:pb-10 lg:px-8">
         {copy.hero.badge ? (
