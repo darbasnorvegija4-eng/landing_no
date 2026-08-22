@@ -53,7 +53,7 @@ export default async function HomePage({ params }: Props) {
         services={content.services}
         description={content.copy.meta.description[locale as "no" | "en"]}
       />
-      <HeroSection heroImage={content.settings.images.hero} />
+      <HeroSection />
       <PackageOfferSection locale={locale as "no" | "en"} />
       <ServicesSection items={content.services} />
       <CalculatorSection calculator={content.settings.calculator} />
