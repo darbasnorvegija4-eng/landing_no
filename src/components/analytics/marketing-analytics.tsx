@@ -7,12 +7,20 @@ import { Link } from "@/i18n/routing";
 
 const CONSENT_STORAGE_KEY = "takfornyelse_marketing_consent";
 const OPEN_CONSENT_EVENT = "takfornyelse:open-marketing-consent";
+const PENDING_LEAD_STORAGE_KEY = "takfornyelse_pending_lead_conversion";
 
-const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim();
+// These public measurement IDs belong to takfornyelse.as. Environment values
+// can override them, while the fallbacks prevent a missing Vercel variable from
+// silently disabling paid-ad conversion measurement in production.
+const googleAdsId =
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim() || "AW-18395015353";
 const googleAdsLeadLabel =
-  process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL?.trim();
-const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID?.trim();
-const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim();
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL?.trim() ||
+  "MEIiCKPAk-UcELnRtsNE";
+const googleAnalyticsId =
+  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID?.trim() || "G-ENMB8696J8";
+const metaPixelId =
+  process.env.NEXT_PUBLIC_META_PIXEL_ID?.trim() || "1015457044803165";
 const marketingConfigured = Boolean(
   googleAdsId || googleAnalyticsId || metaPixelId,
 );
@@ -86,8 +94,10 @@ export function trackLeadFormEvent(
   sendMetaCustomEvent(metaLeadFormEvents[name], eventParams);
 }
 
-export function trackLeadConversion(params?: { inquiryType?: string }) {
-  const eventId = crypto.randomUUID();
+function sendLeadConversion(
+  eventId: string,
+  params?: { inquiryType?: string },
+) {
   const eventParams = {
     value: 1,
     currency: "NOK",
@@ -108,6 +118,23 @@ export function trackLeadConversion(params?: { inquiryType?: string }) {
     });
   }
   sendMetaLeadEvent(eventParams, eventId);
+}
+
+export function trackLeadConversion(params?: { inquiryType?: string }) {
+  const eventId = crypto.randomUUID();
+
+  try {
+    window.sessionStorage.setItem(
+      PENDING_LEAD_STORAGE_KEY,
+      JSON.stringify({
+        eventId,
+        inquiryType: params?.inquiryType,
+        at: Date.now(),
+      }),
+    );
+  } catch {}
+
+  sendLeadConversion(eventId, params);
 }
 
 function ensureGoogleTag() {
@@ -221,6 +248,36 @@ export function MarketingAnalytics() {
       page_path: pathname,
     });
     sendMetaEvent("PageView");
+  }, [choice, pathname]);
+
+  useEffect(() => {
+    if (choice !== "granted" || !pathname.endsWith("/takk")) return;
+
+    try {
+      const raw = window.sessionStorage.getItem(PENDING_LEAD_STORAGE_KEY);
+      if (!raw) return;
+      const pending = JSON.parse(raw) as {
+        eventId?: string;
+        inquiryType?: string;
+        at?: number;
+      };
+      window.sessionStorage.removeItem(PENDING_LEAD_STORAGE_KEY);
+
+      if (
+        pending.eventId &&
+        pending.at &&
+        Date.now() - pending.at < 15 * 60 * 1000
+      ) {
+        // The same Google transaction_id and Meta eventID deduplicate the
+        // immediate event if it already arrived, while recovering events lost
+        // during the redirect to the confirmation page.
+        sendLeadConversion(pending.eventId, {
+          inquiryType: pending.inquiryType,
+        });
+      }
+    } catch {
+      window.sessionStorage.removeItem(PENDING_LEAD_STORAGE_KEY);
+    }
   }, [choice, pathname]);
 
   useEffect(() => {

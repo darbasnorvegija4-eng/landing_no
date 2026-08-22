@@ -68,7 +68,7 @@ const step1Schema = z.object({
 
 const step2Schema = z.object({
   email: z.string().trim().email().optional().or(z.literal("")),
-  address: z.string().trim().min(2),
+  address: z.string().trim().max(200).optional(),
   roofSize: z
     .string()
     .trim()
@@ -496,7 +496,7 @@ export function ContactSection() {
           type: step1.data.type,
           locale,
           email: step2.data.email || undefined,
-          address: step2.data.address,
+          address: step2.data.address || undefined,
           roofSize: step2.data.roofSize || undefined,
           message: step2.data.message || undefined,
           photoUrls: photoUrls.length ? photoUrls : undefined,
@@ -710,7 +710,11 @@ export function ContactSection() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="address">{copy.contact.form.address} *</Label>
+                  <Label htmlFor="address">
+                    {locale === "no"
+                      ? "Adresse (valgfritt)"
+                      : "Address (optional)"}
+                  </Label>
                   <Input
                     id="address"
                     value={form.address}
@@ -721,12 +725,11 @@ export function ContactSection() {
                         ? "Gateadresse og husnummer"
                         : "Street address and house number"
                     }
-                    required
                   />
                   <p className="text-muted-foreground text-xs">
                     {locale === "no"
-                      ? "Skriv hele adressen der arbeidet skal utføres."
-                      : "Enter the full address where the work will be carried out."}
+                      ? "Du kan også oppgi adressen når vi tar kontakt."
+                      : "You can also provide the address when we contact you."}
                   </p>
                 </div>
                 <div className="space-y-2">
