@@ -1,4 +1,4 @@
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Star } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 
@@ -11,6 +11,7 @@ const content = {
     subtitle:
       "Velg mellom Basic, Standard og Premium. Vi hjelper deg å finne behandlingen som passer taket.",
     popular: "Mest valgt",
+    stars: "av 5 stjerner",
     from: "fra",
     unit: "kr/m² + mva",
     cta: "Få gratis befaring og tilbud",
@@ -19,12 +20,14 @@ const content = {
     packages: [
       {
         name: "Basic",
+        rating: 3,
         title: "Takvask",
         price: "99",
         features: ["Taksjekk", "Mosebehandling", "Skånsom takvask"],
       },
       {
         name: "Standard",
+        rating: 4,
         title: "Vask + impregnering",
         price: "140",
         featured: true,
@@ -36,6 +39,7 @@ const content = {
       },
       {
         name: "Premium",
+        rating: 5,
         title: "Komplett takfornying",
         price: "360",
         features: [
@@ -52,6 +56,7 @@ const content = {
     subtitle:
       "Choose between Basic, Standard and Premium. We help you find the right treatment for your roof.",
     popular: "Most popular",
+    stars: "out of 5 stars",
     from: "from",
     unit: "NOK/m² + VAT",
     cta: "Get a free inspection and quote",
@@ -60,12 +65,14 @@ const content = {
     packages: [
       {
         name: "Basic",
+        rating: 3,
         title: "Roof cleaning",
         price: "99",
         features: ["Roof inspection", "Moss treatment", "Gentle roof cleaning"],
       },
       {
         name: "Standard",
+        rating: 4,
         title: "Cleaning + impregnation",
         price: "140",
         featured: true,
@@ -77,6 +84,7 @@ const content = {
       },
       {
         name: "Premium",
+        rating: 5,
         title: "Complete roof renewal",
         price: "360",
         features: [
@@ -94,12 +102,14 @@ const content = {
     title: string;
     subtitle: string;
     popular: string;
+    stars: string;
     from: string;
     unit: string;
     cta: string;
     disclaimer: string;
     packages: Array<{
       name: string;
+      rating: number;
       title: string;
       price: string;
       featured?: boolean;
@@ -159,6 +169,19 @@ export function PackageOfferSection({ locale }: { locale: Locale }) {
               <p className="text-accent text-xs font-bold tracking-[0.18em] uppercase">
                 {item.name}
               </p>
+              <div
+                className="mt-2 flex items-center gap-1"
+                role="img"
+                aria-label={`${item.rating} ${copy.stars}`}
+              >
+                {Array.from({ length: item.rating }, (_, index) => (
+                  <Star
+                    key={index}
+                    className="text-accent size-4 fill-current"
+                    aria-hidden
+                  />
+                ))}
+              </div>
               <h3 className="text-foreground mt-2 text-xl font-bold">
                 {item.title}
               </h3>
