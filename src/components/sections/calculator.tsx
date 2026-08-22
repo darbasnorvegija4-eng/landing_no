@@ -30,7 +30,10 @@ export function CalculatorSection({
   );
 
   return (
-    <section id="kalkulator" className="section-pad bg-background-elevated/50">
+    <section
+      id="kalkulator"
+      className="section-pad bg-background-elevated border-y border-white/[0.06]"
+    >
       <div className="container-narrow">
         <Reveal>
           <p className="eyebrow">{copy.calculator.eyebrow}</p>

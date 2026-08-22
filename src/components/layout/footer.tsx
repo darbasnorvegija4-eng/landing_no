@@ -84,7 +84,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-white/10 bg-[#080a0e] pb-24 md:pb-0">
+    <footer className="border-t border-white/15 bg-[#0a0d12] pb-24 md:pb-0">
       <div className="container-narrow section-pad grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
         <div className="space-y-4">
           <Link
@@ -198,7 +198,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/5">
-        <div className="container-narrow text-muted-foreground flex flex-col gap-2 px-4 py-6 text-xs sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="container-narrow text-muted-foreground flex flex-col gap-2 px-4 py-6 text-[13px] leading-relaxed sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:text-sm lg:px-8">
           <p>
             © {year} {settings.brandName}. {copy.footer.rights}
           </p>
