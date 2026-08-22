@@ -16,7 +16,7 @@ export function ProductsSection({ products }: Props) {
   const locale = useLocale() as "no" | "en";
 
   return (
-    <section id="produkter" className="section-pad bg-background-elevated/40">
+    <section id="produkter" className="section-pad bg-background">
       <div className="container-narrow">
         <Reveal>
           <p className="eyebrow">{copy.products.eyebrow}</p>

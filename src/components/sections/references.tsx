@@ -71,7 +71,10 @@ export function ReferencesSection({ projects }: Props) {
   };
 
   return (
-    <section id="referanser" className="section-pad bg-background-elevated/40">
+    <section
+      id="referanser"
+      className="section-pad bg-background-elevated border-y border-white/[0.06]"
+    >
       <div className="container-narrow">
         <Reveal>
           <div className="max-w-2xl">

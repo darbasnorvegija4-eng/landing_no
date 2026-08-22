@@ -29,7 +29,10 @@ export function TestimonialsSection() {
         };
 
   return (
-    <section id="omtaler" className="section-pad bg-background-elevated/30">
+    <section
+      id="omtaler"
+      className="section-pad bg-background-elevated border-y border-white/[0.06]"
+    >
       <div className="container-narrow">
         <Reveal>
           <p className="eyebrow">{copy.testimonials.eyebrow}</p>

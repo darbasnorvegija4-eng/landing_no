@@ -20,7 +20,10 @@ export function FaqSection({ items }: Props) {
   const locale = useLocale() as "no" | "en";
 
   return (
-    <section id="faq" className="section-pad">
+    <section
+      id="faq"
+      className="section-pad bg-background-elevated border-y border-white/[0.06]"
+    >
       <div className="container-narrow max-w-3xl">
         <Reveal>
           <p className="eyebrow">{copy.faq.eyebrow}</p>

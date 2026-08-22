@@ -145,10 +145,10 @@ export function PackageOfferSection({ locale }: { locale: Locale }) {
           {copy.packages.map((item) => (
             <article
               key={item.name}
-              className={`relative flex flex-col rounded-2xl border p-5 shadow-xl shadow-black/10 sm:p-6 ${
+              className={`relative flex flex-col rounded-2xl border p-5 shadow-xl sm:p-6 ${
                 item.featured
-                  ? "border-accent/60 bg-accent/[0.08]"
-                  : "bg-background/75 border-white/10"
+                  ? "border-accent/70 ring-accent/20 bg-[#17202b] ring-1 shadow-black/30"
+                  : "bg-background/80 border-white/10 shadow-black/10"
               }`}
             >
               {item.featured ? (

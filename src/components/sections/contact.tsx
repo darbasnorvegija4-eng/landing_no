@@ -544,7 +544,7 @@ export function ContactSection() {
   }
 
   return (
-    <section id="kontakt" className="section-pad bg-background-elevated/50">
+    <section id="kontakt" className="section-pad bg-background">
       <div className="container-narrow grid gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal>
           <p className="eyebrow">{copy.contact.eyebrow}</p>

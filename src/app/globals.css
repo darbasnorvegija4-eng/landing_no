@@ -2,10 +2,10 @@
 
 :root {
   --background: #0c0e12;
-  --background-elevated: #141820;
+  --background-elevated: #171c26;
   --foreground: #f4f1ea;
-  --muted: #1a1f2a;
-  --muted-foreground: #a8a29a;
+  --muted: #1e2632;
+  --muted-foreground: #c4c0b8;
   --border: rgba(255, 255, 255, 0.1);
   --accent: #e8a317;
   --accent-hover: #f0b12e;
@@ -15,9 +15,9 @@
   --danger: #d45454;
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(12, 14, 18, 0.55) 0%,
-    rgba(12, 14, 18, 0.72) 45%,
-    rgba(12, 14, 18, 0.95) 100%
+    rgba(12, 14, 18, 0.4) 0%,
+    rgba(12, 14, 18, 0.62) 45%,
+    rgba(12, 14, 18, 0.9) 100%
   );
   --surface-glow: radial-gradient(
     ellipse 80% 50% at 50% -20%,
@@ -121,11 +121,11 @@
   }
 
   .eyebrow {
-    @apply text-xs font-semibold uppercase tracking-[0.2em] text-accent;
+    @apply text-accent text-xs font-semibold tracking-[0.2em] uppercase;
   }
 
   .heading-display {
-    @apply text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl;
+    @apply text-foreground text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl;
   }
 
   .text-balance {
@@ -133,7 +133,7 @@
   }
 
   .surface-card {
-    @apply rounded-2xl border border-white/10 bg-background-elevated/80 backdrop-blur-sm;
+    @apply bg-background-elevated/80 rounded-2xl border border-white/10 backdrop-blur-sm;
   }
 
   .grain {
