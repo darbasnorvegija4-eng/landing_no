@@ -13,12 +13,13 @@ import path from "path";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 import pg from "pg";
+import { postgresSslOptions } from "./postgres-ssl.mjs";
 
 const rawUrl =
   process.env.DATABASE_URL_MIGRATE ||
   process.env.DATABASE_URL ||
   "file:./takfornying.db";
-const databaseUrl = rawUrl.replace(/[&?]channel_binding=require/g, "");
+const databaseUrl = rawUrl;
 
 if (!databaseUrl.startsWith("postgres")) {
   console.log(
@@ -37,7 +38,7 @@ const pool = new pg.Pool({
   connectionString: databaseUrl,
   max: 1,
   connectionTimeoutMillis: 20_000,
-  ssl: { rejectUnauthorized: false },
+  ssl: postgresSslOptions(databaseUrl),
 });
 
 try {
@@ -60,12 +61,13 @@ try {
 }
 
 const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const jiti = require("jiti")(import.meta.url, {
   esmResolve: true,
   interopDefault: true,
+  tsconfigPaths: path.resolve(__dirname, "../tsconfig.json"),
 });
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Use Jiti's async loader because the Payload config conditionally imports the
 // active database adapter with top-level await. The sync loader rewrites that
 // await into invalid CommonJS when Vercel runs the migration on Node 24.

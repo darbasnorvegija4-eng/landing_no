@@ -2,6 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:3000";
 const isCI = Boolean(process.env.CI);
+const isExternalBaseURL = !baseURL.startsWith("http://127.0.0.1")
+  && !baseURL.startsWith("http://localhost");
+const vercelBypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 export default defineConfig({
   testDir: "./e2e",
@@ -12,6 +15,12 @@ export default defineConfig({
   reporter: isCI ? "github" : "list",
   use: {
     baseURL,
+    extraHTTPHeaders: vercelBypassSecret
+      ? {
+          "x-vercel-protection-bypass": vercelBypassSecret,
+          "x-vercel-set-bypass-cookie": "true",
+        }
+      : undefined,
     trace: "retain-on-failure",
   },
   projects: [
@@ -20,9 +29,9 @@ export default defineConfig({
       use: { ...devices["Desktop Chrome"] },
     },
   ],
-  webServer: {
+  webServer: isExternalBaseURL ? undefined : {
     command: isCI
-      ? "npm run build && npm run start -- --hostname 127.0.0.1"
+      ? "npm run start -- --hostname 127.0.0.1"
       : "npm run dev -- --hostname 127.0.0.1",
     url: baseURL,
     reuseExistingServer: !isCI,

@@ -90,7 +90,11 @@ export function ReferencesSection({ projects }: Props) {
                 {copy.references.note}
               </p>
             ) : null}
-            <Button asChild size="lg" className="mt-6">
+            <Button
+              asChild
+              size="lg"
+              className="mt-6 h-auto max-w-full whitespace-normal px-5 py-3 text-center leading-snug sm:whitespace-nowrap sm:px-7"
+            >
               <Link href="/#kontakt">
                 {locale === "no"
                   ? "Få gratis taksjekk og pristilbud"
@@ -321,9 +325,14 @@ function Lightbox({
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.scrollTo(startIndex, true);
-    onSelect();
+    const frame = window.requestAnimationFrame(onSelect);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
   }, [emblaApi, onSelect, startIndex]);
 
   useEffect(() => {

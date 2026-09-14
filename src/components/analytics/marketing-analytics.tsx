@@ -13,10 +13,10 @@ const PENDING_LEAD_STORAGE_KEY = "takfornyelse_pending_lead_conversion";
 // can override them, while the fallbacks prevent a missing Vercel variable from
 // silently disabling paid-ad conversion measurement in production.
 const googleAdsId =
-  process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim() || "AW-18395015353";
+  process.env.NEXT_PUBLIC_GOOGLE_ADS_ID?.trim() || "AW-18213788044";
 const googleAdsLeadLabel =
   process.env.NEXT_PUBLIC_GOOGLE_ADS_LEAD_LABEL?.trim() ||
-  "MEIiCKPAk-UcELnRtsNE";
+  "oHJeCIutstUcEIyzge1D";
 const googleAnalyticsId =
   process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID?.trim() || "G-ENMB8696J8";
 const metaPixelId =
@@ -56,6 +56,12 @@ function sendMetaLeadEvent(params: Record<string, unknown>, eventId: string) {
 
 function sendMetaCustomEvent(name: string, params?: Record<string, unknown>) {
   window.fbq?.("trackCustom", name, params || {});
+}
+
+export function trackArticleCtaClick(slug: string) {
+  const eventParams = { article_slug: slug };
+  sendGoogleEvent("article_cta_click", eventParams);
+  sendMetaCustomEvent("ArticleCtaClick", eventParams);
 }
 
 export function getMarketingConsentChoice(): ConsentChoice | "unknown" {
@@ -106,8 +112,8 @@ function sendLeadConversion(
   };
 
   sendGoogleEvent("generate_lead", eventParams);
-  // This exact GA4 event is the primary website conversion already imported
-  // in Google Ads account 493-800-5876.
+  // Keep the GA4 event alongside the account-specific Google Ads event so the
+  // same successful enquiry can be verified across both measurement surfaces.
   sendGoogleEvent("manual_event_SUBMIT_LEAD_FORM", eventParams);
   if (googleAdsId && googleAdsLeadLabel) {
     sendGoogleEvent("conversion", {
@@ -225,10 +231,12 @@ export function MarketingAnalytics() {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(CONSENT_STORAGE_KEY);
-    if (stored === "granted" || stored === "denied") setChoice(stored);
+    const timer = window.setTimeout(() => {
+      if (stored === "granted" || stored === "denied") setChoice(stored);
+    }, 0);
     const openSettings = () => setSettingsOpen(true);
     window.addEventListener(OPEN_CONSENT_EVENT, openSettings);
-    return () => window.removeEventListener(OPEN_CONSENT_EVENT, openSettings);
+    return () => { window.clearTimeout(timer); window.removeEventListener(OPEN_CONSENT_EVENT, openSettings); };
   }, []);
 
   useEffect(() => {

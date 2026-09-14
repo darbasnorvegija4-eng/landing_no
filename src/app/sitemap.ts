@@ -7,6 +7,7 @@ import {
 } from "@/lib/cms-pages";
 import { siteConfig } from "@/lib/site";
 import { seoLandingSlugs } from "@/content/seo-landing-pages";
+import { localizedBlogPostEntries } from "@/lib/blog/sitemap";
 
 export const revalidate = 300;
 
@@ -73,6 +74,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     { path: "/personvern", changeFrequency: "monthly" as const, priority: 0.5 },
+    {
+      path: "/angreskjema",
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    },
   ];
 
   const staticEntries = staticPages.flatMap((page) =>
@@ -105,11 +111,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         ),
       );
     const blogPosts = posts.flatMap((post) =>
-      localizedEntries(
-        `/blogg/${post.slug}`,
+      localizedBlogPostEntries(
+        post,
         validDate(post.updatedAt, lastModified),
-        "weekly",
-        0.7,
+        siteConfig.url,
       ),
     );
 

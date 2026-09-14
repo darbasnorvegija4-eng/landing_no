@@ -24,11 +24,11 @@ const securityHeaders = [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://www.googletagmanager.com https://connect.facebook.net",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.public.blob.vercel-storage.com https://*.blob.vercel-storage.com https://www.google.com https://www.googleadservices.com https://www.facebook.com",
+      "img-src 'self' data: blob: https://images.unsplash.com https://images.pexels.com https://*.public.blob.vercel-storage.com https://*.blob.vercel-storage.com https://www.google.com https://www.googleadservices.com https://www.facebook.com",
       "font-src 'self' data:",
       "connect-src 'self' https://*.blob.vercel-storage.com https://challenges.cloudflare.com https://*.upstash.io https://www.google.com https://www.googleadservices.com https://www.googletagmanager.com https://www.facebook.com",
       "frame-src https://challenges.cloudflare.com",
-      "frame-ancestors 'none'",
+      "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
     ].join("; "),
@@ -46,6 +46,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "images.pexels.com",
+      },
+      {
+        protocol: "https",
         hostname: "*.public.blob.vercel-storage.com",
       },
       {
@@ -60,6 +64,12 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/pdfjs-dist/standard_fonts/LiberationSans-Regular.ttf",
+      "./node_modules/pdfjs-dist/standard_fonts/LiberationSans-Bold.ttf",
+    ],
   },
   async headers() {
     return [

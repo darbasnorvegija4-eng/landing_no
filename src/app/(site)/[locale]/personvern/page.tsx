@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { getSiteContent } from "@/lib/cms-content";
@@ -38,10 +39,18 @@ function renderMarkdownLite(body: string) {
     const trimmed = block.trim();
     if (!trimmed) return null;
     if (trimmed.startsWith("## ")) {
+      const [heading, ...paragraphLines] = trimmed.split("\n");
       return (
-        <h2 key={i} className="mt-8 text-xl font-semibold tracking-tight">
-          {trimmed.replace(/^##\s+/, "")}
-        </h2>
+        <Fragment key={i}>
+          <h2 className="mt-8 text-xl font-semibold tracking-tight">
+            {heading.replace(/^##\s+/, "")}
+          </h2>
+          {paragraphLines.length > 0 ? (
+            <p className="text-muted-foreground mt-3 leading-relaxed">
+              {paragraphLines.join("\n").trim()}
+            </p>
+          ) : null}
+        </Fragment>
       );
     }
     if (trimmed.startsWith("- ")) {
@@ -91,13 +100,42 @@ If you consent in the cookie banner, we use Google Analytics, Google Ads and Met
   return `${body.replace(outdated, "").trim()}\n\n${disclosure}`;
 }
 
+function withAiDisclosure(body: string, locale: "no" | "en") {
+  if (/AI-assistert behandling|AI-assisted processing/i.test(body)) return body;
+  const disclosure = locale === "no"
+    ? `## AI-assistert behandling av henvendelser
+Vi kan bruke en konfigurert AI-leverandør til å lage en intern oppsummering, mangelliste og et forslag til svar. Navn, telefon, e-post og full adresse sendes ikke i standardprompten, og fritekst reduseres og renses før behandling. AI-utkast sendes ikke automatisk til kunden; en administrator må kontrollere og godkjenne innholdet. AI bestemmer ikke pris, garanti, oppstart eller bindende tilbud. Opplysninger lagres og slettes etter våre vanlige regler for henvendelser. Produksjonsbruk forutsetter godkjent databehandleravtale.`
+    : `## AI-assisted processing of enquiries
+We may use a configured AI provider to prepare an internal summary, missing-information list, and reply suggestion. Names, phone numbers, email addresses, and full addresses are not included in the standard prompt, and free text is reduced and cleaned before processing. AI drafts are not sent automatically; an administrator must review and approve them. AI does not decide prices, warranties, start dates, or binding offers. Information follows our normal enquiry retention rules. Production use requires an approved data-processing agreement.`;
+  return `${body.trim()}\n\n${disclosure}`;
+}
+
+function withOperationalDisclosure(body: string, locale: "no" | "en") {
+  if (/Tilbud, måling og oppdragsoppfølging|Quotes, measurement and job follow-up/i.test(body)) return body;
+  const disclosure = locale === "no"
+    ? `## Tilbud, måling og oppdragsoppfølging
+Når du ber om tilbud, kan adressen brukes til adresseoppslag og et kontrollert takarealestimat fra godkjente kart- eller bildekilder. Estimat, antakelser, kilde og usikkerhet lagres sammen med tilbudsgrunnlaget. Pris beregnes av faste, versjonerte regler; AI bestemmer ikke pris. Administrator må godkjenne tilbud og endringsavtaler før utsending. Ved elektronisk godkjenning lagres dokumentversjon, hash, tidspunkt og pseudonymiserte sikkerhetsbevis. Etter avtaleinngåelse kan vi sende nødvendige planleggingsbekreftelser, påminnelser og ferdigdokumentasjon i valgt kanal. Signerte dokumenter og nødvendig arbeidsdokumentasjon slettes ikke sammen med en ordinær, utløpt henvendelse når vi fortsatt har avtale-, reklamasjons- eller lovpålagt oppbevaringsgrunnlag.`
+    : `## Quotes, measurement and job follow-up
+When you request a quote, the address may be used for address lookup and a controlled roof-area estimate from approved map or imagery sources. The estimate, assumptions, source and uncertainty are stored with the quote basis. Prices are calculated by fixed, versioned rules; AI does not decide prices. An administrator must approve quotes and change agreements before they are sent. Electronic acceptance stores the document version, hash, time and pseudonymised security evidence. After an agreement is made, we may send necessary scheduling confirmations, reminders and completion documentation through the selected channel. Signed documents and necessary work documentation are not deleted with an ordinary expired enquiry while a contract, complaint or statutory retention basis still applies.`;
+  return `${body.trim()}\n\n${disclosure}`;
+}
+
+function withCorrectLegalBasis(body: string, locale: "no" | "en") {
+  const heading = locale === "no" ? "## 3. Formål og rettslig grunnlag" : "## 3. Purpose and legal basis";
+  if (!body.includes(heading)) return body;
+  const replacement = locale === "no"
+    ? `${heading}\nOpplysningene brukes for å besvare forespørselen din, forberede og inngå en eventuell avtale, gjennomføre arbeidet, fakturere, dokumentere kommunikasjon og ivareta rettskrav. Behandling som er nødvendig for forespørselen og avtalen bygger normalt på GDPR art. 6 (1) b. Sikkerhet, misbruksforebygging og nødvendig dokumentasjon kan bygge på berettiget interesse etter art. 6 (1) f, og lovpålagt regnskapsføring på art. 6 (1) c. Samtykke brukes separat for valgfrie markedsførings- og analyseformål.`
+    : `${heading}\nData is used to answer your enquiry, prepare and enter into an agreement, carry out the work, invoice, document communications and handle legal claims. Processing needed for the enquiry and contract normally relies on GDPR Art. 6 (1) b. Security, abuse prevention and necessary documentation may rely on legitimate interests under Art. 6 (1) f, and statutory accounting on Art. 6 (1) c. Consent is used separately for optional marketing and analytics purposes.`;
+  return body.replace(new RegExp(`${heading.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\n[\\s\\S]*?(?=\\n\\n## 4\\.)`), replacement);
+}
+
 export default async function PrivacyPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const loc = locale as "no" | "en";
   const content = await getSiteContent();
   const privacy = content.settings.privacy;
-  const privacyBody = withMarketingDisclosure(privacy.body[loc], loc);
+  const privacyBody = withOperationalDisclosure(withAiDisclosure(withMarketingDisclosure(withCorrectLegalBasis(privacy.body[loc], loc), loc), loc), loc);
 
   return (
     <section className="section-pad">

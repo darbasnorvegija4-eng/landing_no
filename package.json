@@ -2,6 +2,7 @@
   "name": "takfornying",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "npm run build:migrate && next build",
@@ -10,12 +11,16 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:ci:unit": "vitest run --exclude \"**/payload/migration-tests/**\" --maxWorkers=2",
+    "test:ci:migrations": "vitest run src/payload/migration-tests --maxWorkers=1 --fileParallelism=false",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:preview:auth-smoke": "node scripts/verify-protected-preview.mjs",
     "payload": "payload",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
-    "db:push": "node --env-file=.env --import tsx scripts/push-schema.mjs",
+    "db:push": "node --env-file=.env scripts/push-schema-jiti.mjs",
+    "db:bootstrap": "node --env-file=.env scripts/push-schema-jiti.mjs --baseline-current-migrations",
     "db:seed": "node --env-file=.env scripts/seed-cms-sql.mjs",
     "db:seed-copy": "node --env-file=.env scripts/seed-page-copy.mjs",
     "db:ensure": "node --env-file=.env scripts/ensure-cms-schema.mjs",
@@ -25,13 +30,15 @@
     "db:migrate:baseline": "node --env-file=.env scripts/create-baseline-migration.mjs"
   },
   "dependencies": {
-    "@payloadcms/db-postgres": "^3.86.0",
-    "@payloadcms/db-sqlite": "^3.86.0",
-    "@payloadcms/live-preview-react": "^3.86.0",
-    "@payloadcms/next": "^3.86.0",
-    "@payloadcms/richtext-lexical": "^3.86.0",
-    "@payloadcms/storage-vercel-blob": "^3.86.0",
-    "@payloadcms/ui": "^3.86.0",
+    "@payloadcms/db-postgres": "3.88.0",
+    "@payloadcms/db-sqlite": "3.88.0",
+    "@payloadcms/email-resend": "3.88.0",
+    "@payloadcms/live-preview-react": "3.88.0",
+    "@payloadcms/next": "3.88.0",
+    "@payloadcms/richtext-lexical": "3.88.0",
+    "@payloadcms/storage-vercel-blob": "3.88.0",
+    "@payloadcms/translations": "3.88.0",
+    "@payloadcms/ui": "3.88.0",
     "@radix-ui/react-accordion": "^1.2.16",
     "@radix-ui/react-dialog": "^1.1.19",
     "@radix-ui/react-label": "^2.1.11",
@@ -46,11 +53,13 @@
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.42.2",
     "graphql": "^16.14.2",
+    "jszip": "^3.10.1",
     "lucide-react": "^1.24.0",
-    "next": "15.4.11",
+    "next": "16.3.2",
     "next-intl": "^4.13.2",
-    "payload": "^3.86.0",
+    "payload": "3.88.0",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.2.108",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "resend": "^6.17.2",
@@ -60,6 +69,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.6",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.62.0",
     "@tailwindcss/postcss": "^4",
@@ -69,7 +79,7 @@
     "@types/react-dom": "^19",
     "@vitest/coverage-v8": "^4.1.10",
     "eslint": "^9",
-    "eslint-config-next": "^15.4.11",
+    "eslint-config-next": "16.3.2",
     "prettier": "^3.9.5",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
@@ -77,6 +87,6 @@
     "vitest": "^4.1.10"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.9.0"
   }
 }

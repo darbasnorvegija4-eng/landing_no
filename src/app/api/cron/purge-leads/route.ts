@@ -1,7 +1,11 @@
-import { del, list } from "@vercel/blob";
+import { del } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { getPayload } from "@/lib/payload";
 import { captureException } from "@/lib/monitoring";
+import { privateLeadBlobUrls, retainedBySignedContract } from "@/lib/retention/lead-retention";
+import { purgeCase } from "@/lib/leads/case-lifecycle";
+import { recordAuditEvent } from "@/lib/audit/audit-event";
+import { createPayloadAuditWriter } from "@/lib/audit/payload-audit-writer";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -14,8 +18,9 @@ function authorized(request: Request) {
 }
 
 /**
- * Deletes leads older than Site Settings retentionMonths, and best-effort
- * cleans matching private Blob objects under leads/.
+ * Permanently deletes only cases that an administrator already moved to trash
+ * and whose explicit trash retention period has expired. Active and merely
+ * archived cases are never selected by this job.
  *
  * Secure with CRON_SECRET (Vercel Cron sends Authorization: Bearer …).
  */
@@ -26,59 +31,47 @@ export async function GET(request: Request) {
 
   try {
     const payload = await getPayload();
-    const settings = await payload.findGlobal({
-      slug: "site-settings",
-      depth: 0,
-      draft: false,
-      overrideAccess: true,
-    });
-    const months =
-      typeof settings.retentionMonths === "number" &&
-      settings.retentionMonths > 0
-        ? settings.retentionMonths
-        : 24;
-
-    const cutoff = new Date();
-    cutoff.setMonth(cutoff.getMonth() - months);
+    const now = new Date();
 
     const old = await payload.find({
       collection: "leads",
-      where: {
-        createdAt: { less_than: cutoff.toISOString() },
-      },
+      where: { and: [
+        { recordState: { equals: "trashed" } },
+        { purgeAfter: { less_than_equal: now.toISOString() } },
+      ] },
       limit: 100,
       depth: 0,
       overrideAccess: true,
     });
 
     let deleted = 0;
+    let retainedForLegalBasis = 0;
+    let failed = 0;
+    const deletedBlobUrls = new Set<string>();
     for (const lead of old.docs) {
-      await payload.delete({
-        collection: "leads",
-        id: lead.id,
-        overrideAccess: true,
-      });
-      deleted += 1;
+      try {
+        await purgeCase(payload, lead.id, { confirmation: String(lead.id), reason: "Automated purge after the administrator-approved trash retention period", now });
+        await recordAuditEvent(createPayloadAuditWriter(payload), {
+          action: "lead.retention_purge",
+          entityType: "lead",
+          entityId: lead.id,
+          correlationId: `retention-${now.toISOString().slice(0, 10)}`,
+          changedFields: ["deletedAt"],
+          metadata: { retentionConfirmed: true },
+        });
+        for (const url of privateLeadBlobUrls(lead.photoUrls)) deletedBlobUrls.add(url);
+        deleted += 1;
+      } catch (error) {
+        if (retainedBySignedContract(error)) retainedForLegalBasis += 1;
+        else { failed += 1; captureException(error, { route: "GET /api/cron/purge-leads", operation: "lead-delete", leadId: lead.id }); }
+      }
     }
 
     let blobsDeleted = 0;
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    if (process.env.BLOB_READ_WRITE_TOKEN && deletedBlobUrls.size) {
       try {
-        const listed = await list({
-          prefix: "leads/",
-          token: process.env.BLOB_READ_WRITE_TOKEN,
-          limit: 200,
-        });
-        const stale = listed.blobs.filter(
-          (b) => b.uploadedAt && b.uploadedAt < cutoff,
-        );
-        if (stale.length) {
-          await del(
-            stale.map((b) => b.url),
-            { token: process.env.BLOB_READ_WRITE_TOKEN },
-          );
-          blobsDeleted = stale.length;
-        }
+        await del([...deletedBlobUrls], { token: process.env.BLOB_READ_WRITE_TOKEN });
+        blobsDeleted = deletedBlobUrls.size;
       } catch (err) {
         captureException(err, {
           route: "GET /api/cron/purge-leads",
@@ -89,9 +82,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      retentionMonths: months,
-      cutoff: cutoff.toISOString(),
+      purgeCutoff: now.toISOString(),
       leadsDeleted: deleted,
+      retainedForLegalBasis,
+      failures: failed,
       blobsDeleted,
     });
   } catch (err) {

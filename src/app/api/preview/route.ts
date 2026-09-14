@@ -3,6 +3,8 @@ import { draftMode } from "next/headers";
 import { NextResponse } from "next/server";
 import { getPayload } from "@/lib/payload";
 import { captureException } from "@/lib/monitoring";
+import { userIsAdmin } from "@/payload/access/roles";
+import { safePreviewPath } from "@/lib/preview-path";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,7 +36,7 @@ async function isAuthorized(
 
   const payload = await getPayload();
   const { user } = await payload.auth({ headers: request.headers });
-  return Boolean(user);
+  return userIsAdmin(user);
 }
 
 export async function GET(request: Request) {
@@ -46,10 +48,12 @@ export async function GET(request: Request) {
     }
 
     const locale = previewURL.searchParams.get("locale") === "en" ? "en" : "no";
+    const requestedPath = previewURL.searchParams.get("path") || `/${locale}`;
+    const safePath = safePreviewPath(locale, requestedPath);
     const draft = await draftMode();
     draft.enable();
 
-    const response = NextResponse.redirect(new URL(`/${locale}`, previewURL));
+    const response = NextResponse.redirect(new URL(safePath, previewURL));
     response.headers.set("Cache-Control", "private, no-store");
     return response;
   } catch (error) {

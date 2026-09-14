@@ -8,6 +8,7 @@ import pg from "pg";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { postgresSslOptions } from "./postgres-ssl.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
@@ -19,10 +20,7 @@ const enMessages = JSON.parse(
   readFileSync(join(root, "src/i18n/messages/en.json"), "utf8"),
 );
 
-const url = process.env.DATABASE_URL?.replace(
-  /[&?]channel_binding=require/g,
-  "",
-);
+const url = process.env.DATABASE_URL;
 if (!url?.startsWith("postgres")) {
   console.error("DATABASE_URL must be postgres");
   process.exit(1);
@@ -32,7 +30,7 @@ const pool = new pg.Pool({
   connectionString: url,
   max: 1,
   connectionTimeoutMillis: 20000,
-  ssl: { rejectUnauthorized: false },
+  ssl: postgresSslOptions(url),
 });
 
 const siteImages = {
@@ -299,7 +297,7 @@ try {
         'Takfornyelse', '+47 47 73 58 88', 'post@takfornyelse.as',
         'Lyngveien 28', '1182', 'Oslo', '916 693 168', 'Fornyelse Gruppen AS',
         $1, $2, $3,
-        2500, 750, 50, 500, 150,
+        2500, 421.25, 50, 500, 150,
         '2.000.000+', 10, '100+', 'Google',
         now(), now()
       )`,

@@ -186,3 +186,11 @@ than mass-pinning or automatically forcing upgrades.
 - Mobile-first: sticky call/book bar, compact hero, progressive contact form, swipeable references.
 - Brand assets: replace Unsplash hero and placeholder project gradients with client photos via Media in Payload.
 - Do not commit real secrets; use `.env` locally and host secrets in production.
+
+## Planning documents
+
+- [Full platform implementation master plan](docs/full-platform-implementation-master-plan.md)
+- [Pre-implementation backup and recovery manifest](docs/pre-master-backup-2026-08-23.md)
+- [Implementation journal](docs/implementation/README.md)
+- [AI-assisted SEO blog roadmap](docs/seo-blog-automation-roadmap.md)
+- [Simplified admin and worker panel roadmap](docs/takfornyelse-admin-user-panel-roadmap.md)

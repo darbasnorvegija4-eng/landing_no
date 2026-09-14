@@ -9,16 +9,18 @@ import {
   redirectPathCandidates,
 } from "@/lib/content-paths";
 import type { Locale } from "@/lib/site";
+import { availablePostLocales as editorialAvailablePostLocales } from "@/lib/blog/editorial-policy";
+import { publishedPostWhere } from "@/lib/blog/publication-visibility";
 
 export type CmsContentDocument = {
   id: number | string;
   slug: string;
   titleNo: string;
-  titleEn: string;
+  titleEn?: string | null;
   excerptNo?: string | null;
   excerptEn?: string | null;
   contentNo: string;
-  contentEn: string;
+  contentEn?: string | null;
   seoTitleNo?: string | null;
   seoTitleEn?: string | null;
   seoDescriptionNo?: string | null;
@@ -30,6 +32,17 @@ export type CmsContentDocument = {
 };
 
 export type CmsPostDocument = CmsContentDocument & {
+  category?: string | null;
+  editorialStatus?:
+    | "draft"
+    | "ai_qa"
+    | "human_review"
+    | "rejected"
+    | "approved"
+    | "scheduled"
+    | "published"
+    | null;
+  imageAlt?: string | null;
   heroImage?:
     | number
     | string
@@ -40,7 +53,55 @@ export type CmsPostDocument = CmsContentDocument & {
           hero?: { url?: string | null } | null;
           card?: { url?: string | null } | null;
         } | null;
+        stockProvider?: "manual" | "pexels" | null;
+        stockSourceUrl?: string | null;
+        stockPhotographer?: string | null;
+        stockPhotographerUrl?: string | null;
       }
+    | null;
+  stockImage?: {
+    provider?: string | null;
+    assetId?: string | null;
+    imageUrl?: string | null;
+    sourceUrl?: string | null;
+    photographer?: string | null;
+    photographerUrl?: string | null;
+    licenseUrl?: string | null;
+    query?: string | null;
+    selectedAt?: string | null;
+  } | null;
+  authorName?: string | null;
+  reviewerName?: string | null;
+  reviewedAt?: string | null;
+  ctaVariant?: "assessment" | "wash" | "renewal" | "new_roof" | null;
+  sources?:
+    | {
+        label: string;
+        url: string;
+        publisher?: string | null;
+        accessedAt?: string | null;
+      }[]
+    | null;
+  faqItems?:
+    | {
+        questionNo: string;
+        answerNo: string;
+        questionEn?: string | null;
+        answerEn?: string | null;
+      }[]
+    | null;
+  relatedPosts?: (number | string | CmsPostDocument)[] | null;
+  relatedServices?:
+    | (
+        | number
+        | string
+        | {
+            id: number | string;
+            key: string;
+            titleNo: string;
+            titleEn: string;
+          }
+      )[]
     | null;
 };
 
@@ -89,6 +150,10 @@ function slugWhere(slug: string, includeDrafts: boolean): Where {
     : publishedWhere(slug);
 }
 
+function postSlugWhere(slug: string, includeDrafts: boolean): Where {
+  return includeDrafts ? { slug: { equals: slug } } : publishedPostWhere(slug);
+}
+
 const findPageBySlug = cache(
   async (
     slug: string,
@@ -121,12 +186,12 @@ const findPostBySlug = cache(
     const payload = await getPayload();
     const result = await payload.find({
       collection: "posts",
-      depth: 1,
+      depth: 2,
       draft: includeDrafts,
       limit: 1,
       overrideAccess: true,
       pagination: false,
-      where: slugWhere(slug, includeDrafts),
+      where: postSlugWhere(slug, includeDrafts),
     });
 
     return (result.docs[0] as unknown as CmsPostDocument | undefined) ?? null;
@@ -144,7 +209,7 @@ const findPosts = cache(
       overrideAccess: true,
       pagination: false,
       sort: "-publishedAt",
-      where: includeDrafts ? undefined : publishedWhere(),
+      where: includeDrafts ? undefined : publishedPostWhere(),
     });
 
     return result.docs as unknown as CmsPostDocument[];
@@ -219,12 +284,38 @@ export async function getPublishedPosts(): Promise<CmsPostDocument[]> {
       overrideAccess: true,
       pagination: false,
       sort: "-publishedAt",
-      where: publishedWhere(),
+      where: publishedPostWhere(),
     });
 
     return result.docs as unknown as CmsPostDocument[];
   } catch (error) {
     console.error("Published CMS posts could not be loaded:", error);
+    return [];
+  }
+}
+
+export async function getLatestPublishedPosts(
+  locale: Locale,
+  limit = 3,
+): Promise<CmsPostDocument[]> {
+  try {
+    const payload = await getPayload();
+    const result = await payload.find({
+      collection: "posts",
+      depth: 1,
+      draft: false,
+      limit: 100,
+      overrideAccess: true,
+      pagination: false,
+      sort: "-publishedAt",
+      where: publishedPostWhere(),
+    });
+
+    return (result.docs as unknown as CmsPostDocument[])
+      .filter((post) => postHasLocale(post, locale))
+      .slice(0, Math.max(0, limit));
+  } catch (error) {
+    console.error("Latest published CMS posts could not be loaded:", error);
     return [];
   }
 }
@@ -269,10 +360,10 @@ export function localizeContent(
   locale: Locale,
 ): LocalizedContent {
   const norwegian = locale === "no";
-  const title = norwegian ? document.titleNo : document.titleEn;
+  const title = (norwegian ? document.titleNo : document.titleEn)?.trim() || "";
   const excerpt =
     (norwegian ? document.excerptNo : document.excerptEn)?.trim() || "";
-  const content = norwegian ? document.contentNo : document.contentEn;
+  const content = (norwegian ? document.contentNo : document.contentEn) || "";
   const seoTitle =
     (norwegian ? document.seoTitleNo : document.seoTitleEn)?.trim() || title;
   const seoDescription =
@@ -284,6 +375,14 @@ export function localizeContent(
     content.replace(/\s+/g, " ").trim().slice(0, 160);
 
   return { title, excerpt, content, seoTitle, seoDescription };
+}
+
+export function availablePostLocales(post: CmsPostDocument): Locale[] {
+  return editorialAvailablePostLocales(post);
+}
+
+export function postHasLocale(post: CmsPostDocument, locale: Locale): boolean {
+  return availablePostLocales(post).includes(locale);
 }
 
 export function getRedirectDestination(

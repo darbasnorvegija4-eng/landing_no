@@ -1,7 +1,11 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
+import { resendAdapter } from "@payloadcms/email-resend";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
+import { en } from "@payloadcms/translations/languages/en";
+import { lt } from "@payloadcms/translations/languages/lt";
+import { nb } from "@payloadcms/translations/languages/nb";
 import { buildConfig } from "payload";
 import sharp from "sharp";
 
@@ -16,6 +20,25 @@ import { Pages } from "./payload/collections/Pages";
 import { Posts } from "./payload/collections/Posts";
 import { Redirects } from "./payload/collections/Redirects";
 import { SiteSettings } from "./payload/collections/SiteSettings";
+import { AuditEvents } from "./payload/collections/AuditEvents";
+import { OperationalJobs } from "./payload/collections/OperationalJobs";
+import { AccessTokens } from "./payload/collections/AccessTokens";
+import { PrivateMedia } from "./payload/collections/PrivateMedia";
+import { WorkOrders } from "./payload/collections/WorkOrders";
+import { SeoTopics } from "./payload/collections/SeoTopics";
+import { SeoRuns } from "./payload/collections/SeoRuns";
+import { Messages } from "./payload/collections/Messages";
+import { RoofMeasurements } from "./payload/collections/RoofMeasurements";
+import { PriceRules } from "./payload/collections/PriceRules";
+import { PriceCalculations } from "./payload/collections/PriceCalculations";
+import { Quotes } from "./payload/collections/Quotes";
+import { Contracts } from "./payload/collections/Contracts";
+import { ChangeAgreements } from "./payload/collections/ChangeAgreements";
+import { ContractTerms } from "./payload/collections/ContractTerms";
+import { InvoiceRecords } from "./payload/collections/InvoiceRecords";
+import { Warranties } from "./payload/collections/Warranties";
+import { OfficialInvoices } from "./payload/collections/OfficialInvoices";
+import { CustomerContractRequests } from "./payload/collections/CustomerContractRequests";
 import { migrations } from "./payload/migrations";
 import { resolvePayloadSecret } from "./lib/payload-secret";
 
@@ -23,10 +46,20 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
 const rawDatabaseUrl = process.env.DATABASE_URL || "file:./takfornying.db";
-// Neon sometimes adds channel_binding=require which breaks node-pg on Vercel
-const databaseUrl = rawDatabaseUrl.replace(/[&?]channel_binding=require/g, "");
+// Keep Neon connection parameters intact. Current node-postgres supports
+// channel_binding=require; removing the first query parameter can also drop
+// the `?` delimiter and corrupt the database name.
+const databaseUrl = rawDatabaseUrl;
 const usePostgres = databaseUrl.startsWith("postgres");
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN;
+const resendApiKey = process.env.RESEND_API_KEY?.trim();
+
+function payloadFromAddress() {
+  const configured = process.env.PAYLOAD_FROM_EMAIL?.trim();
+  if (configured) return configured;
+  const leadFrom = process.env.LEAD_FROM_EMAIL?.trim() || "";
+  return leadFrom.match(/<([^>]+)>/)?.[1] || leadFrom || "post@takfornyelse.as";
+}
 
 const serverURL =
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -82,10 +115,24 @@ const databaseAdapter = usePostgres
 
 export default buildConfig({
   serverURL,
+  email: resendApiKey
+    ? resendAdapter({
+        apiKey: resendApiKey,
+        defaultFromAddress: payloadFromAddress(),
+        defaultFromName: "Takfornyelse",
+      })
+    : undefined,
   csrf: trustedOrigins,
   cors: trustedOrigins,
+  i18n: {
+    fallbackLanguage: "nb",
+    supportedLanguages: { nb, lt, en },
+  },
   admin: {
     user: Users.slug,
+    components: {
+      beforeDashboard: ["/components/AdminDashboard"],
+    },
     importMap: {
       baseDir: path.resolve(dirname, "app/(payload)/admin"),
     },
@@ -113,6 +160,25 @@ export default buildConfig({
     Posts,
     Redirects,
     Leads,
+    Messages,
+    RoofMeasurements,
+    PriceRules,
+    PriceCalculations,
+    Quotes,
+    Contracts,
+    ChangeAgreements,
+    ContractTerms,
+    WorkOrders,
+    InvoiceRecords,
+    OfficialInvoices,
+    CustomerContractRequests,
+    Warranties,
+    SeoTopics,
+    SeoRuns,
+    AuditEvents,
+    OperationalJobs,
+    AccessTokens,
+    PrivateMedia,
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),

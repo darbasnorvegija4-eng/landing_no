@@ -8,6 +8,7 @@ import {
   useSiteSettings,
 } from "@/components/site-settings-provider";
 import { MarketingSettingsButton } from "@/components/analytics/marketing-analytics";
+import { withGuideNavigation } from "@/lib/public-navigation";
 
 const serviceLinks = [
   { href: "/takvask", no: "Takvask", en: "Roof cleaning" },
@@ -68,20 +69,19 @@ export function Footer() {
         ];
   const resourceLinks = [
     {
-      href: "/blogg",
-      label: locale === "no" ? "Takguide" : "Roof guide",
-    },
-    {
       href: "/kundeomtaler",
       label: locale === "no" ? "Kundeomtaler" : "Customer reviews",
     },
   ];
-  const quickWithResources = [
-    ...quick,
-    ...resourceLinks.filter(
-      (resource) => !quick.some((item) => item.href === resource.href),
-    ),
-  ];
+  const quickWithResources = withGuideNavigation(
+    [
+      ...quick,
+      ...resourceLinks.filter(
+        (resource) => !quick.some((item) => item.href === resource.href),
+      ),
+    ],
+    locale,
+  );
 
   return (
     <footer className="border-t border-white/15 bg-[#0a0d12] pb-24 md:pb-0">
@@ -205,6 +205,9 @@ export function Footer() {
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             <Link href="/personvern" className="hover:text-accent">
               {settings.privacy.linkLabel[locale]}
+            </Link>
+            <Link href="/angreskjema" className="hover:text-accent">
+              {locale === "no" ? "Angreskjema" : "Withdrawal form"}
             </Link>
             <MarketingSettingsButton />
           </div>

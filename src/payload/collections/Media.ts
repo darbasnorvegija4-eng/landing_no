@@ -4,6 +4,7 @@ import { adminOnly, adminsAndEditors } from "../access/roles";
 export const Media: CollectionConfig = {
   slug: "media",
   admin: {
+    group: "Blogg",
     useAsTitle: "alt",
     description:
       "Upload images here (stored on Vercel Blob). Then pick them in Site Settings or Project stages. Prefer WebP when possible; large JPEG/PNG are auto-converted when supported.",
@@ -47,6 +48,59 @@ export const Media: CollectionConfig = {
       admin: {
         description: "Short description for accessibility / SEO",
       },
+    },
+    {
+      name: "stockProvider",
+      type: "select",
+      label: "Bildetekilde",
+      defaultValue: "manual",
+      options: [
+        { label: "Egen opplasting", value: "manual" },
+        { label: "Pexels", value: "pexels" },
+      ],
+      admin: { position: "sidebar", readOnly: true },
+    },
+    {
+      name: "stockAssetId",
+      type: "text",
+      label: "Stockbilde-ID",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockSourceUrl",
+      type: "text",
+      label: "Kildeside",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockPhotographer",
+      type: "text",
+      label: "Fotograf",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockPhotographerUrl",
+      type: "text",
+      label: "Fotografside",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockLicenseUrl",
+      type: "text",
+      label: "Lisens",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockRetrievedAt",
+      type: "date",
+      label: "Hentet",
+      admin: { readOnly: true },
+    },
+    {
+      name: "stockQuery",
+      type: "text",
+      label: "Bildesøk",
+      admin: { readOnly: true },
     },
   ],
 };
